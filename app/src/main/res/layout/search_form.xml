@@ -49,66 +49,98 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/editTextEmail"
+        <TextView
+            android:id="@+id/distance_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:text="@string/distance_label"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
         <EditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/distance_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            android:hint="@string/distance_placeholder"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/from_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/from_label"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
-            android:id="@+id/radioGender"
+            android:id="@+id/radio_loc_selection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <RadioButton
-                android:id="@+id/radioButtonMale"
+                android:id="@+id/radio_current_loc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Male" />
+                android:checked="false"
+                android:text="@string/current_loc_label" />
 
 
             <RadioButton
-                android:id="@+id/radioButtonFemale"
+                android:id="@+id/radio_other_loc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Female" />
+                android:checked="false"
+                android:text="@string/other_loc_label" />
 
         </RadioGroup>
 
-        <Button
-            android:id="@+id/buttonRegister"
+        <EditText
+            android:id="@+id/other_loc_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="Register" />
+            android:layout_marginLeft="20dp"
+            android:hint="@string/other_loc_placeholder"
+            android:inputType="text" />
 
-        <TextView
-            android:id="@+id/textViewLogin"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Already Registered?\nLogin Here"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/btn_search_label" />
+
+            <Button
+                android:id="@+id/btn_clear"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/btn_clear_label" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <ProgressBar

@@ -33,9 +33,9 @@ public class SearchFragment extends Fragment  {
 
     public void populateDropdown(View v) {
 
-        String [] values =  getResources().getStringArray(R.array.planets_array);
+        String [] values =  getResources().getStringArray(R.array.categories);
         Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 

@@ -6,6 +6,14 @@
     <string name="keyword_label">Keyword</string>
     <string name="keyword_placeholder">Enter keyword</string>
     <string name="category_label">Category</string>
+    <string name="distance_label">Distance (in miles)</string>
+    <string name="distance_placeholder">Enter distance (default 10 miles)</string>
+    <string name="from_label">From</string>
+    <string name="current_loc_label">Current Location</string>
+    <string name="other_loc_label">Other. Specify Location</string>
+    <string name="other_loc_placeholder">Type in the location</string>
+    <string name="btn_search_label">Search</string>
+    <string name="btn_clear_label">Clear</string>
 
 
     <!--Dropdown-->
@@ -18,6 +26,38 @@
         <item>Saturn</item>
         <item>Uranus</item>
         <item>Neptune</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>Default</item>
+        <item>Airport</item>
+        <item>Amusement</item>
+        <item>Aquarium</item>
+        <item>Art</item>
+        <item>Bakery</item>
+        <item>Bar</item>
+        <item>Beauty</item>
+        <item>Bowling</item>
+        <item>Bus</item>
+        <item>Cafe</item>
+        <item>Campground</item>
+        <item>Car</item>
+        <item>Casino</item>
+        <item>Lodging</item>
+        <item>Movie</item>
+        <item>Museum</item>
+        <item>Night</item>
+        <item>Park</item>
+        <item>Parking</item>
+        <item>Restaurant</item>
+        <item>Shopping</item>
+        <item>Stadium</item>
+        <item>Subway</item>
+        <item>Taxi</item>
+        <item>Train</item>
+        <item>Transit</item>
+        <item>Travel</item>
+        <item>Zoo</item>
     </string-array>
 
 
