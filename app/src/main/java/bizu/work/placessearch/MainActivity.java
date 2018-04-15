@@ -12,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+
     }
 
     private void setupTabIcons() {
@@ -64,13 +67,12 @@ public class MainActivity extends AppCompatActivity {
             ((LinearLayout) root).setDividerDrawable(drawable);
         };
 
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new OneFragment(), null);
-        adapter.addFrag(new OneFragment(), null);
+        adapter.addFrag(new SearchFragment(), null);
+        adapter.addFrag(new FavoritesFragment(), null);
         viewPager.setAdapter(adapter);
     }
 

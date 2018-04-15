@@ -3,5 +3,23 @@
     <string name="action_settings">Settings</string>
     <string name="text_fav">FAVORITES</string>
     <string name="text_search">SEARCH</string>
+    <string name="keyword_label">Keyword</string>
+    <string name="keyword_placeholder">Enter keyword</string>
+    <string name="category_label">Category</string>
+
+
+    <!--Dropdown-->
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+
     <string name="one">One</string>
 </resources>
