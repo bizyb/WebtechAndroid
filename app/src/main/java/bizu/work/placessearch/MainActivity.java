@@ -1,5 +1,7 @@
 package bizu.work.placessearch;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,6 +53,16 @@ public class MainActivity extends AppCompatActivity {
 
         TextView favTAb = (TextView) LayoutInflater.from(this).inflate(R.layout.fav_tab, null);
         tabLayout.getTabAt(1).setCustomView(favTAb);
+
+        View root = tabLayout.getChildAt(0);
+        if (root instanceof LinearLayout) {
+            ((LinearLayout) root).setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColor(getResources().getColor(R.color.separator));
+            drawable.setSize(1, 1);
+            ((LinearLayout) root).setDividerPadding(10);
+            ((LinearLayout) root).setDividerDrawable(drawable);
+        };
 
 
     }
