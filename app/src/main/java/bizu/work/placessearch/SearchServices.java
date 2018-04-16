@@ -3,6 +3,7 @@ package bizu.work.placessearch;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,18 +13,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -31,7 +24,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Handler;
 
 public class SearchServices {
 
@@ -116,7 +108,8 @@ public class SearchServices {
         RequestQueue queue = Volley.newRequestQueue(view.getContext());
 
 
-        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+//        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+        final String url = "http://ip-api.com/json";
         Log.d("url", url);
 
         // prepare the Request
@@ -127,7 +120,12 @@ public class SearchServices {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
-                        Log.d("Response", response.toString());
+//                        Log.d("Response", response.toString());
+                        Intent resultsIntent = new Intent(activity, ResultsActivity.class);
+                        resultsIntent.putExtra("response", response.toString());
+                        resultsIntent.putExtra("resultType", "SEARCH_RESULTS");
+                        progressBar.dismiss();
+                        activity.startActivity(resultsIntent);
                     }
                 },
                 new Response.ErrorListener()
@@ -135,6 +133,7 @@ public class SearchServices {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", error.toString());
+                        progressBar.dismiss();
                     }
                 }
         );

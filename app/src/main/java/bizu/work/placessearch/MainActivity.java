@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.ic_magnifying_glass,
+            R.drawable.ic_magnifying_glass_white,
             R.drawable.ic_heart,
     };
 
