@@ -113,17 +113,10 @@ public class SearchServices {
     public void search() {
 
         String queryString = getGETParams();
-
-        // Instantiate the cache
-        Cache cache = new DiskBasedCache(activity.getCacheDir(), 1024 * 1024 * 5); // 5MB cap
-
-        // Set up the network to use HttpURLConnection as the HTTP client.
-        Network network = new BasicNetwork(new HurlStack());
-        RequestQueue queue = new RequestQueue(cache, network);
+        RequestQueue queue = Volley.newRequestQueue(view.getContext());
 
 
-//        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
-        final String url = "http://ip-api.com/json";
+        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
         Log.d("url", url);
 
         // prepare the Request
