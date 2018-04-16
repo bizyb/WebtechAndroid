@@ -14,6 +14,9 @@
     <string name="other_loc_placeholder">Type in the location</string>
     <string name="btn_search_label">Search</string>
     <string name="btn_clear_label">Clear</string>
+    <string name="no_favorites">No favorites</string>
+    <string name="mandatory_field_msg">Please enter mandatory field</string>
+    <string name="field_error_msg">Please fix all fields with errors</string>
 
 
     <!--Dropdown-->

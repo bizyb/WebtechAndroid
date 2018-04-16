@@ -5,14 +5,18 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class SearchFragment extends Fragment {
@@ -174,13 +178,37 @@ public class SearchFragment extends Fragment {
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
+        TextView textView;
 
         String keywordStr = keyword.getText().toString();
         keywordStr = keywordStr.replaceAll("\\s+","");
 
+        if (keywordStr.length() == 0) {
+            isValid = false;
+            textView = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
+            textView.setVisibility(View.VISIBLE);
+
+        }
+
+        if (!isValid) {
+            showToast();
+        }
+
         return isValid;
 
 
+    }
+    private void showToast() {
+
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+
+        Toast toast = new Toast(getContext());
+        toast.setGravity(Gravity.BOTTOM, 0, 100);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
     }
 
     private void search() {
@@ -195,11 +223,12 @@ public class SearchFragment extends Fragment {
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
-
+        TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
 
         keyword.setText("");
         distance.setText("");
         otherLocInput.setText("");
+        errorMsg1.setVisibility(View.INVISIBLE);
         populateDropdown(v);
         resetRadioBtn();
 
