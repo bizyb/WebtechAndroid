@@ -124,6 +124,18 @@
 
         </RadioGroup>
 
+        <TextView
+            android:id="@+id/mandatory_msg_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/erroMsg"
+            android:text="@string/mandatory_field_msg"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
         <EditText
             android:id="@+id/other_loc_input"
             android:layout_width="match_parent"

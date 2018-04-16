@@ -162,12 +162,16 @@ public class SearchFragment extends Fragment {
         RadioButton currLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_current_loc);
         RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
+        TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
 
+        currLocBtn.setChecked(true);
+        otherLocBtn.setChecked(false);
         currLocBtn.setButtonTintList(getResources().getColorStateList(R.color.webtech_pink));
         otherLocBtn.setButtonTintList(getResources().getColorStateList(R.color.radioInactive));
         otherLocInput.setInputType(InputType.TYPE_NULL);
         otherLocInput.setFocusableInTouchMode(false);
         otherLocInput.setFocusable(false);
+        errorMsg2.setVisibility(View.INVISIBLE);
 
     }
     private boolean formIsValid() {
@@ -178,6 +182,7 @@ public class SearchFragment extends Fragment {
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
+        RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
         TextView textView;
 
         String keywordStr = keyword.getText().toString();
@@ -189,6 +194,18 @@ public class SearchFragment extends Fragment {
             textView.setVisibility(View.VISIBLE);
 
         }
+
+        if (otherLocBtn.isChecked()) {
+            String customLoc = otherLocInput.getText().toString();
+            customLoc = customLoc.replaceAll("\\s+","");
+            if (customLoc.length() == 0) {
+
+                textView = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
+                textView.setVisibility(View.VISIBLE);
+            }
+
+        }
+
 
         if (!isValid) {
             showToast();
@@ -224,11 +241,13 @@ public class SearchFragment extends Fragment {
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
         TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
+        TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
 
         keyword.setText("");
         distance.setText("");
         otherLocInput.setText("");
         errorMsg1.setVisibility(View.INVISIBLE);
+        errorMsg2.setVisibility(View.INVISIBLE);
         populateDropdown(v);
         resetRadioBtn();
 
