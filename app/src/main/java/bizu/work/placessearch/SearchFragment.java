@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 
 public class SearchFragment extends Fragment {
@@ -60,7 +60,7 @@ public class SearchFragment extends Fragment {
         btnSearch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                search();
+                search(v);
             }
         });
 
@@ -212,9 +212,8 @@ public class SearchFragment extends Fragment {
         }
 
         return isValid;
-
-
     }
+
     private void showToast() {
 
         LayoutInflater inflater = getLayoutInflater();
@@ -228,13 +227,16 @@ public class SearchFragment extends Fragment {
         toast.show();
     }
 
-    private void search() {
+    private void search(View v) {
 
         if (formIsValid()) {
 
+            SearchServices ss = new SearchServices(getActivity(), v);
+            ss.search();
         }
 
     }
+
     private void clearForm(View v) {
 
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
