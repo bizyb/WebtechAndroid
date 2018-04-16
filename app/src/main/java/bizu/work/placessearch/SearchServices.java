@@ -155,7 +155,7 @@ public class SearchServices {
 
         String msg = activity.getResources().getString(R.string.fetching_results);
 
-        progressBar = new ProgressDialog(view.getContext());
+        progressBar = new ProgressDialog(view.getContext(), R.style.FetchingResultsStyle);
         progressBar.setCancelable(true);
         progressBar.setMessage(msg);
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
