@@ -1,5 +1,7 @@
 package bizu.work.placessearch;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
@@ -33,11 +35,16 @@ public class SearchFragment extends Fragment {
         View v = inflater.inflate(R.layout.search_form, container, false);
         populateDropdown(v);
 
-        // Set button onclick listeners
+        // Set onclick listeners
         Button btnClear = (Button) v.findViewById(R.id.btn_clear);
         Button btnSearch = (Button) v.findViewById(R.id.btn_search);
         RadioButton otherLocBtn = (RadioButton) v.findViewById(R.id.radio_other_loc);
         RadioButton currLocBtn = (RadioButton) v.findViewById(R.id.radio_current_loc);
+        final EditText keyword = (EditText) v.findViewById(R.id.keyword_input);
+        final EditText distance = (EditText) v.findViewById(R.id.distance_input);
+        final EditText otherLocInput = (EditText) v.findViewById(R.id.other_loc_input);
+
+
 
         btnClear.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -67,8 +74,24 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
-
+        keyword.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                setOnFocusEvent(R.id.keyword_input, hasFocus);
+            }
+        });
+        distance.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                setOnFocusEvent(R.id.distance_input, hasFocus);
+            }
+        });
+        otherLocInput.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                setOnFocusEvent( R.id.other_loc_input, hasFocus);
+            }
+        });
 
         return v;
     }
@@ -80,12 +103,29 @@ public class SearchFragment extends Fragment {
 
         if (spinner == null) {spinner = getActivity().findViewById(R.id.spinner);}
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 
     }
 
+    private void setOnFocusEvent(int id, boolean hasFocus) {
+
+        EditText textElem = (EditText) getActivity().findViewById(id);
+        Resources res = getResources();
+        Drawable background;
+
+        if (hasFocus) {
+            background = res.getDrawable(R.drawable.border_color_active);
+
+        }
+        else {
+            background = res.getDrawable(R.drawable.border_color);
+        }
+
+        textElem.setBackground(background);
+    }
 
     private void updateRadioBtn(View v) {
 
@@ -126,13 +166,28 @@ public class SearchFragment extends Fragment {
         otherLocInput.setFocusable(false);
 
     }
-    private void validateForm() {
+    private boolean formIsValid() {
+
+
+        boolean isValid = true;
+
+        EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
+        EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
+        EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
+
+        String keywordStr = keyword.getText().toString();
+        keywordStr = keywordStr.replaceAll("\\s+","");
+
+        return isValid;
 
 
     }
 
     private void search() {
 
+        if (formIsValid()) {
+
+        }
 
     }
     private void clearForm(View v) {
@@ -141,6 +196,7 @@ public class SearchFragment extends Fragment {
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
 
+
         keyword.setText("");
         distance.setText("");
         otherLocInput.setText("");
@@ -148,11 +204,5 @@ public class SearchFragment extends Fragment {
         resetRadioBtn();
 
     }
-
-
-
-
-
-
 
 }
