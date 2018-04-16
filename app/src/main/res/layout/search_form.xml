@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
             android:layout_marginTop="0dp"
-            android:background="@drawable/border_color"
+            android:background="@drawable/border_color_active"
             android:hint="@string/keyword_placeholder"
             android:inputType="text"
             android:focusable="true"
@@ -96,7 +96,8 @@
                 android:id="@+id/radio_current_loc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"
+                android:checked="true"
+                android:buttonTint="@color/webtech_pink"
                 android:text="@string/current_loc_label" />
 
 
@@ -105,6 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
+                android:buttonTint="#000"
                 android:text="@string/other_loc_label" />
 
         </RadioGroup>
@@ -118,7 +120,7 @@
             android:layout_marginTop="0dp"
             android:background="@drawable/border_color"
             android:hint="@string/other_loc_placeholder"
-            android:inputType="text" />
+            android:focusable="false"/>
 
 
         <LinearLayout
@@ -128,6 +130,7 @@
 
             <Button
                 android:id="@+id/btn_search"
+                android:onClick="onClick"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -137,6 +140,7 @@
 
             <Button
                 android:id="@+id/btn_clear"
+                android:onClick="onClick"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

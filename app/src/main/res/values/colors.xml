@@ -8,4 +8,5 @@
     <color name="separator">#fff</color>
     <color name="colorAccent">#c8e8ff</color>
     <color name="webtech_pink">#E91E63</color>
+    <color name="radioInactive">#000</color>
 </resources>

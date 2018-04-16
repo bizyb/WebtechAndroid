@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void setupTabIcons() {
 
         TextView searchTab = (TextView) LayoutInflater.from(this).inflate(R.layout.search_tab, null);
