@@ -2,11 +2,18 @@ package bizu.work.placessearch;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -24,9 +31,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Handler;
 
 public class SearchServices {
 
+    private ProgressDialog progressBar;
     private Activity activity;
     private View view;
 
@@ -113,7 +122,8 @@ public class SearchServices {
         RequestQueue queue = new RequestQueue(cache, network);
 
 
-        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+//        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+        final String url = "http://ip-api.com/json";
         Log.d("url", url);
 
         // prepare the Request
@@ -138,5 +148,26 @@ public class SearchServices {
 
         // add it to the RequestQueue
         queue.add(getRequest);
+        showProgressBar();
     }
+
+    public void showProgressBar() {
+
+        String msg = activity.getResources().getString(R.string.fetching_results);
+
+        progressBar = new ProgressDialog(view.getContext());
+        progressBar.setCancelable(true);
+        progressBar.setMessage(msg);
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.show();
+
+        new Thread(new Runnable() {
+
+            public void run() {
+
+            }
+        }).start();
+    }
+
+
 }
