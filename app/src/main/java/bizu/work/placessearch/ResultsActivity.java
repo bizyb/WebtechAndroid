@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.TableLayout.LayoutParams;
 
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -51,6 +53,7 @@ public class ResultsActivity extends AppCompatActivity {
 
                String name = r.getString("name");
                String vicinity = r.getString("vicinity");
+               String iconURL = r.getString("icon");
 
                tr = new TableRow(this);
                tr.setPadding(50, 0, 0, 0);
@@ -67,12 +70,13 @@ public class ResultsActivity extends AppCompatActivity {
 
                iconLayout.gravity = Gravity.LEFT;
 
-               catIcon.setPadding(0, 3, 120, 3);
+               catIcon.setPadding(0, 3, 50, 3);
                catIcon.setLayoutParams(new TableRow.LayoutParams(1));
                catIcon.setLayoutParams(iconLayout);
-               Drawable icon = getResources().getDrawable(R.drawable.ic_droid);
-               catIcon.setImageDrawable(icon);
-               catIcon.setMaxWidth(50);
+               catIcon.setMinimumHeight(150);
+               catIcon.setMinimumWidth(150);
+               setIcon(catIcon, iconURL);
+               catIcon.setScaleType(ImageView.ScaleType.FIT_XY);
 
 
                // Favorites icon
@@ -81,7 +85,6 @@ public class ResultsActivity extends AppCompatActivity {
                favIcon.setLayoutParams(new TableRow.LayoutParams(1));
                Drawable heart = getResources().getDrawable(R.drawable.ic_favorite_plain);
                favIcon.setImageDrawable(heart);
-
 
                // Place name
                 String nameNaddr = "<strong>" + name + "</strong>";
@@ -105,6 +108,11 @@ public class ResultsActivity extends AppCompatActivity {
             return tr;
     }
 
+    private void setIcon(ImageView catIcon, String iconURL) {
+
+        Picasso.get().load(iconURL).into(catIcon);
+    }
+
 
     private void populateResults(String response) {
 
@@ -115,14 +123,10 @@ public class ResultsActivity extends AppCompatActivity {
 
             JSONObject responseJSON = new JSONObject(response);
             JSONArray results = responseJSON.getJSONArray("results");
-//            Log.d("json", (JSONArray) responseJSON["as"].toString());
-
 
             for (int i = 0; i < results.length(); i++) {
 
                 JSONObject r = results.getJSONObject(i);
-
-//                Log.d("result row", r.toString());
                 TableRow row = getTableRow(r);
                 table.addView(row);
             }

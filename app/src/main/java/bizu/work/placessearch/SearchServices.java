@@ -110,7 +110,7 @@ public class SearchServices {
 
         final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
 //        final String url = "http://ip-api.com/json";
-//        Log.d("url", u);
+        Log.d("url", url);
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(
