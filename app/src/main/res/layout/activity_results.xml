@@ -25,13 +25,20 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:stretchColumns="0,1"
-        android:id="@+id/main_table"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-    </TableLayout>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_gravity="left"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content">
+        <TableLayout
+            android:stretchColumns="0,1"
+            android:id="@+id/main_table"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
+        </TableLayout>
+    </ScrollView>
 
 
 </android.support.design.widget.CoordinatorLayout>
