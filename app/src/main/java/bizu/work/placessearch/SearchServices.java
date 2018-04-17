@@ -108,9 +108,9 @@ public class SearchServices {
         RequestQueue queue = Volley.newRequestQueue(view.getContext());
 
 
-//        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
-        final String url = "http://ip-api.com/json";
-        Log.d("url", url);
+        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+//        final String url = "http://ip-api.com/json";
+//        Log.d("url", u);
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(
@@ -120,7 +120,7 @@ public class SearchServices {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
-//                        Log.d("Response", response.toString());
+                        Log.d("Response", response.toString());
                         Intent resultsIntent = new Intent(activity, ResultsActivity.class);
                         resultsIntent.putExtra("response", response.toString());
                         resultsIntent.putExtra("resultType", "SEARCH_RESULTS");
