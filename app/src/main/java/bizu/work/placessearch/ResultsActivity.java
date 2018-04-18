@@ -75,7 +75,13 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         Paginator paginator = new Paginator(this, response, this);
 
         getLayoutInflater().inflate(R.layout.table_layout, table, true);
-        paginator.showPagination(pageNum);
+        if (pageFromDB > 0) {
+            paginator.showPagination(pageFromDB);
+        }
+        else {
+            paginator.showPagination(pageNum);
+        }
+
 
 
     }
@@ -86,7 +92,18 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
         if (nextBtn != null) {
             String next_page_token = (String) nextBtn.getTag();
-            getNewResult(next_page_token);
+            Log.i("token", "next_page_token-----------------length-------------------: " + next_page_token.length() + "");
+            Log.i("token", "next_page_token------------------------------------: " + next_page_token + "");
+            if (next_page_token.length() > 1) {
+                // we have API token so make a new request
+                getNewResult(next_page_token);
+            }
+            else {
+                pageNum = Integer.parseInt((String)nextBtn.getTag());
+                pageNum++;
+                populateResults(null, "PAGINATION", pageNum);
+            }
+
         }
         else {
 
@@ -97,6 +114,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
                         // currently resides in
             populateResults(null, "PAGINATION", pageNum);
         }
+
 
     }
 

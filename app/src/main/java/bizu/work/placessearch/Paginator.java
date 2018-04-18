@@ -27,7 +27,7 @@ public class Paginator {
 
         RelativeLayout paginator = activity.findViewById(R.id.pagination_container);
         paginator.removeAllViews();
-        activity.getLayoutInflater().inflate(R.layout.pagination,  paginator, true);
+        activity.getLayoutInflater().inflate(R.layout.pagination, paginator, true);
 
         // handle prev button
         //TODO: set listener if previous page available and make it clickable
@@ -41,47 +41,56 @@ public class Paginator {
 
             prevBtn.setEnabled(false);
             prevBtn.setClickable(false);
-        }
-        else {
+        } else {
             setPrevBtnListener(prevBtn, pageNum);
         }
 
-        try {
+        if (pageNum < 3) {
+            try {
+                String next_page_token = null;
+                if (response != null) {
+                    JSONObject r = new JSONObject(response);
 
-            JSONObject r = new JSONObject(response);
-            String next_page_token = r.getString("next_page_token");
-
-            if (next_page_token != null && (next_page_token.length() > 1)) {
-
-                //If there is a next page token, make a new request to the api
-
-                nextBtn.setEnabled(true);
-                nextBtn.setClickable(true);
-
-                nextBtn.setTag(next_page_token);
-                nextBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        resultsInstace.loadPaginatedPage(null, nextBtn);
+                    if (r.has("next_page_token")) {
+                        next_page_token = r.getString("next_page_token");
                     }
-                });
-
+                }
+                setNextBtnListener(nextBtn, next_page_token, pageNum);
             }
-//            else if (next_page_token != null) {
-//
-//                // a next page token
-//            }
-        }
-        catch(Exception e){
-            // TODO: output no results/failed to get results error here
-            Log.d("error", e.toString());
+            catch(Exception e){
+                // TODO: output no results/failed to get results error here
+                Log.d("error", e.toString());
+            }
         }
 
+    }
+
+    private void setNextBtnListener(final Button nextBtn, String next_page_token, int currentPage) {
+
+
+        Log.i("in next listener", "setting listener -------------------next_page_token-----------    " + next_page_token + "");
+        Log.i("in next listener", "setting listener -------------------currentPage-----------    " + currentPage + "");
+        nextBtn.setEnabled(true);
+        nextBtn.setClickable(true);
+
+        if (next_page_token == null) {
+
+            next_page_token = currentPage + "";
+        }
+
+        nextBtn.setTag(next_page_token);
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                resultsInstace.loadPaginatedPage(null, nextBtn);
+            }
+        });
 
     }
 
     private void setPrevBtnListener(final Button prevBtn, int currentPage) {
+
 
         prevBtn.setTag(currentPage);
         prevBtn.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +100,12 @@ public class Paginator {
                 resultsInstace.loadPaginatedPage(prevBtn, null);
             }
         });
+
+        if (currentPage < 3) {
+
+            final Button nextBtn = (Button) activity.findViewById(R.id.btn_next);
+            setNextBtnListener(nextBtn, null, currentPage);
+        }
 
 
     }
