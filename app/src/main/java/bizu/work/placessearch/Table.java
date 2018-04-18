@@ -22,11 +22,13 @@ public class Table {
 
     private String response;
     private Activity activity;
+    private int pageNum;
 
     public Table(Activity activity, String response) {
 
         this.activity = activity;
         this.response = response;
+        pageNum = 0;
     }
 
     private TableRow getTableRow(String name, String vicinity, String iconURL) {
@@ -91,7 +93,7 @@ public class Table {
         Picasso.get().load(iconURL).into(catIcon);
     }
 
-    public TableLayout populateTable(String tableFor) {
+    public TableLayout populateTable(String tableFor, int pageFromDB) {
 
         TableLayout table = (TableLayout) activity.findViewById(R.id.main_table);
         table.removeAllViews();
@@ -101,17 +103,31 @@ public class Table {
 
             if (tableFor == "results") {
 
-                JSONObject responseJSON = new JSONObject(response);
-                JSONArray results = responseJSON.getJSONArray("results");
+                String name;
+                String vicinity;
+                String iconURL;
+                JSONArray results;
+
+                if (pageFromDB > 0) {
+
+                    Database db = new Database(activity);
+                    results = db.getDBPage(pageFromDB);
+
+                }
+                else {
+
+                    JSONObject responseJSON = new JSONObject(response);
+                    results = responseJSON.getJSONArray("results");
+                }
 
                 for (int i = 0; i < results.length(); i++) {
 
                     JSONObject r = results.getJSONObject(i);
-                    String name = r.getString("name");
-                    String vicinity = r.getString("vicinity");
-                    String iconURL = r.getString("icon");
+                    name = r.getString("name");
+                    vicinity = r.getString("vicinity");
+                    iconURL = r.getString("icon");
 
-                    saveToDB(r);
+                    if (pageFromDB < 0) { saveToDB(r); }
 
                     TableRow row = getTableRow(name, vicinity, iconURL);
                     table.addView(row);
@@ -155,5 +171,10 @@ public class Table {
 
 
     }
+
+//    public int getPageNum() {
+//
+//        return pageNum;
+//    }
 
 }

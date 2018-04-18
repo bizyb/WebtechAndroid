@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 public class Database  extends SQLiteOpenHelper{
 
@@ -69,9 +72,8 @@ public class Database  extends SQLiteOpenHelper{
 
     private boolean rowExists(String place_id) {
 
-        // a row may already exist because it's been favorited
+        // a row may already exist if it's been favorited
 
-//        Log.i("exists", "inside rowExists");
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_PLACE_ID + "=?";
         String[] selectionArgs = { place_id };
@@ -101,7 +103,6 @@ public class Database  extends SQLiteOpenHelper{
     public void addEntry(String place_id, String name, String vicinity,
                          int favorited, String category_icon) {
 
-        rowExists(place_id);
 
         if (!rowExists(place_id)) {
 
@@ -109,7 +110,7 @@ public class Database  extends SQLiteOpenHelper{
             ContentValues values = new ContentValues();
             values.put(COLUMN_PLACE_ID, place_id);
             values.put(COLUMN_NAME, name);
-            values.put(COLUMN_FAVORITED, favorited); // initially they're all false
+            values.put(COLUMN_FAVORITED, favorited); // initially they're all set to false
             values.put(COLUMN_PAGE_NUM, getPageNum());
             values.put(COLUMN_CATEGORY_ICON, category_icon);
             values.put(COLUMN_VICINITY, vicinity);
@@ -117,6 +118,54 @@ public class Database  extends SQLiteOpenHelper{
             db.insert(TABLE_NAME, null, values);
             db.close();
         }
+    }
+
+    public JSONArray getDBPage(int pageNum) {
+
+        JSONArray results = new JSONArray();
+
+        String countQuery = "SELECT  * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        final int PAGE_SIZE = 0;
+        int i = 0;
+        int start = (pageNum - 1) * PAGE_SIZE;
+        int end = pageNum * PAGE_SIZE;
+
+        try {
+            while (cursor.moveToNext() && i < end) {
+
+               if (i >= start) {
+
+                    //TODO: are these sorted by the primary key or are we just assuming?
+
+                    JSONObject row = new JSONObject();
+
+                    String name = cursor.getString(cursor.getColumnIndex("name"));
+                    String vicinity = cursor.getString(cursor.getColumnIndex("vicinity"));
+                    String iconURL = cursor.getString(cursor.getColumnIndex("category_icon"));
+
+                    try {
+                        row.put("name", name);
+                        row.put("vicinity", vicinity);
+                        row.put("icon", iconURL);
+                        results.put(row);
+                    }
+                    catch(Exception e){
+                        // TODO: output no results/failed to get results error here
+                        Log.d("error", e.toString());
+                    }
+               }
+                i++;
+            }
+        }
+        finally {
+            cursor.close();
+        }
+
+
+
+        return results;
     }
 
 

@@ -25,6 +25,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
     private Toolbar toolbar;
     private ProgressDialog progressBar;
+    private  int pageNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         setContentView(R.layout.activity_results);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        pageNum = 0;
 
         // add a back button and a listener
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,40 +51,51 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         Intent intent = getIntent();
         String response = intent.getStringExtra("response");
         String resultType = intent.getStringExtra("resultType");
-        populateResults(response, resultType);
+        populateResults(response, resultType, -1);
 
     }
 
-    private void populateResults(String response, String resultType) {
+    private void populateResults(String response, String resultType, int pageFromDB) {
 
 
-        Log.i("in populateResults", resultType);
         if (resultType.equals("SEARCH_RESULTS")) {
 
             // we have a new search query. Drop all existing entries, except for thos
             // that have been favorited
             Database db = new Database(this);
             db.dropRows();
+            pageNum = 1;
 
         }
+
         Table tableObj = new Table(this, response);
-        TableLayout table = tableObj.populateTable("results");
+        TableLayout table = tableObj.populateTable("results", pageFromDB);
 
         Paginator paginator = new Paginator(this, response, this);
 
         getLayoutInflater().inflate(R.layout.table_layout, table, true);
-        paginator.showPagination();
+        paginator.showPagination(pageNum);
 
 
     }
 
 
-    public void loadPaginatedPage() {
+    public void loadPaginatedPage(Button prevBtn, Button nextBtn) {
 
 
-        Button nextBtn = (Button) findViewById(R.id.btn_next);
-        String next_page_token = (String) nextBtn.getTag();
-        getNewResult(next_page_token);
+        if (nextBtn != null) {
+            String next_page_token = (String) nextBtn.getTag();
+            getNewResult(next_page_token);
+        }
+        else {
+
+            //TODO: need to assert if pagename > 0?
+
+            pageNum = (Integer) prevBtn.getTag();
+            pageNum--; // the page number to load; prevBtn stores the page number of the page it
+                        // currently resides in
+            populateResults(null, null, pageNum);
+        }
 
     }
 
@@ -108,7 +121,8 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
                         // display response
                         Log.d("Response", response.toString());
                         progressBar.dismiss();
-                        populateResults(response.toString(), "PAGINATION");
+                        pageNum++;
+                        populateResults(response.toString(), "PAGINATION", -1);
 
                     }
                 },
