@@ -127,14 +127,17 @@ public class Database  extends SQLiteOpenHelper{
         String countQuery = "SELECT  * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
-        final int PAGE_SIZE = 0;
+        final int PAGE_SIZE = 20;
         int i = 0;
         int start = (pageNum - 1) * PAGE_SIZE;
         int end = pageNum * PAGE_SIZE;
 
         try {
-            while (cursor.moveToNext() && i < end) {
-
+            Log.i("in getDbPage", " about to enter while loop------------------------------- cursor count:   " + cursor.getCount() + "");
+            while (cursor.moveToNext()) {
+                Log.i("in getDbPage", "inside loop: i = ------------------------------    " + i + "");
+                Log.i("in getDbPage", "inside loop: start = ------------------------------    " + start + "");
+                Log.i("in getDbPage", "inside loop: end = ------------------------------    " + end + "");
                if (i >= start) {
 
                     //TODO: are these sorted by the primary key or are we just assuming?
@@ -156,6 +159,7 @@ public class Database  extends SQLiteOpenHelper{
                         Log.d("error", e.toString());
                     }
                }
+               if (i >= end) {break;}
                 i++;
             }
         }

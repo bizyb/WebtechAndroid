@@ -110,6 +110,7 @@ public class Table {
 
                 if (pageFromDB > 0) {
 
+                    Log.i("in populateTable", "calling getDBPage----------------------------------");
                     Database db = new Database(activity);
                     results = db.getDBPage(pageFromDB);
 

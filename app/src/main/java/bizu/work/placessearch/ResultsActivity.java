@@ -58,6 +58,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
     private void populateResults(String response, String resultType, int pageFromDB) {
 
 
+        Log.i("pagination", "in ppopulateResults pageFromDB=---------------------------    " + pageFromDB);
         if (resultType.equals("SEARCH_RESULTS")) {
 
             // we have a new search query. Drop all existing entries, except for thos
@@ -94,7 +95,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             pageNum = (Integer) prevBtn.getTag();
             pageNum--; // the page number to load; prevBtn stores the page number of the page it
                         // currently resides in
-            populateResults(null, null, pageNum);
+            populateResults(null, "PAGINATION", pageNum);
         }
 
     }
