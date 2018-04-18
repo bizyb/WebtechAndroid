@@ -55,7 +55,7 @@ public class Paginator {
                     @Override
                     public void onClick(View v) {
 
-                        resultsInstace.loadPaginatePage();
+                        resultsInstace.loadPaginatedPage();
                     }
                 });
 

@@ -2,5 +2,5 @@ package bizu.work.placessearch;
 
 public interface PaginationLoader {
 
-    public void loadPaginatePage();
+    public void loadPaginatedPage();
 }
