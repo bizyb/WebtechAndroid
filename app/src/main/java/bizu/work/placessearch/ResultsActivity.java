@@ -18,6 +18,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
+import db.Database;
+
 
 public class ResultsActivity extends AppCompatActivity implements PaginationLoader {
 
@@ -46,13 +48,23 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
         Intent intent = getIntent();
         String response = intent.getStringExtra("response");
-        populateResults(response);
+        String resultType = intent.getStringExtra("resultType");
+        populateResults(response, resultType);
 
     }
 
-    private void populateResults(String response) {
+    private void populateResults(String response, String resultType) {
 
 
+        Log.i("in populateResults", resultType);
+        if (resultType.equals("SEARCH_RESULTS")) {
+
+            // we have a new search query. Drop all existing entries, except for thos
+            // that have been favorited
+            Database db = new Database(this);
+            db.dropRows();
+
+        }
         Table tableObj = new Table(this, response);
         TableLayout table = tableObj.populateTable("results");
 
@@ -96,7 +108,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
                         // display response
                         Log.d("Response", response.toString());
                         progressBar.dismiss();
-                        populateResults(response.toString());
+                        populateResults(response.toString(), "PAGINATION");
 
                     }
                 },
