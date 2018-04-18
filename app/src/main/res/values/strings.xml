@@ -19,6 +19,8 @@
     <string name="mandatory_field_msg">Please enter mandatory field</string>
     <string name="field_error_msg">Please fix all fields with errors</string>
     <string name="fetching_results">Fetching results</string>
+    <string name="btn_prev_label">PREVIOUS</string>
+    <string name="btn_next_label">NEXT</string>
 
 
     <!--Dropdown-->

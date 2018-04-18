@@ -13,16 +13,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
 
 
 public class SearchFragment extends Fragment {
 
 
-    public SearchFragment() {}
+    public SearchFragment() {
+    }
 
 
     @Override
@@ -49,51 +52,50 @@ public class SearchFragment extends Fragment {
         final EditText otherLocInput = (EditText) v.findViewById(R.id.other_loc_input);
 
 
-
-        btnClear.setOnClickListener(new View.OnClickListener(){
+        btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearForm(v);
             }
         });
 
-        btnSearch.setOnClickListener(new View.OnClickListener(){
+        btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 search(v);
             }
         });
 
-        currLocBtn.setOnClickListener(new View.OnClickListener(){
+        currLocBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateRadioBtn(v);
             }
         });
 
-        otherLocBtn.setOnClickListener(new View.OnClickListener(){
+        otherLocBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateRadioBtn(v);
             }
         });
 
-        keyword.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        keyword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 setOnFocusEvent(R.id.keyword_input, hasFocus);
             }
         });
-        distance.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        distance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 setOnFocusEvent(R.id.distance_input, hasFocus);
             }
         });
-        otherLocInput.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        otherLocInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                setOnFocusEvent( R.id.other_loc_input, hasFocus);
+                setOnFocusEvent(R.id.other_loc_input, hasFocus);
             }
         });
 
@@ -102,10 +104,12 @@ public class SearchFragment extends Fragment {
 
     public void populateDropdown(View v) {
 
-        String [] values =  getResources().getStringArray(R.array.categories);
+        String[] values = getResources().getStringArray(R.array.categories);
         Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
 
-        if (spinner == null) {spinner = getActivity().findViewById(R.id.spinner);}
+        if (spinner == null) {
+            spinner = getActivity().findViewById(R.id.spinner);
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, values);
@@ -123,8 +127,7 @@ public class SearchFragment extends Fragment {
         if (hasFocus) {
             background = res.getDrawable(R.drawable.border_color_active);
 
-        }
-        else {
+        } else {
             background = res.getDrawable(R.drawable.border_color);
         }
 
@@ -143,8 +146,7 @@ public class SearchFragment extends Fragment {
         if (currLocBtn.isChecked()) {
 
             resetRadioBtn();
-        }
-        else if (otherLocBtn.isChecked()) {
+        } else if (otherLocBtn.isChecked()) {
 
             currLocBtn.setButtonTintList(getResources().getColorStateList(R.color.radioInactive));
             otherLocBtn.setButtonTintList(getResources().getColorStateList(R.color.webtech_pink));
@@ -174,19 +176,21 @@ public class SearchFragment extends Fragment {
         errorMsg2.setVisibility(View.INVISIBLE);
 
     }
+
     private boolean formIsValid() {
 
 
         boolean isValid = true;
 
-        EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
+        EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
+        ;
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
         RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
         TextView textView;
 
         String keywordStr = keyword.getText().toString();
-        keywordStr = keywordStr.replaceAll("\\s+","");
+        keywordStr = keywordStr.replaceAll("\\s+", "");
 
         if (keywordStr.length() == 0) {
             isValid = false;
@@ -197,7 +201,7 @@ public class SearchFragment extends Fragment {
 
         if (otherLocBtn.isChecked()) {
             String customLoc = otherLocInput.getText().toString();
-            customLoc = customLoc.replaceAll("\\s+","");
+            customLoc = customLoc.replaceAll("\\s+", "");
             if (customLoc.length() == 0) {
 
                 textView = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
@@ -239,7 +243,8 @@ public class SearchFragment extends Fragment {
 
     private void clearForm(View v) {
 
-        EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);;
+        EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
+        ;
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
         TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);

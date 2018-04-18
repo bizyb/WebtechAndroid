@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -57,11 +58,6 @@ public class ResultsActivity extends AppCompatActivity {
         populateResults(response);
 
     }
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        finish();
-//    }
 
     private TableRow getTableRow(JSONObject r) {
 
@@ -149,6 +145,9 @@ public class ResultsActivity extends AppCompatActivity {
             }
 
             getLayoutInflater().inflate(R.layout.table_layout, table, true);
+
+            // Show previous and next buttons if applicable
+            showPagination(responseJSON);
         }
 
         catch(Exception e){
@@ -157,6 +156,25 @@ public class ResultsActivity extends AppCompatActivity {
         }
 
 
+
+    }
+
+    private void showPagination(JSONObject r) {
+
+        RelativeLayout paginator = findViewById(R.id.pagination_container);
+        getLayoutInflater().inflate(R.layout.pagination,  paginator, true);
+
+//        try {
+//
+//            String next_page_token = r.getString("next_page_token");
+//            if (next_page_token != null) {
+//
+//            }
+//        }
+//        catch(Exception e){
+//            // TODO: output no results/failed to get results error here
+//            Log.d("error", e.toString());
+//        }
 
     }
 
