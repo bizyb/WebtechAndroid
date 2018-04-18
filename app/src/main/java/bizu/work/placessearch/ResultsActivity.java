@@ -170,6 +170,7 @@ public class ResultsActivity extends AppCompatActivity {
     private void showPagination(JSONObject r) {
 
         RelativeLayout paginator = findViewById(R.id.pagination_container);
+        paginator.removeAllViews();
         getLayoutInflater().inflate(R.layout.pagination,  paginator, true);
 
         // handle prev button
@@ -208,10 +209,12 @@ public class ResultsActivity extends AppCompatActivity {
             Log.d("error", e.toString());
         }
 
+
     }
 
 
     private void loadPaginatePage() {
+
 
         Button nextBtn = (Button) findViewById(R.id.btn_next);
         String next_page_token = (String) nextBtn.getTag();
@@ -276,47 +279,6 @@ public class ResultsActivity extends AppCompatActivity {
             }
         }).start();
     }
-//    public void search() {
-//
-//        String queryString = getGETParams();
-//        RequestQueue queue = Volley.newRequestQueue(view.getContext());
-//
-//
-//        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
-////        final String url = "http://ip-api.com/json";
-//        Log.d("url", url);
-//
-//        // prepare the Request
-//        JsonObjectRequest getRequest = new JsonObjectRequest(
-//                Request.Method.GET, url, null,
-//                new Response.Listener<JSONObject>()
-//                {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        // display response
-//                        Log.d("Response", response.toString());
-//                        Intent resultsIntent = new Intent(activity, ResultsActivity.class);
-//                        resultsIntent.putExtra("response", response.toString());
-//                        resultsIntent.putExtra("resultType", "SEARCH_RESULTS");
-//                        progressBar.dismiss();
-//                        activity.startActivity(resultsIntent);
-//                    }
-//                },
-//                new Response.ErrorListener()
-//                {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.d("Error.Response", error.toString());
-//                        progressBar.dismiss();
-//                    }
-//                }
-//        );
-//
-//        // add it to the RequestQueue
-//        queue.add(getRequest);
-//        showProgressBar();
-//    }
-
 
 }
 
