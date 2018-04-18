@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -35,7 +36,18 @@ public class ResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // add a back button and a listener
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                finish();
+            }
+        });
 
 
         Intent intent = getIntent();
@@ -45,6 +57,11 @@ public class ResultsActivity extends AppCompatActivity {
         populateResults(response);
 
     }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        finish();
+//    }
 
     private TableRow getTableRow(JSONObject r) {
 
