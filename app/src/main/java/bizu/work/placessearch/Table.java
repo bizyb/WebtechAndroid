@@ -16,6 +16,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import db.Database;
+
 public class Table {
 
     private String response;
@@ -109,6 +111,8 @@ public class Table {
                     String vicinity = r.getString("vicinity");
                     String iconURL = r.getString("icon");
 
+                    saveToDB(r);
+
                     TableRow row = getTableRow(name, vicinity, iconURL);
                     table.addView(row);
                 }
@@ -127,6 +131,29 @@ public class Table {
         }
 
         return table;
+    }
+
+    private void saveToDB(JSONObject r) {
+
+        try {
+
+            String name = r.getString("name");
+            String vicinity = r.getString("vicinity");
+            String iconURL = r.getString("icon");
+            String place_id = r.getString("place_id");
+            int favorited = 0;
+
+            Database db = new Database(activity);
+
+            db.addEntry(place_id, name, vicinity, favorited, iconURL);
+            Log.d("db", "saving to db..........................------------");
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.d("error", e.toString());
+        }
+
+
     }
 
 }
