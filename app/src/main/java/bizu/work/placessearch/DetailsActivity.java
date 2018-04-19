@@ -21,6 +21,8 @@ import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    private String place_id;
+    private String response;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -49,11 +51,6 @@ public class DetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        getSupportActionBar().setTitle("University of Southern California");
-
-//        toolbar.setTitle();
-//        toolbar.setTex
-
 
         viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -63,6 +60,21 @@ public class DetailsActivity extends AppCompatActivity {
 //        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
 
+        Intent intent = getIntent();
+        response = intent.getStringExtra("response");
+//        place_id = intent.getStringExtra("place_id");
+        setPageTitle();
+
+    }
+
+    public String getDetailsData() {
+
+        return response;
+    }
+
+    private void setPageTitle() {
+
+        getSupportActionBar().setTitle("XYZXYZXYZ University of Southern California");
     }
 
 

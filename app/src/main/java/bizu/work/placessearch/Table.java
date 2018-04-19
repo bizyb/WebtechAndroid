@@ -173,9 +173,69 @@ public class Table {
 
     }
 
-//    public int getPageNum() {
-//
-//        return pageNum;
-//    }
+    public TableLayout getDetailsInfoTable(String response, boolean fromDB) {
+
+        JSONObject results = null;
+        Database db = new Database(activity);
+
+        if (fromDB) {
+            // response == place_id
+            results = db.getDetailsInfo(response);
+        }
+        else {
+            // save the new info to db
+            try {
+
+                JSONObject responseJSON = new JSONObject(response);
+                results = responseJSON.getJSONObject("results");
+
+            }
+            catch(Exception e){
+                // TODO: output no results/failed to get results error here
+                Log.d("error", e.toString());
+            }
+        }
+
+        TableLayout table = new TableLayout(activity);
+        String address, phoneNumber, priceLevel, googlePage, website, rating;
+
+        try {
+
+            address = results.getString("formatted_address");
+            phoneNumber = results.getString("formatted_phone_number");
+            priceLevel = results.getString("price_level");
+            rating = results.getString("rating");
+            googlePage = results.getString("url");
+            website = results.getString("website");
+
+            table.addView(getDetailsRow(address, "address", false));
+            table.addView(getDetailsRow(phoneNumber, "phoneNumber", false));
+            table.addView(getDetailsRow(priceLevel, "priceLevel", false));
+            table.addView(getDetailsRow(rating, "rating", false));
+            table.addView(getDetailsRow(googlePage, "googlePage", true));
+            table.addView(getDetailsRow(website, "website", true));
+
+
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.d("error", e.toString());
+        }
+
+        return table;
+
+
+
+    }
+
+    private TableRow getDetailsRow(String data, String rowFor, boolean isURL) {
+
+        TableRow row = new TableRow(activity);
+
+        return row;
+
+
+
+    }
 
 }

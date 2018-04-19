@@ -29,6 +29,14 @@ public class Database  extends SQLiteOpenHelper{
     private static final String COLUMN_FAVORITED = "favorited";
     private static final String COLUMN_PAGE_NUM = "page_num";
 
+    //Applicable to Details
+    private static final String COLUMN_PHONE_NUMBER = "phone_number";
+    private static final String COLUMN_PRICE_LEVEL = "price_level";
+    private static final String COLUMN_RATING = "rating";
+    private static final String COLUMN_GOOGLE_PAGE = "google_page";
+    private static final String COLUMN_WEBSITE = "website";
+
+
     private String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                             + COLUMN_PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                             + COLUMN_PLACE_ID + " TEXT,"
@@ -36,6 +44,11 @@ public class Database  extends SQLiteOpenHelper{
                             + COLUMN_CATEGORY_ICON + " TEXT,"
                             + COLUMN_FAVORITED + " INTEGER,"
                             + COLUMN_PAGE_NUM + " INTEGER,"
+                            + COLUMN_PHONE_NUMBER + " TEXT,"
+                            + COLUMN_PRICE_LEVEL + " INTEGER,"
+                            + COLUMN_RATING + " REAL,"
+                            + COLUMN_GOOGLE_PAGE + " TEXT,"
+                            + COLUMN_WEBSITE + " TEXT,"
                             + COLUMN_VICINITY + " TEXT" + ")";
 
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
