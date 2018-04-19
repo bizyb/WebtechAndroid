@@ -185,6 +185,43 @@ public class Database  extends SQLiteOpenHelper{
         return results;
     }
 
+    public JSONObject getDetailsInfo(String place_id) {
+
+        JSONObject row = new JSONObject();
+
+        try {
+
+            String name = "University of Southern California";
+            String vicinity = "Los Angeles, CA 90007, USA";
+            String phoneNumber = "(213) 740-2311";
+            String priceLevel = "$$";
+            String rating = "****";
+            String googlePage = "";
+            String website = "http://usc.edu";
+
+            row.put("name", name);
+            row.put("formatted_address", vicinity);
+            row.put("formatted_phone_number", phoneNumber);
+            row.put("price_level", priceLevel);
+            row.put("rating", rating);
+            row.put("url", googlePage);
+            row.put("website", website);
+
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.d("error", e.toString());
+        }
+
+        return row;
+    }
+
+    public String getPlaceName(String place_id) {
+
+        String name = "University of Southern California";
+        return name;
+    }
+
 
 //
     public int getPageNum() {

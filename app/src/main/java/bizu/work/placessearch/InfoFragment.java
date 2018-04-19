@@ -2,6 +2,7 @@ package bizu.work.placessearch;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +30,25 @@ public class InfoFragment extends Fragment {
         DetailsActivity activity = (DetailsActivity) getActivity();
         response = activity.getDetailsData();
 
-        populateInfoTab();
+        populateInfoTab(v);
 
         return v;
     }
 
-    private void populateInfoTab() {
-
-        TableLayout table = getActivity().findViewById(R.id.info_fragment_table);
+    private void populateInfoTab(View v) {
 
 
+        TableLayout table = v.findViewById(R.id.info_fragment_table);
+
+        table.removeAllViews();
+        table.setPadding(0,200, 0,50 );
+
+        Table tableObj = new Table(getActivity(), response);
+        tableObj.getDetailsInfoTable(table, response, true);
+
+//        Log.d("table", table.toString());
+//        TableLayout tableLayout = new TableLayout(getActivity());
+//        getLayoutInflater().inflate(R.layout.table_layout, tableLayout, true);
 
     }
 }

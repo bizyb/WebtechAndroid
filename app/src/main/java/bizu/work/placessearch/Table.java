@@ -173,7 +173,7 @@ public class Table {
 
     }
 
-    public TableLayout getDetailsInfoTable(String response, boolean fromDB) {
+    public TableLayout getDetailsInfoTable(TableLayout table, String response, boolean fromDB) {
 
         JSONObject results = null;
         Database db = new Database(activity);
@@ -196,7 +196,7 @@ public class Table {
             }
         }
 
-        TableLayout table = new TableLayout(activity);
+//        TableLayout table = new TableLayout(activity);
         String address, phoneNumber, priceLevel, googlePage, website, rating;
 
         try {
@@ -208,12 +208,12 @@ public class Table {
             googlePage = results.getString("url");
             website = results.getString("website");
 
-            table.addView(getDetailsRow(address, "address", false));
-            table.addView(getDetailsRow(phoneNumber, "phoneNumber", false));
-            table.addView(getDetailsRow(priceLevel, "priceLevel", false));
-            table.addView(getDetailsRow(rating, "rating", false));
-            table.addView(getDetailsRow(googlePage, "googlePage", true));
-            table.addView(getDetailsRow(website, "website", true));
+            table.addView(getDetailsRow(address, "Address", false));
+            table.addView(getDetailsRow(phoneNumber, "Phone Number", false));
+            table.addView(getDetailsRow(priceLevel, "Price Level", false));
+            table.addView(getDetailsRow(rating, "Rating", false));
+            table.addView(getDetailsRow(googlePage, "Google Page", true));
+            table.addView(getDetailsRow(website, "Website", true));
 
 
         }
@@ -231,6 +231,24 @@ public class Table {
     private TableRow getDetailsRow(String data, String rowFor, boolean isURL) {
 
         TableRow row = new TableRow(activity);
+        TextView rowEntry = new TextView(activity);
+//        TextView right = new TextView(activity);
+
+        String url = "";
+
+        if (isURL) {
+
+            url = "<a href=\"" + data + "\">" + data + "</a>";
+            data = url;
+        }
+
+        String entry = "<strong>" + rowFor + "</strong>";
+        entry += "<span style=\"padding-left:30px\">" + data + "</span>";
+
+
+        rowEntry.setText(Html.fromHtml(entry));
+        row.addView(rowEntry);
+        Log.d("detail row entry", row.toString());
 
         return row;
 

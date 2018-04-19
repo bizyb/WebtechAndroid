@@ -18,6 +18,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.Database;
+
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -74,7 +76,12 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void setPageTitle() {
 
-        getSupportActionBar().setTitle("XYZXYZXYZ University of Southern California");
+        // Set the global toolbar title for all the fragments
+
+        place_id = "";
+        Database db = new Database(this);
+        String title = db.getPlaceName(place_id);
+        getSupportActionBar().setTitle(title);
     }
 
 
