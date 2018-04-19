@@ -179,5 +179,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
 }
 
+//TODO: error loading paginated page and error getting search results for te first time
+
 
 

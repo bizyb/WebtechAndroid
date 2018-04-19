@@ -68,8 +68,6 @@ public class Paginator {
     private void setNextBtnListener(final Button nextBtn, String next_page_token, int currentPage) {
 
 
-        Log.i("in next listener", "setting listener -------------------next_page_token-----------    " + next_page_token + "");
-        Log.i("in next listener", "setting listener -------------------currentPage-----------    " + currentPage + "");
         nextBtn.setEnabled(true);
         nextBtn.setClickable(true);
 

@@ -18,14 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.ic_magnifying_glass_white,
-            R.drawable.ic_heart,
+            R.drawable.ic_info,
+            R.drawable.ic_phtos,
+            R.drawable.ic_directions_black_24dp,
+            R.drawable.ic_reviews,
     };
 
     @Override
@@ -69,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new SearchFragment(), null);
-        adapter.addFrag(new FavoritesFragment(), null);
+        adapter.addFrag(new InfoFragment(), null);
+        adapter.addFrag(new PhotosFragment(), null);
+        adapter.addFrag(new MapFragment(), null);
+        adapter.addFrag(new ReviewsFragment(), null);
         viewPager.setAdapter(adapter);
     }
 
