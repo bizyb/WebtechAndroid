@@ -14,7 +14,24 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:id="@+id/details_forward_arrow"
+                android:src="@drawable/ic_forward_arrow"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:id="@+id/details_fav_icon"
+                android:src="@drawable/ic_heart"/>
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -22,7 +39,7 @@
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@color/webtech_pink"
             app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            app:tabMode="scrollable"/>
 
     </android.support.design.widget.AppBarLayout>
 

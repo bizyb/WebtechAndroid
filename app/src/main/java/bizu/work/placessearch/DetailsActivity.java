@@ -1,5 +1,6 @@
 package bizu.work.placessearch;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -33,18 +34,33 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_details);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        // add a back button and a listener
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
+                finish();
+            }
+        });
+        getSupportActionBar().setTitle("University of Southern California");
+
+//        toolbar.setTitle();
+//        toolbar.setTex
+
 
         viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+//        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
 
     }
