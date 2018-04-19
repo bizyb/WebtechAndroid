@@ -44,6 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
 
     }
@@ -51,11 +52,17 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void setupTabIcons() {
 
-        TextView searchTab = (TextView) LayoutInflater.from(this).inflate(R.layout.search_tab, null);
-        tabLayout.getTabAt(0).setCustomView(searchTab);
+        TextView infoTab = (TextView) LayoutInflater.from(this).inflate(R.layout.info_tab, null);
+        tabLayout.getTabAt(0).setCustomView(infoTab);
 
-        TextView favTAb = (TextView) LayoutInflater.from(this).inflate(R.layout.fav_tab, null);
-        tabLayout.getTabAt(1).setCustomView(favTAb);
+        TextView photosTab = (TextView) LayoutInflater.from(this).inflate(R.layout.photos_tab, null);
+        tabLayout.getTabAt(1).setCustomView(photosTab);
+
+        TextView mapTab = (TextView) LayoutInflater.from(this).inflate(R.layout.map_tab, null);
+        tabLayout.getTabAt(2).setCustomView(mapTab);
+
+        TextView reviewsTab = (TextView) LayoutInflater.from(this).inflate(R.layout.reviews_tab, null);
+        tabLayout.getTabAt(3).setCustomView(reviewsTab);
 
         View root = tabLayout.getChildAt(0);
         if (root instanceof LinearLayout) {
@@ -74,7 +81,7 @@ public class DetailsActivity extends AppCompatActivity {
         adapter.addFrag(new InfoFragment(), null);
         adapter.addFrag(new PhotosFragment(), null);
         adapter.addFrag(new MapFragment(), null);
-        adapter.addFrag(new ReviewsFragment(), null);
+        adapter.addFrag(new ReviewsFragment(), null);;
         viewPager.setAdapter(adapter);
     }
 
