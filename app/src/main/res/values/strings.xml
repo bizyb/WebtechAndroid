@@ -25,18 +25,18 @@
     <string name="fetching_results">Fetching results</string>
     <string name="btn_prev_label">PREVIOUS</string>
     <string name="btn_next_label">NEXT</string>
+    <string name="map_from_text">From</string>
+    <string name="map_hint_text">Type in the Location</string>
+    <string name="map_travel_mode">Travel mode</string>
 
 
-    <!--Dropdown-->
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+
+    <!--Dropdowns-->
+    <string-array name="driving_mode">
+        <item>Driving</item>
+        <item>Bicycling</item>
+        <item>Transit</item>
+        <item>Walking</item>
     </string-array>
 
     <string-array name="categories">
