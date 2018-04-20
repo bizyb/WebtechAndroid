@@ -3,6 +3,8 @@ package bizu.work.placessearch;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.ImageView;
@@ -208,12 +210,12 @@ public class Table {
             googlePage = results.getString("url");
             website = results.getString("website");
 
-            table.addView(getDetailsRow(address, "Address", false));
-            table.addView(getDetailsRow(phoneNumber, "Phone Number", false));
-            table.addView(getDetailsRow(priceLevel, "Price Level", false));
-            table.addView(getDetailsRow(rating, "Rating", false));
-            table.addView(getDetailsRow(googlePage, "Google Page", true));
-            table.addView(getDetailsRow(website, "Website", true));
+            table.addView(getDetailsRow(address, "Address", false, false));
+            table.addView(getDetailsRow(phoneNumber, "Phone Number", false, true));
+            table.addView(getDetailsRow(priceLevel, "Price Level", false, false));
+            table.addView(getDetailsRow(rating, "Rating", false, false));
+            table.addView(getDetailsRow(googlePage, "Google Page", true, false));
+            table.addView(getDetailsRow(website, "Website", true, false));
 
 
         }
@@ -228,11 +230,12 @@ public class Table {
 
     }
 
-    private TableRow getDetailsRow(String data, String rowFor, boolean isURL) {
+    private TableRow getDetailsRow(String data, String rowFor, boolean isURL, boolean isPhone) {
 
         TableRow row = new TableRow(activity);
-        TextView rowEntry = new TextView(activity);
-//        TextView right = new TextView(activity);
+
+        TextView left = new TextView(activity);
+        TextView right = new TextView(activity);
 
         String url = "";
 
@@ -242,13 +245,31 @@ public class Table {
             data = url;
         }
 
-        String entry = "<strong>" + rowFor + "</strong>";
-        entry += "<span style=\"padding-left:30px\">" + data + "</span>";
+        String leftStr = "<strong>" + rowFor + "</strong>";
 
 
-        rowEntry.setText(Html.fromHtml(entry));
-        row.addView(rowEntry);
-        Log.d("detail row entry", row.toString());
+
+        left.setText(Html.fromHtml(leftStr));
+        right.setText(Html.fromHtml(data));
+        left.setPadding(0, 3, 50, 3);
+        left.setTextSize(14);
+
+        // make URLs clickable and phone numbers callable
+        right.setMovementMethod(LinkMovementMethod.getInstance());
+        right.setLinkTextColor(activity.getResources().getColor(R.color.webtech_pink));
+        right.setTextSize(14);
+        if (isPhone) {
+            Linkify.addLinks(right, Linkify.PHONE_NUMBERS);
+        }
+        else if (isURL) {
+
+            Linkify.addLinks(right, Linkify.WEB_URLS);
+        }
+
+        row.addView(left);
+        row.addView(right);
+        row.setPadding(50, 10, 10, 50);
+
 
         return row;
 

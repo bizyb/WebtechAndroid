@@ -41,7 +41,7 @@ public class InfoFragment extends Fragment {
         TableLayout table = v.findViewById(R.id.info_fragment_table);
 
         table.removeAllViews();
-        table.setPadding(0,200, 0,50 );
+        table.setPadding(0,40, 0,50 );
 
         Table tableObj = new Table(getActivity(), response);
         tableObj.getDetailsInfoTable(table, response, true);
