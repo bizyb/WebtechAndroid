@@ -1,7 +1,11 @@
 package bizu.work.placessearch;
 
 import android.app.Activity;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -9,6 +13,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -233,8 +239,26 @@ public class Table {
     private TableRow getDetailsRow(String data, String rowFor, boolean isURL, boolean isPhone) {
 
         TableRow row = new TableRow(activity);
-
         TextView left = new TextView(activity);
+        RatingBar rating = new RatingBar(activity);
+        RelativeLayout relativeLayout = new RelativeLayout(activity);
+
+        if (rowFor.equals("Rating")) {
+
+            rating.setNumStars(5);
+            rating.setStepSize(0.1f);
+            rating.setRating(3.6f);
+            rating.setScaleX(0.6f);
+            rating.setScaleY(0.6f);
+
+            relativeLayout.addView(rating);
+            relativeLayout.setPadding(-180, -50, 0, 0);
+
+            // set the color of the stars
+            LayerDrawable drawable = (LayerDrawable) rating.getProgressDrawable();
+            drawable.getDrawable(2).setColorFilter((activity.getResources().getColor(R.color.webtech_pink)),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
         TextView right = new TextView(activity);
 
         String url = "";
@@ -252,12 +276,14 @@ public class Table {
         left.setText(Html.fromHtml(leftStr));
         right.setText(Html.fromHtml(data));
         left.setPadding(0, 3, 50, 3);
-        left.setTextSize(14);
+        left.setTextSize(15);
+        right.setMaxWidth(1000);
+        right.setPadding(0,0, 50, 0);
 
         // make URLs clickable and phone numbers callable
         right.setMovementMethod(LinkMovementMethod.getInstance());
         right.setLinkTextColor(activity.getResources().getColor(R.color.webtech_pink));
-        right.setTextSize(14);
+        right.setTextSize(15);
         if (isPhone) {
             Linkify.addLinks(right, Linkify.PHONE_NUMBERS);
         }
@@ -267,8 +293,17 @@ public class Table {
         }
 
         row.addView(left);
-        row.addView(right);
-        row.setPadding(50, 10, 10, 50);
+        if (rowFor.equals("Rating")) {
+
+            row.addView(relativeLayout);
+            row.setPadding(50, 10, 10, 0);
+        }
+        else {
+            row.addView(right);
+            row.setPadding(50, 10, 10, 50);
+        }
+
+
 
 
         return row;

@@ -196,7 +196,7 @@ public class Database  extends SQLiteOpenHelper{
             String phoneNumber = "(213) 740-2311";
             String priceLevel = "$$";
             String rating = "****";
-            String googlePage = "";
+            String googlePage = "https://stackoverflow.com/questions/6763111/how-to-change-color-of-textview-hyperlink";
             String website = "http://usc.edu";
 
             row.put("name", name);
