@@ -49,7 +49,7 @@ public class PhotosFragment extends Fragment {
 
     private void populatePhotosTab(View v) {
 
-        LinearLayout linearLayout = v.findViewById(R.id.photos_fragment);
+        LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.photos_fragment);
 
         Database db = new Database(getActivity());
         ArrayList<String> photosArray = db.getDetailsPhotos(response, true);
