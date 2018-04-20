@@ -303,9 +303,6 @@ public class Table {
             row.setPadding(50, 10, 10, 50);
         }
 
-
-
-
         return row;
 
 

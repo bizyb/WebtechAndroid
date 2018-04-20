@@ -12,6 +12,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class Database  extends SQLiteOpenHelper{
 
@@ -189,6 +191,9 @@ public class Database  extends SQLiteOpenHelper{
 
         JSONObject row = new JSONObject();
 
+        //TODO: save to db if for the first time; otherwise check fromDB flag
+        // and act accordingly
+
         try {
 
             String name = "University of Southern California";
@@ -214,6 +219,33 @@ public class Database  extends SQLiteOpenHelper{
         }
 
         return row;
+    }
+
+    public ArrayList<String> getDetailsPhotos(String response, boolean fromDB) {
+
+        ArrayList<String> arr = new ArrayList<>();
+        if (fromDB) {
+
+            try {
+
+                arr.add("https://www.hdwallpapers.in/walls/new_year_high_quality-wide.jpg");
+                arr.add("https://www.hdwallpapers.in/walls/fantasy_world_of_flowers-wide.jpg");
+                arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
+                arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
+
+            }
+
+            catch(Exception e){
+                // TODO: output no results/failed to get results error here
+                Log.d("error", e.toString());
+            }
+
+        }
+        else {
+            //parse the response, save to db and return the jsonobj
+        }
+
+        return arr;
     }
 
     public String getPlaceName(String place_id) {

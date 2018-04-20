@@ -46,9 +46,6 @@ public class InfoFragment extends Fragment {
         Table tableObj = new Table(getActivity(), response);
         tableObj.getDetailsInfoTable(table, response, true);
 
-//        Log.d("table", table.toString());
-//        TableLayout tableLayout = new TableLayout(getActivity());
-//        getLayoutInflater().inflate(R.layout.table_layout, tableLayout, true);
 
     }
 }
