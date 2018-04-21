@@ -7,14 +7,21 @@ import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -96,10 +103,17 @@ public class Table {
         return tr;
     }
 
+    private String getPlaceID() {
 
-    private void setIcon(ImageView catIcon, String iconURL) {
+        String placeID = "ChIJfWmJOsfSD4gRVMPC4R4Q10w";
 
-        Picasso.get().load(iconURL).into(catIcon);
+        return placeID;
+    }
+
+
+    private void setIcon(ImageView imageView, String url) {
+
+        Picasso.get().load(url).into(imageView);
     }
 
     public TableLayout populateTable(String tableFor, int pageFromDB) {
@@ -237,6 +251,34 @@ public class Table {
 
     }
 
+    private void setRatingStars(RatingBar rating, float ratingF, int ratingI) {
+
+
+        rating.setNumStars(5);
+
+        if (ratingF > 0) {
+
+            rating.setStepSize(0.1f);
+            rating.setRating(ratingF);
+        }
+        else {
+
+            rating.setStepSize(1);
+            rating.setRating(ratingI);
+
+        }
+
+        rating.setScaleX(0.6f);
+        rating.setScaleY(0.6f);
+
+        // set the color of the stars
+        LayerDrawable drawable = (LayerDrawable) rating.getProgressDrawable();
+        drawable.getDrawable(2).setColorFilter((activity.getResources().getColor(R.color.webtech_pink)),
+                PorterDuff.Mode.SRC_ATOP);
+
+    }
+
+
     private TableRow getDetailsRow(String data, String rowFor, boolean isURL, boolean isPhone) {
 
         TableRow row = new TableRow(activity);
@@ -246,19 +288,10 @@ public class Table {
 
         if (rowFor.equals("Rating")) {
 
-            rating.setNumStars(5);
-            rating.setStepSize(0.1f);
-            rating.setRating(3.6f);
-            rating.setScaleX(0.6f);
-            rating.setScaleY(0.6f);
-
+            setRatingStars(rating, 3.6f, -1);
             relativeLayout.addView(rating);
             relativeLayout.setPadding(-180, -50, 0, 0);
 
-            // set the color of the stars
-            LayerDrawable drawable = (LayerDrawable) rating.getProgressDrawable();
-            drawable.getDrawable(2).setColorFilter((activity.getResources().getColor(R.color.webtech_pink)),
-                    PorterDuff.Mode.SRC_ATOP);
         }
         TextView right = new TextView(activity);
 
@@ -314,15 +347,11 @@ public class Table {
         try {
 
                 JSONArray reviews = new JSONArray();
-
-
                 if (fromDB) {
 
                     // just populate the table
                     Database db = new Database(activity);
                     reviews = db.getSortedReviews(placeID, source, sortBy);
-
-
 
                 }
                 else {
@@ -334,32 +363,156 @@ public class Table {
                     }
                 }
 
-                //loop here; if not fromDB, save it to db
 
+                for (int i = 0; i < reviews.length(); i++) {
 
+                    JSONObject row = reviews.getJSONObject(i);
+
+                    String author = row.getString("author");
+                    String authorURL = row.getString("authorURL");
+                    String avatar = row.getString("avatar");
+                    String text = row.getString("text");
+                    String date = row.getString("date");
+                    Integer rating = row.getInt("rating");
+                    text.replace('\n', ' ');
+                    table.addView(getReviewRow(author, authorURL, avatar, text, date, rating));
+
+                    //TODO: loop here; if not fromDB, save it to db
+                }
 
             }
             catch(Exception e){
                 // TODO: output no results/failed to get results error here
-                Log.d("error", e.toString());
+                Log.e("error", e.toString());
             }
 
     }
 
-//    private JSONArray getReviewsFromDB(String placeID, String reviewSource, SortBy sortBy) {
-//
-//       Database db = new Database(activity);
-//       JSONArray reviews = db.getSortedReviews(placeID, reviewSource, sortBy);
-//
-//
-//
-//
-//    }
+    private TableRow getReviewRow(String author, String authorURL, String avatar, String text,
+                              String date, Integer rating) {
 
-    private String getPlaceID() {
+        TableRow mainRow = new TableRow(activity);
+        TableLayout rightTable = new TableLayout(activity);
+        TableLayout leftTable = new TableLayout(activity);
+        TableRow authorRow = new TableRow(activity);
+        TableRow ratingRow = new TableRow(activity);
+        TableRow textRow = new TableRow(activity);
+        TableRow dateRow = new TableRow(activity);
+        TableRow imageRow = new TableRow(activity);
+        RelativeLayout relativeLayout = new RelativeLayout(activity);
 
-        String placeID = "ChIJfWmJOsfSD4gRVMPC4R4Q10w";
+        TextView authorView = new TextView(activity);
+        RatingBar ratingBar = new RatingBar(activity);
+        TextView dateView = new TextView(activity);
+        TextView textView = new TextView(activity);
+        ImageView imageView = new ImageView(activity);
 
-        return placeID;
+
+        setAuthorName(authorView, author, authorURL);
+
+        setRatingStars(ratingBar, -1.0f, rating);
+        relativeLayout.addView(ratingBar);
+        relativeLayout.setPadding(-180, -50, 0, -50);
+
+
+
+        // populate image and set layout
+        setIcon(imageView, avatar);
+        TableRow.LayoutParams iconLayout = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT);
+        iconLayout.gravity = Gravity.CENTER;
+//
+//        imageView.setPadding(50, 3, 50, 3);
+        imageView.setLayoutParams(iconLayout);
+//        imageView.setMinimumHeight(150);
+//        imageView.setMinimumWidth(150);
+
+//        imageRow.setLayoutParams(iconLayout);
+//        imageView.setMaxWidth(50);
+
+
+
+
+
+
+
+
+
+
+        dateView.setText(date);
+
+
+
+        textView.setText(text);
+        textView.setMaxWidth(950);
+
+
+
+
+        authorRow.addView(authorView);
+        ratingRow.addView(relativeLayout);
+        textRow.addView(textView);
+        dateRow.addView(dateView);
+        imageRow.addView(imageView);
+
+
+        rightTable.addView(authorRow, new TableRow.LayoutParams(1));
+        rightTable.addView(ratingRow, new TableRow.LayoutParams(1));
+        rightTable.addView(dateRow, new TableRow.LayoutParams(1));
+        rightTable.addView(textRow, new TableRow.LayoutParams(1));
+        rightTable.setPadding(0, 0, 200, 0);
+
+        leftTable.addView(imageRow);
+        leftTable.setPadding(50, 0, -100, 0);
+
+        mainRow.addView(leftTable, new TableRow.LayoutParams(1));
+        mainRow.addView(rightTable, new TableRow.LayoutParams(2));
+
+        mainRow.setPadding(50, 50, 50, 50);
+
+
+        return mainRow;
+
+    }
+
+    private void setAuthorName(TextView authorView, String author, String authorURL) {
+
+        String authHTML = "<a href=\"" + authorURL + "\">" + author + "</a>";
+        authorView.setText(Html.fromHtml(authHTML));
+        Linkify.addLinks(authorView, Linkify.WEB_URLS);
+        authorView.setMovementMethod(LinkMovementMethod.getInstance());
+        authorView.setLinkTextColor(activity.getResources().getColor(R.color.colorPrimary));
+        stripUnderlines(authorView);
+
+        authorView.setTextSize(16);
+        authorView.setPadding(0, 50, 50, 10);
+    }
+
+
+    private void stripUnderlines(TextView textView) {
+
+        Spannable s = new SpannableString(textView.getText());
+        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+        for (URLSpan span: spans) {
+            int start = s.getSpanStart(span);
+            int end = s.getSpanEnd(span);
+            s.removeSpan(span);
+            span = new URLSpanNoUnderline(span.getURL());
+            s.setSpan(span, start, end, 0);
+        }
+        textView.setText(s);
+    }
+
+
+    private class URLSpanNoUnderline extends URLSpan {
+        public URLSpanNoUnderline(String url) {
+            super(url);
+        }
+        @Override public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
     }
 }
+

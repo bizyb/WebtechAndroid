@@ -2,22 +2,13 @@ package bizu.work.placessearch;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-
-import java.util.ArrayList;
-
-import db.Database;
 
 public class ReviewsFragment extends Fragment {
 
@@ -46,7 +37,7 @@ public class ReviewsFragment extends Fragment {
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
 
         //TODO: set listeners for spinner selection and pass that to get sorted reviews
-        populateReviews(v);
+//        populateReviews(v);
 
         return v;
     }
@@ -70,12 +61,11 @@ public class ReviewsFragment extends Fragment {
     private void populateReviews(View v) {
 
         TableLayout table = v.findViewById(R.id.reviews_table);
-
         table.removeAllViews();
-        table.setPadding(0,40, 0,50 );
+        table.setPadding(0,200, 0,300 );
 
         Table tableObj = new Table(getActivity(), response);
-        tableObj.populateReviews(table, "Google", true);
+        tableObj.populateReviews(table, "Google", true, SortBy.DEFAULT_ORDER);
 
     }
 
