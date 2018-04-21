@@ -14,6 +14,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import bizu.work.placessearch.SortBy;
+
 
 public class Database  extends SQLiteOpenHelper{
 
@@ -21,7 +23,8 @@ public class Database  extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "PlacesSearch.db";
 
-    private static final String TABLE_NAME = "webtech";
+    private static final String TABLE_NEARBY_PLACES = "webtech";
+    private static final String TABLE_REVIEWS = "reviews";
 
     private static final String COLUMN_PRIMARY_KEY = "id";
     private static final String COLUMN_PLACE_ID = "place_id";
@@ -39,7 +42,23 @@ public class Database  extends SQLiteOpenHelper{
     private static final String COLUMN_WEBSITE = "website";
 
 
-    private String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+    // Applicable to Reviews
+    //private static final String COLUMN_PLACE_ID = "place_id";
+    private static final String COLUMN_AUTHOR_NAME = "author_name";
+    private static final String COLUMN_AUTHOR_URL = "author_url";
+    private static final String COLUMN_LANGUAGE = "language";
+    private static final String COLUMN_AVATAR = "profile_photo_url";
+    //private static final String COLUMN_RATING = "rating";
+    private static final String COLUMN_RELATIVE_TIME = "relative_time";
+    private static final String COLUMN_TEXT = "text";
+    private static final String COLUMN_EPOCH_TIME = "EPOCH_time";
+    private static final String COLUMN_FORMATTED_TIME = "formatted_time";
+    private static final String COLUMN_REVIEW_SOURCE = "review_source";
+    private static final String COLUMN_DEFAULT_INDEX = "default_index";
+    private static final String COLUMN_DETAILS_PLACE = "details_place";
+
+
+    private String CREATE_TABLE = "CREATE TABLE " + TABLE_NEARBY_PLACES + "("
                             + COLUMN_PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                             + COLUMN_PLACE_ID + " TEXT,"
                             + COLUMN_NAME + " TEXT,"
@@ -53,7 +72,26 @@ public class Database  extends SQLiteOpenHelper{
                             + COLUMN_WEBSITE + " TEXT,"
                             + COLUMN_VICINITY + " TEXT" + ")";
 
-    private String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    private String CREATE_REVIEWS_TABLE = "CREATE TABLE " + TABLE_REVIEWS + "("
+            + COLUMN_PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_PLACE_ID + " TEXT,"
+            + COLUMN_AUTHOR_NAME + " TEXT,"
+            + COLUMN_AUTHOR_URL + " TEXT,"
+            + COLUMN_LANGUAGE + " TEXT,"
+            + COLUMN_AVATAR + " TEXT,"
+            + COLUMN_RATING + " INTEGER,"
+            + COLUMN_RELATIVE_TIME + " TEXT,"
+            + COLUMN_TEXT + " TEXT,"
+            + COLUMN_EPOCH_TIME + " INTEGER,"
+            + COLUMN_FORMATTED_TIME + " TEXT,"
+            + COLUMN_REVIEW_SOURCE + " TEXT,"
+            + COLUMN_DEFAULT_INDEX + " INTEGER,"
+            +  "FOREIGN KEY(" + COLUMN_DETAILS_PLACE + "_id) REFERENCES "+ TABLE_NEARBY_PLACES + "(id))";
+
+
+
+    private String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NEARBY_PLACES;
+    private String DROP_TABLE_REVIEWS = "DROP TABLE IF EXISTS " + TABLE_REVIEWS;
 
     public Database(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -61,7 +99,10 @@ public class Database  extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
+
         db.execSQL(CREATE_TABLE);
+        db.execSQL(CREATE_REVIEWS_TABLE);
+
         Log.d("db", CREATE_TABLE);
 
     }
@@ -69,6 +110,7 @@ public class Database  extends SQLiteOpenHelper{
     @Override
     public  void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         db.execSQL(DROP_TABLE);
+        db.execSQL(DROP_TABLE_REVIEWS);
         onCreate(db);
     }
 
@@ -76,12 +118,11 @@ public class Database  extends SQLiteOpenHelper{
 
         // remove all existing entries from the db except for the ones that have been
         // favorited
+        // TODO: does this do cascade deletion?
 
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_FAVORITED + "=?";
-        db.delete(TABLE_NAME, whereClause, new String[]{"0"});
-
-
+        db.delete(TABLE_NEARBY_PLACES, whereClause, new String[]{"0"});
 
     }
 
@@ -97,7 +138,7 @@ public class Database  extends SQLiteOpenHelper{
                 COLUMN_PRIMARY_KEY
         };
 
-        Cursor cursor = db.query(TABLE_NAME,
+        Cursor cursor = db.query(TABLE_NEARBY_PLACES,
                 columns,
                 selection,
                 selectionArgs,
@@ -130,7 +171,7 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_CATEGORY_ICON, category_icon);
             values.put(COLUMN_VICINITY, vicinity);
 
-            db.insert(TABLE_NAME, null, values);
+            db.insert(TABLE_NEARBY_PLACES, null, values);
             db.close();
         }
     }
@@ -139,7 +180,7 @@ public class Database  extends SQLiteOpenHelper{
 
         JSONArray results = new JSONArray();
 
-        String countQuery = "SELECT  * FROM " + TABLE_NAME;
+        String countQuery = "SELECT  * FROM " + TABLE_NEARBY_PLACES;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         final int PAGE_SIZE = 20;
@@ -185,6 +226,14 @@ public class Database  extends SQLiteOpenHelper{
 
 
         return results;
+    }
+
+    public JSONArray getSortedReviews(String placeID, String source, SortBy sortBy) {
+
+
+
+
+
     }
 
     public JSONObject getDetailsInfo(String place_id) {
@@ -265,7 +314,7 @@ public class Database  extends SQLiteOpenHelper{
         final int PAGE_SIZE = 20;
         int pageNum;
 
-        String countQuery = "SELECT  * FROM " + TABLE_NAME;
+        String countQuery = "SELECT  * FROM " + TABLE_NEARBY_PLACES;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int count = cursor.getCount();
@@ -280,6 +329,8 @@ public class Database  extends SQLiteOpenHelper{
         return pageNum;
 
     }
+
+
 }
 
 

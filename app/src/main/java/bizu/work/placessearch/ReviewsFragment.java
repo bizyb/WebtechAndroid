@@ -9,8 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -42,10 +45,13 @@ public class ReviewsFragment extends Fragment {
         populateDropdown(v, R.id.review_source, R.array.review_source);
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
 
+        //TODO: set listeners for spinner selection and pass that to get sorted reviews
+        populateReviews(v);
+
         return v;
     }
 
-    public void populateDropdown(View v, int spinnerType, int arrayType) {
+    private void populateDropdown(View v, int spinnerType, int arrayType) {
 
         String[] values = getResources().getStringArray(arrayType);
         Spinner spinner = (Spinner) v.findViewById(spinnerType);
@@ -60,5 +66,18 @@ public class ReviewsFragment extends Fragment {
         spinner.setAdapter(adapter);
 
     }
+
+    private void populateReviews(View v) {
+
+        TableLayout table = v.findViewById(R.id.reviews_table);
+
+        table.removeAllViews();
+        table.setPadding(0,40, 0,50 );
+
+        Table tableObj = new Table(getActivity(), response);
+        tableObj.populateReviews(table, "Google", true);
+
+    }
+
 
 }

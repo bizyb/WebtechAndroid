@@ -32,6 +32,7 @@ public class Table {
     private Activity activity;
     private int pageNum;
 
+
     public Table(Activity activity, String response) {
 
         this.activity = activity;
@@ -305,8 +306,60 @@ public class Table {
 
         return row;
 
+    }
 
+    public void populateReviews(TableLayout table, String source, boolean fromDB, SortBy sortBy) {
+
+        String placeID = getPlaceID();
+        try {
+
+                JSONArray reviews = new JSONArray();
+
+
+                if (fromDB) {
+
+                    // just populate the table
+                    Database db = new Database(activity);
+                    reviews = db.getSortedReviews(placeID, source, sortBy);
+
+
+
+                }
+                else {
+
+                    String key = "google_reviews_" + placeID;
+                    if (source.equals("Yelp")) {
+
+                        key = "yelp_reviews_" + placeID;
+                    }
+                }
+
+                //loop here; if not fromDB, save it to db
+
+
+
+            }
+            catch(Exception e){
+                // TODO: output no results/failed to get results error here
+                Log.d("error", e.toString());
+            }
 
     }
 
+//    private JSONArray getReviewsFromDB(String placeID, String reviewSource, SortBy sortBy) {
+//
+//       Database db = new Database(activity);
+//       JSONArray reviews = db.getSortedReviews(placeID, reviewSource, sortBy);
+//
+//
+//
+//
+//    }
+
+    private String getPlaceID() {
+
+        String placeID = "ChIJfWmJOsfSD4gRVMPC4R4Q10w";
+
+        return placeID;
+    }
 }
