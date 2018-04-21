@@ -31,8 +31,6 @@
     <string name="maps_web_api">AIzaSyA_NhluopOgKm1DhlpxCZebkdwgPqOfItQ</string>
     <string name="maps_android_api">AIzaSyAY81543GmGrUPk3R2hTOhTTdy3Bd_Os38</string>
 
-
-
     <!--Dropdowns-->
     <string-array name="driving_mode">
         <item>Driving</item>
@@ -40,6 +38,7 @@
         <item>Transit</item>
         <item>Walking</item>
     </string-array>
+
 
     <string-array name="categories">
         <item>Default</item>
@@ -73,6 +72,18 @@
         <item>Zoo</item>
     </string-array>
 
+    <string-array name="review_source">
+        <item>Google reviews</item>
+        <item>Yelp reviews</item>
+    </string-array>
 
-    <string name="one">One</string>
+    <string-array name="review_sort_method">
+        <item>Default Order</item>
+        <item> Highest Rating</item>
+        <item>Lowest Rating</item>
+        <item>Most Recent</item>
+        <item>Least Recent</item>
+    </string-array>
+
+
 </resources>
