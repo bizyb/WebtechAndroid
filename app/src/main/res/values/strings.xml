@@ -28,6 +28,8 @@
     <string name="map_from_text">From</string>
     <string name="map_hint_text">Type in the Location</string>
     <string name="map_travel_mode">Travel mode</string>
+    <string name="maps_web_api">AIzaSyA_NhluopOgKm1DhlpxCZebkdwgPqOfItQ</string>
+    <string name="maps_android_api">AIzaSyAY81543GmGrUPk3R2hTOhTTdy3Bd_Os38</string>
 
 
 
