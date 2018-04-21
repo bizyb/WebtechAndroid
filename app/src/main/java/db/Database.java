@@ -245,8 +245,7 @@ public class Database  extends SQLiteOpenHelper{
             String avatar = "https://lh3.googleusercontent.com/-LDBFaAenwDc/AAAAAAAAAAI/AAAAAAAAAWA/OFIsFer2zZA/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg";
             String text = "Absolutely not worth the hour + wait but if it’s 30 minutes or so I’d say probably worth it. Just go to Lokal across the street for some drinks. \n\nPizza is incredible. My party discussed for quite some time what makes the crust so good and we came to the, not verified, conclusion that it must come from the bagel shop that is literally next door. \n\nAnd then it’s also a brewery! Only tried the ‘quarters only’ but it was 10/10. A bit expensive but worth it for sure.";
             String date = "2018-03-17 1:46:13";
-            Integer rating = 5;
-
+            Integer rating = 3;
             row.put("author", author);
             row.put("authorURL", authorURL);
             row.put("avatar", avatar);

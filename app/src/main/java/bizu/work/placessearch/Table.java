@@ -17,6 +17,7 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -219,7 +220,6 @@ public class Table {
             }
         }
 
-//        TableLayout table = new TableLayout(activity);
         String address, phoneNumber, priceLevel, googlePage, website, rating;
 
         try {
@@ -247,8 +247,6 @@ public class Table {
 
         return table;
 
-
-
     }
 
     private void setRatingStars(RatingBar rating, float ratingF, int ratingI) {
@@ -267,7 +265,6 @@ public class Table {
             rating.setRating(ratingI);
 
         }
-
         rating.setScaleX(0.6f);
         rating.setScaleY(0.6f);
 
@@ -275,9 +272,7 @@ public class Table {
         LayerDrawable drawable = (LayerDrawable) rating.getProgressDrawable();
         drawable.getDrawable(2).setColorFilter((activity.getResources().getColor(R.color.webtech_pink)),
                 PorterDuff.Mode.SRC_ATOP);
-
     }
-
 
     private TableRow getDetailsRow(String data, String rowFor, boolean isURL, boolean isPhone) {
 
@@ -304,7 +299,6 @@ public class Table {
         }
 
         String leftStr = "<strong>" + rowFor + "</strong>";
-
 
 
         left.setText(Html.fromHtml(leftStr));
@@ -338,7 +332,6 @@ public class Table {
         }
 
         return row;
-
     }
 
     public void populateReviews(TableLayout table, String source, boolean fromDB, SortBy sortBy) {
@@ -414,67 +407,38 @@ public class Table {
         relativeLayout.addView(ratingBar);
         relativeLayout.setPadding(-180, -50, 0, -50);
 
-
-
-        // populate image and set layout
         setIcon(imageView, avatar);
-        TableRow.LayoutParams iconLayout = new TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
-                TableRow.LayoutParams.WRAP_CONTENT);
-        iconLayout.gravity = Gravity.CENTER;
-//
-//        imageView.setPadding(50, 3, 50, 3);
-        imageView.setLayoutParams(iconLayout);
-//        imageView.setMinimumHeight(150);
-//        imageView.setMinimumWidth(150);
-
-//        imageRow.setLayoutParams(iconLayout);
-//        imageView.setMaxWidth(50);
-
-
-
-
-
-
-
-
-
-
         dateView.setText(date);
-
-
-
         textView.setText(text);
-        textView.setMaxWidth(950);
-
-
-
+        textView.setMaxWidth(900);
 
         authorRow.addView(authorView);
         ratingRow.addView(relativeLayout);
         textRow.addView(textView);
         dateRow.addView(dateView);
         imageRow.addView(imageView);
-
+        setImageListener(imageView, textView);
 
         rightTable.addView(authorRow, new TableRow.LayoutParams(1));
         rightTable.addView(ratingRow, new TableRow.LayoutParams(1));
         rightTable.addView(dateRow, new TableRow.LayoutParams(1));
         rightTable.addView(textRow, new TableRow.LayoutParams(1));
         rightTable.setPadding(0, 0, 200, 0);
+        rightTable.setMinimumWidth(1000);
 
         leftTable.addView(imageRow);
         leftTable.setPadding(50, 0, -100, 0);
+
 
         mainRow.addView(leftTable, new TableRow.LayoutParams(1));
         mainRow.addView(rightTable, new TableRow.LayoutParams(2));
 
         mainRow.setPadding(50, 50, 50, 50);
-
-
         return mainRow;
 
     }
+
+
 
     private void setAuthorName(TextView authorView, String author, String authorURL) {
 
@@ -502,6 +466,34 @@ public class Table {
             s.setSpan(span, start, end, 0);
         }
         textView.setText(s);
+    }
+
+    public void setImageListener(final ImageView imageView, final TextView textView) {
+
+        // Dynamically set imageView top padding.
+
+        imageView.getViewTreeObserver().addOnGlobalLayoutListener
+                (new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                int topPadding = 100;
+
+                imageView.getViewTreeObserver();
+                int textHeight = textView.getHeight();
+
+                double scalar = 1.5;
+
+                if (textHeight > 0 && textHeight > topPadding) {
+
+                    topPadding = (int)((double)textHeight/scalar);
+
+                }
+
+                imageView.setPadding(50, topPadding, 50, 50);
+            }
+        });
+
     }
 
 
