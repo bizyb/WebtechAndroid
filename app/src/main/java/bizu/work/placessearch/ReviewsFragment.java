@@ -37,7 +37,7 @@ public class ReviewsFragment extends Fragment {
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
 
         //TODO: set listeners for spinner selection and pass that to get sorted reviews
-//        populateReviews(v);
+        populateReviews(v);
 
         return v;
     }
@@ -62,7 +62,7 @@ public class ReviewsFragment extends Fragment {
 
         TableLayout table = v.findViewById(R.id.reviews_table);
         table.removeAllViews();
-        table.setPadding(0,200, 0,300 );
+        table.setPadding(0,20, 0,20 );
 
         Table tableObj = new Table(getActivity(), response);
         tableObj.populateReviews(table, "Google", true, SortBy.DEFAULT_ORDER);
