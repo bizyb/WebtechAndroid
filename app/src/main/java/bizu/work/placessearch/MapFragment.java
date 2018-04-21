@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,9 +47,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-
-
         mapView.getMapAsync(this);
+
+        populateDropdown(v);
 
 
         return v;
@@ -68,17 +70,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 .snippet("The most populous city in Australia.")
                 .position(sydney));
 
-
-//        map.setMyLocationEnabled(true);
-//        CameraUpdate camera = CameraUpdateFactory.newLatLng(sydney);
-//        map.animateCamera(camera);
-
-
     }
 
     @Override
     public void onResume() {
         mapView.onResume();
         super.onResume();
+    }
+
+
+    public void populateDropdown(View v) {
+
+        String[] values = getResources().getStringArray(R.array.driving_mode);
+        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+
+        if (spinner == null) {
+            spinner = getActivity().findViewById(R.id.spinner);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, values);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinner.setAdapter(adapter);
+
     }
 }
