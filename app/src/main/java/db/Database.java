@@ -130,7 +130,6 @@ public class Database  extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_FAVORITED + "=?";
         db.delete(TABLE_NEARBY_PLACES, whereClause, new String[]{"0"});
-//        db.close();
 
     }
 
@@ -259,7 +258,7 @@ public class Database  extends SQLiteOpenHelper{
         if (optional.length > 0) {
             insertionOrder -= optional[0]; // offset
         }
-        Log.i("in addEntry", " ----insertiong order and name---------------------  " + name  + ": " + insertionOrder + "");
+//        Log.i("in addEntry", " ----entry---------------------  " + name  + ": " + insertionOrder + "");
 
         SQLiteDatabase db = this.getWritableDatabase();
         if (!rowExists) {
@@ -286,15 +285,12 @@ public class Database  extends SQLiteOpenHelper{
 //            SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-//            try {
-
                 values.put(COLUMN_INSERTION_ORDER, insertionOrder);
                 db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                         new String[] {place_id});
-//            }
-//            finally {
-////                db.close();
-//            }
+
+//            Log.i("in addEntry", " ----exists new insertion order---------------------  " + name  + ": " + insertionOrder + "");
+
         }
         db.close();
     }
@@ -315,11 +311,11 @@ public class Database  extends SQLiteOpenHelper{
 
 
         try {
-            Log.i("in getDbPage", " about to enter while loop------------------------------- cursor count:   " + cursor.getCount() + "");
+//            Log.i("in getDbPage", " about to enter while loop------------------------------- cursor count:   " + cursor.getCount() + "");
             while (cursor.moveToNext()) {
-                Log.i("in getDbPage", "inside loop: i = ------------------------------    " + i + "");
-                Log.i("in getDbPage", "inside loop: start = ------------------------------    " + start + "");
-                Log.i("in getDbPage", "inside loop: end = ------------------------------    " + end + "");
+//                Log.i("in getDbPage", "inside loop: i = ------------------------------    " + i + "");
+//                Log.i("in getDbPage", "inside loop: start = ------------------------------    " + start + "");
+//                Log.i("in getDbPage", "inside loop: end = ------------------------------    " + end + "");
                if (i >= start) {
 
                     //TODO: are these sorted by the primary key or are we just assuming?
@@ -533,67 +529,3 @@ public class Database  extends SQLiteOpenHelper{
 
 
 }
-
-
-
-//    public void addUser(User user){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put(COLUMN_USER_NAME, user.getName());
-//        values.put(COLUMN_USER_EMAIL, user.getEmail());
-//        values.put(COLUMN_USER_PASSWORD, user.getPassword());
-//
-//        db.insert(TABLE_USER, null, values);
-//        db.close();
-//    }
-
-//    public boolean checkUser(String email){
-//        String[] columns = {
-//                COLUMN_USER_ID
-//        };
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String selection = COLUMN_USER_EMAIL + " = ?";
-//        String[] selectionArgs = { email };
-//
-//        Cursor cursor = db.query(TABLE_USER,
-//                columns,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                null);
-//        int cursorCount = cursor.getCount();
-//        cursor.close();
-//        db.close();
-//
-//        if (cursorCount > 0){
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    public boolean checkUser(String email, String password){
-//        String[] columns = {
-//                COLUMN_USER_ID
-//        };
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " =?";
-//        String[] selectionArgs = { email, password };
-//
-//        Cursor cursor = db.query(TABLE_USER,
-//                columns,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                null);
-//        int cursorCount = cursor.getCount();
-//        cursor.close();
-//        db.close();
-//
-//        if (cursorCount > 0){
-//            return true;
-//        }
-//        return false;
-//    }
-
