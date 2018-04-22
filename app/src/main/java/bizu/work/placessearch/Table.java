@@ -171,7 +171,7 @@ public class Table {
         Picasso.get().load(url).into(imageView);
     }
 
-    public TableLayout populateTable(String tableFor, int pageFromDB) {
+    public TableLayout populateTable(String tableFor, int pageFromDB, int... optional) {
 
         TableLayout table = (TableLayout) activity.findViewById(R.id.main_table);
         table.removeAllViews();
@@ -211,7 +211,7 @@ public class Table {
                     Log.i("in populateTable", "populateTable--------------------2--------------");
 
 
-                    if (pageFromDB < 0) { saveToDB(r); }
+                    if (pageFromDB < 0) { saveToDB(r, optional); }
 
                     TableRow row = getTableRow(name, vicinity, iconURL, placeID);
                     table.addView(row);
@@ -234,7 +234,7 @@ public class Table {
         return table;
     }
 
-    private void saveToDB(JSONObject r) {
+    private void saveToDB(JSONObject r, int...optional) {
 
         try {
 
@@ -246,7 +246,7 @@ public class Table {
 
             Database db = new Database(activity);
 
-            db.addEntry(place_id, name, vicinity, favorited, iconURL);
+            db.addEntry(place_id, name, vicinity, favorited, iconURL, optional);
             Log.d("db", "saving to db..........................------------: " + place_id);
         }
         catch(Exception e){

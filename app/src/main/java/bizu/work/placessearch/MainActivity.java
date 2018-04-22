@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
+//        this.deleteDatabase("PlacesSearch.db");
+
     }
 
 

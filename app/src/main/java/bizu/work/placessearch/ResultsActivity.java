@@ -59,18 +59,20 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
 
         Log.i("pagination", "in ppopulateResults pageFromDB=---------------------------    " + pageFromDB);
+        int insertionOrderOffset = 0;
         if (resultType.equals("SEARCH_RESULTS")) {
 
             // we have a new search query. Drop all existing entries, except for those
             // that have been favorited
             Database db = new Database(this);
             db.dropRows();
+            insertionOrderOffset = db.getCount(); // number of favorited entries
             pageNum = 1;
 
         }
 
         Table tableObj = new Table(this, response);
-        TableLayout table = tableObj.populateTable("results", pageFromDB);
+        TableLayout table = tableObj.populateTable("results", pageFromDB, insertionOrderOffset);
 
         Paginator paginator = new Paginator(this, response, this);
 
