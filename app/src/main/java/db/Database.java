@@ -19,6 +19,9 @@ import bizu.work.placessearch.SortBy;
 
 public class Database  extends SQLiteOpenHelper{
 
+//    private SQLiteDatabase db;
+//    private Cursor cursor;
+
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_NAME = "PlacesSearch.db";
@@ -93,15 +96,19 @@ public class Database  extends SQLiteOpenHelper{
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NEARBY_PLACES;
     private String DROP_TABLE_REVIEWS = "DROP TABLE IF EXISTS " + TABLE_REVIEWS;
 
+    private Context context;
+
     public Database(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db){
 
+//        context.deleteDatabase(DATABASE_NAME);
         db.execSQL(CREATE_TABLE);
-        db.execSQL(CREATE_REVIEWS_TABLE);
+//        db.execSQL(CREATE_REVIEWS_TABLE);
 
         Log.d("db", CREATE_TABLE);
 
@@ -110,7 +117,7 @@ public class Database  extends SQLiteOpenHelper{
     @Override
     public  void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         db.execSQL(DROP_TABLE);
-        db.execSQL(DROP_TABLE_REVIEWS);
+//        db.execSQL(DROP_TABLE_REVIEWS);
         onCreate(db);
     }
 
@@ -126,16 +133,22 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
-    private boolean rowExists(String place_id) {
-
-        // a row may already exist if it's been favorited
+    /* Return a row cursor
+    *
+    * */
+    private CursorContainer getCursor(String placeID, String cursorFor) {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_PLACE_ID + "=?";
-        String[] selectionArgs = { place_id };
+        String[] selectionArgs = {placeID};
 
+        String col = COLUMN_PRIMARY_KEY;
+
+        if (cursorFor.equals("favorites")) {
+            col = COLUMN_FAVORITED;
+        }
         String[] columns = {
-                COLUMN_PRIMARY_KEY
+                col
         };
 
         Cursor cursor = db.query(TABLE_NEARBY_PLACES,
@@ -145,14 +158,90 @@ public class Database  extends SQLiteOpenHelper{
                 null,
                 null,
                 null);
-        int cursorCount = cursor.getCount();
-        cursor.close();
-        db.close();
 
-        if (cursorCount > 0){
-            return true;
+        CursorContainer container = new CursorContainer(db, cursor);
+
+        return container;
+
+    }
+    /*
+    *  If placeID is already favorited, set it to false and return false.
+    *  Otherwise, the place is being favorited for the first time so set the
+    *  field to true and return true. Display a toast to indicate the addition or removal of the
+    *  place from the list.
+    *
+    * */
+
+    public boolean addToFav(String placeID) {
+
+        boolean isFavorited = false;
+        int state;
+
+        CursorContainer container = getCursor(placeID, "favorites");
+        SQLiteDatabase db = container.db();
+        Cursor cursor = container.cursor();
+
+        ContentValues values = new ContentValues();
+        try {
+
+            while(cursor.moveToNext()) {
+
+                int index = cursor.getColumnIndex(COLUMN_FAVORITED);
+                state = cursor.getInt(index);
+
+                if (state == 0) {
+
+                    values.put(COLUMN_FAVORITED, 1);
+                    isFavorited = true;
+                }
+                else {
+                    values.put(COLUMN_FAVORITED, 0);
+                }
+                db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
+                        new String[] {placeID});
+
+            }
+
         }
-        return false;
+        finally {
+            cursor.close();
+            db.close();
+        }
+
+        return isFavorited;
+
+    }
+
+    public boolean checkState(String placeID, String checkFor) {
+
+        boolean state = false;
+        CursorContainer container = getCursor(placeID, checkFor);
+        SQLiteDatabase db = container.db();
+        Cursor cursor = container.cursor();
+
+        try {
+            if (checkFor.equals("rowExistence")) {
+
+                int cursorCount = cursor.getCount();
+                if (cursorCount > 0) {
+                    state = true;
+                }
+            } else if (checkFor.equals("favorites")) {
+
+
+                while (cursor.moveToNext()) {
+
+                    state = cursor.getInt(cursor.getColumnIndex(COLUMN_FAVORITED)) == 1 ? true : false;
+
+                }
+            }
+        }
+        finally {
+            cursor.close();
+            db.close();
+        }
+
+        return state;
 
     }
 
@@ -160,7 +249,7 @@ public class Database  extends SQLiteOpenHelper{
                          int favorited, String category_icon) {
 
 
-        if (!rowExists(place_id)) {
+        if (!checkState(place_id, "rowExistence")) {
 
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -200,19 +289,22 @@ public class Database  extends SQLiteOpenHelper{
 
                     JSONObject row = new JSONObject();
 
-                    String name = cursor.getString(cursor.getColumnIndex("name"));
-                    String vicinity = cursor.getString(cursor.getColumnIndex("vicinity"));
-                    String iconURL = cursor.getString(cursor.getColumnIndex("category_icon"));
+
+                    String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+                    String vicinity = cursor.getString(cursor.getColumnIndex(COLUMN_VICINITY));
+                    String iconURL = cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY_ICON));
+                    String place_id = cursor.getString(cursor.getColumnIndex(COLUMN_PLACE_ID));
 
                     try {
                         row.put("name", name);
                         row.put("vicinity", vicinity);
                         row.put("icon", iconURL);
+                        row.put("place_id", place_id);
                         results.put(row);
                     }
                     catch(Exception e){
                         // TODO: output no results/failed to get results error here
-                        Log.d("error", e.toString());
+                        Log.e("error", e.toString());
                     }
                }
                if (i >= end) {break;}
@@ -221,6 +313,7 @@ public class Database  extends SQLiteOpenHelper{
         }
         finally {
             cursor.close();
+            db.close();
         }
 
 
@@ -361,8 +454,30 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
+    /* A wrapper class to hold a cursor and db file descriptors so that the client can close
+     *  both connections.
+     */
+    class CursorContainer {
+
+        private SQLiteDatabase db;
+        private Cursor cursor;
+
+        public CursorContainer(SQLiteDatabase db,  Cursor cursor) {
+
+            this.db = db;
+            this.cursor = cursor;
+
+        }
+
+        public SQLiteDatabase db() { return db; }
+
+        public Cursor cursor() { return cursor;}
+
+    }
+
 
 }
+
 
 
 //    public void addUser(User user){

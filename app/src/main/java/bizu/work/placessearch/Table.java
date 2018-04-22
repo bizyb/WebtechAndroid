@@ -48,7 +48,7 @@ public class Table {
         pageNum = 0;
     }
 
-    private TableRow getTableRow(String name, String vicinity, String iconURL) {
+    private TableRow getTableRow(String name, String vicinity, String iconURL, String placeID) {
 
         //TODO: set listeners for both search resutls and favorites
         TableRow tr;
@@ -80,11 +80,12 @@ public class Table {
         // Favorites icon
 
         //todo: parameterize icon selection based on whether or not the row is in the favorites db table
+        setResultsFav(favIcon, placeID);
 
-        favIcon.setPadding(50, 10, 50, 3);
-        favIcon.setLayoutParams(new TableRow.LayoutParams(1));
-        Drawable heart = activity.getResources().getDrawable(R.drawable.ic_favorite_plain);
-        favIcon.setImageDrawable(heart);
+//        favIcon.setPadding(50, 10, 50, 3);
+//        favIcon.setLayoutParams(new TableRow.LayoutParams(1));
+//        Drawable heart = activity.getResources().getDrawable(R.drawable.ic_favorite_plain);
+//        favIcon.setImageDrawable(heart);
 
         // Place name
         String nameNaddr = "<strong>" + name + "</strong>";
@@ -102,6 +103,59 @@ public class Table {
 
 
         return tr;
+    }
+
+    private void setResultsFav(final ImageView favIcon, final String placeID) {
+
+        // Set the favorites icon based on whether the place is already in the favorites list
+
+        int id = R.drawable.ic_favorite_plain;
+        boolean isFavorited = false;
+
+        final Database db = new Database(activity);
+        if (db.checkState(placeID, "favorites")) {
+
+            id = R.drawable.ic_favorite_red;
+            isFavorited = true;
+        }
+
+        favIcon.setPadding(50, 10, 50, 3);
+        favIcon.setLayoutParams(new TableRow.LayoutParams(1));
+        Drawable heart = activity.getResources().getDrawable(id);
+        favIcon.setImageDrawable(heart);
+        favIcon.setTag(isFavorited);
+
+        // Set click listener
+        favIcon.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                resultsFavClickHandler(favIcon, placeID);
+
+            }
+        });
+
+    }
+
+    private void resultsFavClickHandler(final ImageView favIcon, final String placeID) {
+
+        // update the state of the favorites button. If favorited, change color to red. Otherwise,
+        // change the color to plain
+
+        Log.i("in resultsFa", "resultsFavClickHandler--------------------1--------------");
+        Database db = new Database(activity);
+        int id = R.drawable.ic_favorite_plain;
+        boolean isFavorited = db.addToFav(placeID);
+
+        if (isFavorited) {
+
+            id =  R.drawable.ic_favorite_red;
+        }
+
+        Drawable heart = activity.getResources().getDrawable(id);
+        favIcon.setImageDrawable(heart);
+        favIcon.setTag(isFavorited);
+
     }
 
     private String getPlaceID() {
@@ -122,6 +176,7 @@ public class Table {
         TableLayout table = (TableLayout) activity.findViewById(R.id.main_table);
         table.removeAllViews();
         table.setPadding(0,200, 0,50 );
+        Log.i("in populateTable", "populateTable--------------------1--------------");
 
         try {
 
@@ -130,6 +185,7 @@ public class Table {
                 String name;
                 String vicinity;
                 String iconURL;
+                String placeID;
                 JSONArray results;
 
                 if (pageFromDB > 0) {
@@ -151,10 +207,13 @@ public class Table {
                     name = r.getString("name");
                     vicinity = r.getString("vicinity");
                     iconURL = r.getString("icon");
+                    placeID = r.getString("place_id");
+                    Log.i("in populateTable", "populateTable--------------------2--------------");
+
 
                     if (pageFromDB < 0) { saveToDB(r); }
 
-                    TableRow row = getTableRow(name, vicinity, iconURL);
+                    TableRow row = getTableRow(name, vicinity, iconURL, placeID);
                     table.addView(row);
                 }
             }
@@ -168,7 +227,8 @@ public class Table {
 
         catch(Exception e){
             // TODO: output no results/failed to get results error here
-            Log.d("error", e.toString());
+            Log.e("error", e.toString());
+            Log.i("in populateTable", "populateTable--------------------3--------------");
         }
 
         return table;
@@ -187,11 +247,11 @@ public class Table {
             Database db = new Database(activity);
 
             db.addEntry(place_id, name, vicinity, favorited, iconURL);
-            Log.d("db", "saving to db..........................------------");
+            Log.d("db", "saving to db..........................------------: " + place_id);
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
-            Log.d("error", e.toString());
+            Log.e("error", e.toString());
         }
 
 

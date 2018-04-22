@@ -61,7 +61,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         Log.i("pagination", "in ppopulateResults pageFromDB=---------------------------    " + pageFromDB);
         if (resultType.equals("SEARCH_RESULTS")) {
 
-            // we have a new search query. Drop all existing entries, except for thos
+            // we have a new search query. Drop all existing entries, except for those
             // that have been favorited
             Database db = new Database(this);
             db.dropRows();
