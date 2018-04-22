@@ -43,7 +43,7 @@ public class InfoFragment extends Fragment {
         table.removeAllViews();
         table.setPadding(0,40, 0,50 );
 
-        Table tableObj = new Table(getActivity(), response);
+        Table tableObj = new Table(getActivity(), response, v, null);
         tableObj.getDetailsInfoTable(table, response, true);
 
 

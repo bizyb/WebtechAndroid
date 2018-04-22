@@ -38,17 +38,22 @@ public class Table {
 
     private String response;
     private Activity activity;
-    private int pageNum;
+    private View view;
+    FavoritesFragment favInstance;
+//    private int pageNum;
 
 
-    public Table(Activity activity, String response) {
+    public Table(Activity activity, String response, View view, FavoritesFragment favInstance) {
 
         this.activity = activity;
         this.response = response;
-        pageNum = 0;
+        this.view = view;
+        this.favInstance = favInstance;
+//        pageNum = 0;
     }
 
-    private TableRow getTableRow(String name, String vicinity, String iconURL, String placeID) {
+    private TableRow getTableRow(String name, String vicinity, String iconURL, String placeID,
+                                 String tableFor) {
 
         //TODO: set listeners for both search resutls and favorites
         TableRow tr;
@@ -80,7 +85,7 @@ public class Table {
         // Favorites icon
 
         //todo: parameterize icon selection based on whether or not the row is in the favorites db table
-        setResultsFav(favIcon, placeID);
+        setResultsFav(favIcon, placeID, tableFor);
 
 //        favIcon.setPadding(50, 10, 50, 3);
 //        favIcon.setLayoutParams(new TableRow.LayoutParams(1));
@@ -105,7 +110,7 @@ public class Table {
         return tr;
     }
 
-    private void setResultsFav(final ImageView favIcon, final String placeID) {
+    private void setResultsFav(final ImageView favIcon, final String placeID, final String tableFor) {
 
         // Set the favorites icon based on whether the place is already in the favorites list
 
@@ -130,14 +135,14 @@ public class Table {
 
             @Override
             public void onClick(View v) {
-                resultsFavClickHandler(favIcon, placeID);
+                resultsFavClickHandler(favIcon, placeID, tableFor);
 
             }
         });
 
     }
 
-    private void resultsFavClickHandler(final ImageView favIcon, final String placeID) {
+    private void resultsFavClickHandler(final ImageView favIcon, final String placeID, String tableFor) {
 
         // update the state of the favorites button. If favorited, change color to red. Otherwise,
         // change the color to plain
@@ -155,6 +160,13 @@ public class Table {
         Drawable heart = activity.getResources().getDrawable(id);
         favIcon.setImageDrawable(heart);
         favIcon.setTag(isFavorited);
+
+        // re-inflate the view if we're currently on the favorites page
+        if (tableFor.equals("favorites")) {
+
+            favInstance.populateFavorites(view, 1);
+
+        }
 
     }
 
@@ -174,25 +186,29 @@ public class Table {
     public TableLayout populateTable(String tableFor, int pageFromDB, int... optional) {
 
         TableLayout table = (TableLayout) activity.findViewById(R.id.main_table);
+
+        if (table == null) {table = view.findViewById(R.id.main_table);}
+
         table.removeAllViews();
         table.setPadding(0,200, 0,50 );
         Log.i("in populateTable", "populateTable--------------------1--------------");
 
+        String name;
+        String vicinity;
+        String iconURL;
+        String placeID;
+        JSONArray results = new JSONArray();
+
         try {
 
-            if (tableFor == "results") {
 
-                String name;
-                String vicinity;
-                String iconURL;
-                String placeID;
-                JSONArray results;
+            if (tableFor.equals("results")) {
 
                 if (pageFromDB > 0) {
 
                     Log.i("in populateTable", "calling getDBPage----------------------------------");
                     Database db = new Database(activity);
-                    results = db.getDBPage(pageFromDB);
+                    results = db.getDBPage(pageFromDB, "results");
 
                 }
                 else {
@@ -201,26 +217,27 @@ public class Table {
                     results = responseJSON.getJSONArray("results");
                 }
 
-                for (int i = 0; i < results.length(); i++) {
-
-                    JSONObject r = results.getJSONObject(i);
-                    name = r.getString("name");
-                    vicinity = r.getString("vicinity");
-                    iconURL = r.getString("icon");
-                    placeID = r.getString("place_id");
-                    Log.i("in populateTable", "populateTable--------------------2--------------");
-
-
-                    if (pageFromDB < 0) { saveToDB(r, optional); }
-
-                    TableRow row = getTableRow(name, vicinity, iconURL, placeID);
-                    table.addView(row);
-                }
             }
             else if (tableFor == "favorites") {
 
-                //todo: populate the table from the database
-                int debug = 1;
+                Database db = new Database(activity);
+                results = db.getDBPage(pageFromDB, "favorites");
+            }
+
+            for (int i = 0; i < results.length(); i++) {
+
+                JSONObject r = results.getJSONObject(i);
+                name = r.getString("name");
+                vicinity = r.getString("vicinity");
+                iconURL = r.getString("icon");
+                placeID = r.getString("place_id");
+                Log.i("in populateTable", "populateTable--------------------2--------------");
+
+
+                if (pageFromDB < 0) { saveToDB(r, optional); }
+
+                TableRow row = getTableRow(name, vicinity, iconURL, placeID, tableFor);
+                table.addView(row);
             }
 
         }
@@ -440,6 +457,7 @@ public class Table {
             }
 
     }
+
 
     private TableRow getReviewRow(String author, String authorURL, String avatar, String text,
                               String date, Integer rating) {

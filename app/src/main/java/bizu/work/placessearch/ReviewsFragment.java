@@ -64,7 +64,7 @@ public class ReviewsFragment extends Fragment {
         table.removeAllViews();
         table.setPadding(0,20, 0,20 );
 
-        Table tableObj = new Table(getActivity(), response);
+        Table tableObj = new Table(getActivity(), response, v, null);
         tableObj.populateReviews(table, "Google", true, SortBy.DEFAULT_ORDER);
 
     }

@@ -13,13 +13,20 @@ public class Paginator {
     private Activity activity;
     private String response;
     private ResultsActivity resultsInstace;
+    private FavoritesFragment fragActivity;
 //    private View view;
 
-    public Paginator(Activity activity, String response, ResultsActivity resultsInstace) {
+    public Paginator(Activity activity, String response, ResultsActivity resultsInstace, FavoritesFragment
+                     fragActivity) {
 
         this.activity = activity;
         this.response = response;
         this.resultsInstace = resultsInstace;
+        this.fragActivity = fragActivity;
+
+
+
+
 
     }
 

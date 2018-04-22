@@ -35,6 +35,7 @@ public class Database  extends SQLiteOpenHelper{
     private static final String COLUMN_FAVORITED = "favorited";
     private static final String COLUMN_PAGE_NUM = "page_num";
     private static final String COLUMN_INSERTION_ORDER = "insertion_order";
+    private static final String COLUMN_FAV_INSERTION_ORDER = "fav_insertion_order";
 
     //Applicable to Details
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
@@ -70,6 +71,7 @@ public class Database  extends SQLiteOpenHelper{
                             + COLUMN_PHONE_NUMBER + " TEXT,"
                             + COLUMN_PRICE_LEVEL + " INTEGER,"
                             + COLUMN_INSERTION_ORDER + " INTEGER,"
+                            + COLUMN_FAV_INSERTION_ORDER + " INTEGER,"
                             + COLUMN_RATING + " REAL,"
                             + COLUMN_GOOGLE_PAGE + " TEXT,"
                             + COLUMN_WEBSITE + " TEXT,"
@@ -181,6 +183,8 @@ public class Database  extends SQLiteOpenHelper{
 
         boolean isFavorited = false;
         int state;
+        int favInsertionOrder = getCount("favorites");
+
 
         CursorContainer container = getCursor(placeID, "favorites");
         SQLiteDatabase db = container.db();
@@ -196,7 +200,9 @@ public class Database  extends SQLiteOpenHelper{
 
                 if (state == 0) {
 
+                    favInsertionOrder++;
                     values.put(COLUMN_FAVORITED, 1);
+                    values.put(COLUMN_FAV_INSERTION_ORDER, favInsertionOrder);
                     isFavorited = true;
                 }
                 else {
@@ -295,13 +301,21 @@ public class Database  extends SQLiteOpenHelper{
         db.close();
     }
 
-    public JSONArray getDBPage(int pageNum) {
+
+
+    public JSONArray getDBPage(int pageNum, String pageFor) {
 
         JSONArray results = new JSONArray();
 
-        String countQuery = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " ORDER BY " + COLUMN_INSERTION_ORDER;
+        String query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " ORDER BY " + COLUMN_INSERTION_ORDER;
+        if (pageFor.equals("favorites")) {
+
+            query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_FAVORITED + " =1" + " ORDER BY " + COLUMN_FAV_INSERTION_ORDER;
+
+        }
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
+        Cursor cursor = db.rawQuery(query, null);
         final int PAGE_SIZE = 20;
         int i = 0;
         int start = (pageNum - 1) * PAGE_SIZE;
@@ -490,18 +504,26 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
-    public int getCount() {
+    public int getCount(String...optional) {
 
         int count = 0;
+        String query = "SELECT  * FROM " + TABLE_NEARBY_PLACES;
 
-        String countQuery = "SELECT  * FROM " + TABLE_NEARBY_PLACES;
+        if (optional.length > 0) {
+
+            if (optional[0].equals("favorites")) {
+                query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_FAVORITED + " =1";
+            }
+        }
+
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
+        Cursor cursor = db.rawQuery(query, null);
         count = cursor.getCount();
 
         cursor.close();
         db.close();
-        Log.i("count", count + "");
+//        Log.i("count", count + "");
         return count;
 
     }
