@@ -12,7 +12,7 @@ import android.widget.TableLayout;
 
 public class ReviewsFragment extends Fragment {
 
-    private String response;
+    private String placeID;
 
     public ReviewsFragment() {
     }
@@ -31,7 +31,7 @@ public class ReviewsFragment extends Fragment {
         View v = inflater.inflate(R.layout.reviews_fragment, container, false);
 
         DetailsActivity activity = (DetailsActivity) getActivity();
-        response = activity.getDetailsData();
+        placeID = activity.getDetailsPlaceID();
 
         populateDropdown(v, R.id.review_source, R.array.review_source);
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
@@ -64,8 +64,8 @@ public class ReviewsFragment extends Fragment {
         table.removeAllViews();
         table.setPadding(0,20, 0,20 );
 
-        Table tableObj = new Table(getActivity(), response, v, null);
-        tableObj.populateReviews(table, "Google", true, SortBy.DEFAULT_ORDER);
+        Table tableObj = new Table(getActivity(), null, v, null);
+        tableObj.populateReviews(table, "Google",SortBy.DEFAULT_ORDER);
 
     }
 

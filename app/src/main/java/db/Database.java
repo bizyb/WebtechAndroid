@@ -196,16 +196,75 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
-//    public String getPhotosDelim() {
-//
-//        return delim;
-//    }
 
-    private void  saveReviewsToDB(String response) {
+
+    private void  saveReviewsToDB(JSONArray reviews, String placeID, String reviewsFrom) {
 
         // parse out the source
         // parse out the place id
 
+//        String source = reviewsFrom;
+//        String authorName;
+//        String authorURL;
+//        String language;
+//        String avatr;
+//        String relativeTime;
+//        String text;
+//        String formattedTime;
+//        int defaultIndex;
+//        int epoch;
+//        int rating;
+
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+
+            for (int i = 0; i < reviews.length(); i++) {
+
+                JSONArray row = reviews.getJSONArray(i);
+
+                String authorName = row.getString(0);
+                String authorURL = row.getString(1);
+                String language = row.getString(2);
+                String avatr = row.getString(3);
+                int rating = row.getInt(4);
+                String relativeTime = row.getString(5);
+                String text = row.getString(6);
+                int epoch = row.getInt(7);
+                String formattedTime = row.getString(8);
+                int defaultIndex = row.getInt(10);
+
+
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_AUTHOR_NAME, authorName);
+                values.put(COLUMN_AUTHOR_URL, authorURL);
+                values.put(COLUMN_LANGUAGE, language);
+                values.put(COLUMN_AVATAR, avatr);
+                values.put(COLUMN_RATING, rating);
+                values.put(COLUMN_RELATIVE_TIME, relativeTime);
+                values.put(COLUMN_TEXT, text);
+                values.put(COLUMN_EPOCH_TIME, epoch);
+                values.put(COLUMN_FORMATTED_TIME, formattedTime);
+                values.put(COLUMN_REVIEW_SOURCE, reviewsFrom);
+                values.put(COLUMN_DEFAULT_INDEX, defaultIndex);
+                values.put(COLUMN_PLACE_ID, placeID);
+
+                db.insert(TABLE_REVIEWS, null, values);
+
+
+            }
+
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+            Log.i("in saveReviewsToDB", "-------saveReviewsToDB-----------ERROR-----------------------");
+        }
+
+        finally {
+            db.close();
+        }
 
 
     }
@@ -229,6 +288,7 @@ public class Database  extends SQLiteOpenHelper{
         String google_page;
         String website;
         JSONArray photosArray;
+        JSONArray googleReviews;
         String photosStr;
         String place_id;
 
@@ -253,6 +313,10 @@ public class Database  extends SQLiteOpenHelper{
             website = result.getString("website");
             photosArray = responseJSON.getJSONArray("photosArray");
             photosStr = mergePhotoURLs(photosArray);
+
+            String key = "google_reviews_" + place_id;
+            googleReviews = responseJSON.getJSONArray(key);
+
 
 //            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
 //            Log.i("in saveDetailsToDB", "-------place_id---------------------------------: " + place_id);
@@ -279,6 +343,8 @@ public class Database  extends SQLiteOpenHelper{
 
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {place_id});
+
+            saveReviewsToDB(googleReviews, place_id, "Google");
     }
      catch(Exception e){
         // TODO: output no results/failed to get results error here
@@ -521,39 +587,71 @@ public class Database  extends SQLiteOpenHelper{
         return results;
     }
 
-    public JSONArray getSortedReviews(String placeID, String source, SortBy sortBy) {
+    public JSONArray getSortedReviews(String placeID, String reviewsFrom, SortBy sortBy) {
 
 
         JSONArray reviews = new JSONArray();
 
-        //TODO: save to db if for the first time; otherwise check fromDB flag
-        // and act accordingly
+        String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_REVIEW_SOURCE + "=?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[] {reviewsFrom});
 
         try {
 
             JSONObject row = new JSONObject();
 
-            String author = "Kai Colucci";
-            String authorURL = "https://www.google.com/maps/contrib/111028753854868402896/reviews";
-            String avatar = "https://lh3.googleusercontent.com/-LDBFaAenwDc/AAAAAAAAAAI/AAAAAAAAAWA/OFIsFer2zZA/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg";
-            String text = "Absolutely not worth the hour + wait but if it’s 30 minutes or so I’d say probably worth it. Just go to Lokal across the street for some drinks. \n\nPizza is incredible. My party discussed for quite some time what makes the crust so good and we came to the, not verified, conclusion that it must come from the bagel shop that is literally next door. \n\nAnd then it’s also a brewery! Only tried the ‘quarters only’ but it was 10/10. A bit expensive but worth it for sure.";
-            String date = "2018-03-17 1:46:13";
-            Integer rating = 3;
-            row.put("author", author);
-            row.put("authorURL", authorURL);
-            row.put("avatar", avatar);
-            row.put("text", text);
-            row.put("date", date);
-            row.put("rating", rating);
+//            String author = "Kai Colucci";
+//            String authorURL = "https://www.google.com/maps/contrib/111028753854868402896/reviews";
+//            String avatar = "https://lh3.googleusercontent.com/-LDBFaAenwDc/AAAAAAAAAAI/AAAAAAAAAWA/OFIsFer2zZA/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg";
+//            String text = "Absolutely not worth the hour + wait but if it’s 30 minutes or so I’d say probably worth it. Just go to Lokal across the street for some drinks. \n\nPizza is incredible. My party discussed for quite some time what makes the crust so good and we came to the, not verified, conclusion that it must come from the bagel shop that is literally next door. \n\nAnd then it’s also a brewery! Only tried the ‘quarters only’ but it was 10/10. A bit expensive but worth it for sure.";
+//            String date = "2018-03-17 1:46:13";
+//            Integer rating = 3;
 
-            for (int i = 0; i < 10; i++) {
+            while (cursor.moveToNext()) {
+
+                String author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_NAME));
+                String authorURL = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_URL));
+                String avatar = cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR));
+                String text = cursor.getString(cursor.getColumnIndex(COLUMN_TEXT));
+                String date = cursor.getString(cursor.getColumnIndex(COLUMN_FORMATTED_TIME));
+                Integer rating = cursor.getInt(cursor.getColumnIndex(COLUMN_RATING));
+
+                row.put("author", author);
+                row.put("authorURL", authorURL);
+                row.put("avatar", avatar);
+                row.put("text", text);
+                row.put("date", date);
+                row.put("rating", rating);
+
                 reviews.put(row);
+
+//                for (int i = 0; i < 10; i++) {
+//                    reviews.put(row);
+//                }
+
+
             }
+
+//            row.put("author", author);
+//            row.put("authorURL", authorURL);
+//            row.put("avatar", avatar);
+//            row.put("text", text);
+//            row.put("date", date);
+//            row.put("rating", rating);
+//
+//            for (int i = 0; i < 10; i++) {
+//                reviews.put(row);
+//            }
 
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.d("error", e.toString());
+            Log.i("in mergePhotoURLs", "mergePhotoURLs--------------------ERROR--------------");
+        }
+        finally {
+            cursor.close();
+            db.close();
         }
 
         return reviews;

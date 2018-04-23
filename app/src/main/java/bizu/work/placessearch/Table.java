@@ -478,27 +478,27 @@ public class Table {
         return dollarSigns;
     }
 
-    public void populateReviews(TableLayout table, String source, boolean fromDB, SortBy sortBy) {
+    public void populateReviews(TableLayout table, String source, SortBy sortBy) {
 
         String placeID = getPlaceID();
         try {
 
                 JSONArray reviews = new JSONArray();
-                if (fromDB) {
+//                if (fromDB) {
 
                     // just populate the table
                     Database db = new Database(activity);
                     reviews = db.getSortedReviews(placeID, source, sortBy);
 
-                }
-                else {
-
-                    String key = "google_reviews_" + placeID;
-                    if (source.equals("Yelp")) {
-
-                        key = "yelp_reviews_" + placeID;
-                    }
-                }
+//                }
+//                else {
+//
+//                    String key = "google_reviews_" + placeID;
+//                    if (source.equals("Yelp")) {
+//
+//                        key = "yelp_reviews_" + placeID;
+//                    }
+//                }
 
 
                 for (int i = 0; i < reviews.length(); i++) {
