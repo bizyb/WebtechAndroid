@@ -153,6 +153,10 @@ public class Database  extends SQLiteOpenHelper{
 
             col = COLUMN_INSERTION_ORDER;
         }
+        else if (cursorFor.equals("name")) {
+
+            col = COLUMN_NAME;
+        }
         String[] columns = {
                 col
         };
@@ -468,10 +472,28 @@ public class Database  extends SQLiteOpenHelper{
         return arr;
     }
 
-    public String getPlaceName(String place_id) {
+//    public String getPlaceName(String place_id) {
+//
+//        String name = "University of Southern California";
+//        return name;
+//    }
+    public String getPlaceName(String placeID) {
 
-        String name = "University of Southern California";
+        String name = "?";
+        CursorContainer container = getCursor(placeID, "name");
+        SQLiteDatabase db = container.db();
+        Cursor cursor = container.cursor();
+
+        while (cursor.moveToNext()) {
+
+            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
+            name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+        }
+
+        cursor.close();
+        db.close();
         return name;
+
     }
 
 

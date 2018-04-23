@@ -16,7 +16,9 @@ import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -147,14 +150,21 @@ public class Table {
         // update the state of the favorites button. If favorited, change color to red. Otherwise,
         // change the color to plain
 
-        Log.i("in resultsFa", "resultsFavClickHandler--------------------1--------------");
         Database db = new Database(activity);
         int id = R.drawable.ic_favorite_plain;
         boolean isFavorited = db.addToFav(placeID);
 
+        String placeName = db.getPlaceName(placeID);
+
+
+
         if (isFavorited) {
 
             id =  R.drawable.ic_favorite_red;
+            showToast(placeName, false);
+        }
+        else {
+            showToast(placeName, true);
         }
 
         Drawable heart = activity.getResources().getDrawable(id);
@@ -169,6 +179,29 @@ public class Table {
         }
 
     }
+
+    private void showToast(String name, boolean removed) {
+
+        String message = name + " was added to favorites";
+        if (removed) {
+
+            message = name + " was removed from favorites";
+        }
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ViewGroup) activity.findViewById(R.id.custom_toast_container));
+
+
+        TextView textView = layout.findViewById(R.id.toast);
+        textView.setText(message);
+        Log.i("in resultsFa", "resultsFavClickHandler--------------------message--------------: " + message);
+        Toast toast = new Toast(activity);
+        toast.setGravity(Gravity.BOTTOM, 0, 100);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+    }
+
 
     private String getPlaceID() {
 
