@@ -516,6 +516,25 @@ public class Table {
 
     }
 
+    public void showEmpty(String forTab) {
+
+        String message = "";
+        TableLayout table = new TableLayout(activity);
+
+        if (forTab.equals("favorites")) {
+
+            message = "No Favorites";
+            table = view.findViewById(R.id.main_table);
+        }
+
+        table.removeAllViews();
+        TextView textView = new TextView(activity);
+        textView.setText(message);
+
+        textView.setPadding(500, 1100, 0,0);
+        table.addView(textView);
+    }
+
 
 
     private void setAuthorName(TextView authorView, String author, String authorURL) {

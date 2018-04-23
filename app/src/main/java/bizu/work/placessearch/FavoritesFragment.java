@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import db.Database;
@@ -41,12 +44,11 @@ public class FavoritesFragment extends Fragment  {
 
 
         Database db = new Database(activity);
+        Table tableObj = new Table(activity, null, v, this);
+
         if (db.getCount("favorites") > 0) {
 
-            TextView textView = v.findViewById(R.id.favorites_no_favs);
-            textView.setText("");
 
-            Table tableObj = new Table(activity, null, v, this);
             TableLayout table = tableObj.populateTable("favorites", pageFromDB);
 
 //            Paginator paginator = new Paginator(activity, null, null, this);
@@ -63,8 +65,7 @@ public class FavoritesFragment extends Fragment  {
         }
         else {
 
-            Log.i("in fav", "---------------------------in fav----");
-            getLayoutInflater().inflate(R.layout.favorites_fragment, null);
+            tableObj.showEmpty("favorites");
         }
     }
 
