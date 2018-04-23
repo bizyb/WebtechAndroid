@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.TableRow;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,9 +44,11 @@ public class Database  extends SQLiteOpenHelper{
     private static final String COLUMN_RATING = "rating";
     private static final String COLUMN_GOOGLE_PAGE = "google_page";
     private static final String COLUMN_WEBSITE = "website";
+    private static final String COLUMN_PHOTOS = "photos";
 
 
-    // Applicable to Reviews
+
+    // Applicable to Reviews and Details
     private static final String COLUMN_FOREIGN_KEY = TABLE_NEARBY_PLACES + "_id";
     private static final String COLUMN_AUTHOR_NAME = "author_name";
     private static final String COLUMN_AUTHOR_URL = "author_url";
@@ -58,7 +61,10 @@ public class Database  extends SQLiteOpenHelper{
     private static final String COLUMN_FORMATTED_TIME = "formatted_time";
     private static final String COLUMN_REVIEW_SOURCE = "review_source";
     private static final String COLUMN_DEFAULT_INDEX = "default_index";
-    private static final String COLUMN_DETAILS_PLACE = "details_place";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_LONGITUDE = "longitude";
+
+//    private static final String COLUMN_DETAILS_PLACE = "details_place";
 
 
     private String CREATE_TABLE = "CREATE TABLE " + TABLE_NEARBY_PLACES + "("
@@ -73,6 +79,7 @@ public class Database  extends SQLiteOpenHelper{
                             + COLUMN_INSERTION_ORDER + " INTEGER,"
                             + COLUMN_FAV_INSERTION_ORDER + " INTEGER,"
                             + COLUMN_RATING + " REAL,"
+                            + COLUMN_PHOTOS + " TEXT,"
                             + COLUMN_GOOGLE_PAGE + " TEXT,"
                             + COLUMN_WEBSITE + " TEXT,"
                             + COLUMN_VICINITY + " TEXT" + ")";
@@ -85,13 +92,15 @@ public class Database  extends SQLiteOpenHelper{
             + COLUMN_LANGUAGE + " TEXT,"
             + COLUMN_AVATAR + " TEXT,"
             + COLUMN_RATING + " INTEGER,"
+            + COLUMN_LATITUDE + " REAL,"
+            + COLUMN_LONGITUDE + " REAL,"
             + COLUMN_RELATIVE_TIME + " TEXT,"
             + COLUMN_TEXT + " TEXT,"
             + COLUMN_EPOCH_TIME + " INTEGER,"
             + COLUMN_FORMATTED_TIME + " TEXT,"
             + COLUMN_REVIEW_SOURCE + " TEXT,"
             + COLUMN_DEFAULT_INDEX + " INTEGER,"
-            +  " FOREIGN KEY(" + COLUMN_FOREIGN_KEY + ") REFERENCES "+ TABLE_NEARBY_PLACES + "(_id))";
+            + COLUMN_PLACE_ID + " TEXT" + ")";
 
 
 
@@ -99,10 +108,17 @@ public class Database  extends SQLiteOpenHelper{
     private String DROP_TABLE_REVIEWS = "DROP TABLE IF EXISTS " + TABLE_REVIEWS;
 
     private Context context;
+    private String delim;
+    private String placeName;
+    private String placeID;
+
 
     public Database(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        this.delim = "::::::::";
+        this.placeName = "?";
+        this.placeID = "?";
     }
 
     @Override
@@ -174,6 +190,126 @@ public class Database  extends SQLiteOpenHelper{
         return container;
 
     }
+
+    public String getPhotosDelim() {
+
+        return delim;
+    }
+
+    private void  saveReviewsToDB(String response) {
+
+        // parse out the source
+        // parse out the place id
+
+
+
+    }
+
+    /*
+    * Save details info to the database. Note: this routine is executed during the transition from
+    * ResultsActivity to DetailsActivity. The information for details is incomplete at this stage.
+    * Later, we populate the missing yelp reviews asynchronously.
+    *
+    * PRE: place already exists in the database
+    * */
+    public void saveDetailsToDB(String response) {
+
+        double latitude;
+        double longitude;
+        double rating;
+        int price_level;
+        String formatted_address;
+        String formatted_phone_number;
+        String name;
+        String google_page;
+        String website;
+        JSONArray photosArray;
+        String photosStr;
+        String place_id;
+
+        JSONObject result = new JSONObject();
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+
+            JSONObject responseJSON = new JSONObject(response);
+            result = responseJSON.getJSONObject("result");
+
+            latitude = result.getDouble("centerLat");
+            longitude = result.getDouble("centerLon");
+            rating = result.getDouble("rating");
+            price_level = result.getInt("price_level");
+            formatted_address = result.getString("formatted_address");
+            formatted_phone_number = result.getString("formatted_phone_number");
+            name = result.getString("name");
+            google_page = result.getString("url");
+            place_id = result.getString("place_id");
+            website = result.getString("website");
+            photosArray = result.getJSONArray("photosArray");
+            photosStr = mergePhotoURLs(photosArray);
+
+
+            ContentValues values = new ContentValues();
+
+            this.placeName = name;
+            this.placeID = place_id;
+
+            values.put(COLUMN_LATITUDE, latitude);
+            values.put(COLUMN_LONGITUDE, longitude);
+            values.put(COLUMN_RATING, rating);
+            values.put(COLUMN_PRICE_LEVEL, price_level);
+            values.put(COLUMN_VICINITY, formatted_address);
+            values.put(COLUMN_PHONE_NUMBER, formatted_phone_number);
+            values.put(COLUMN_NAME, name);
+            values.put(COLUMN_GOOGLE_PAGE, google_page);
+            values.put(COLUMN_WEBSITE, website);
+            values.put(COLUMN_PHOTOS, photosStr);
+
+            db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
+                    new String[] {place_id});
+    }
+     catch(Exception e){
+        // TODO: output no results/failed to get results error here
+        Log.e("error", e.toString());
+        Log.i("in saveDetailsToDB", "-------saveDetailsToDB-----------ERROR-----------------------");
+    }
+
+    finally {
+            db.close();
+        }
+
+    }
+
+    /*
+    * Merge all photo URLs into a single string with a common delimiter.
+    * */
+    private String mergePhotoURLs(JSONArray photosArray) {
+
+        String photos = "";
+
+        try {
+
+            for (int i = 0; i < photosArray.length(); i++) {
+
+                if (i == photosArray.length() - 1) {
+
+                    photos += photosArray.getString(i);
+                }
+                else {
+                    photos += photosArray.getString(i) + delim;
+                }
+
+            }
+
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+            Log.i("in mergePhotoURLs", "mergePhotoURLs--------------------ERROR--------------");
+        }
+
+        return photos;
+    }
+
 
     /*
     *  If placeID is already favorited, set it to false and return false.
@@ -477,22 +613,29 @@ public class Database  extends SQLiteOpenHelper{
 //        String name = "University of Southern California";
 //        return name;
 //    }
+    public String getPlaceID() {
+
+        return placeID;
+    }
+
     public String getPlaceName(String placeID) {
 
-        String name = "?";
-        CursorContainer container = getCursor(placeID, "name");
-        SQLiteDatabase db = container.db();
-        Cursor cursor = container.cursor();
+        return placeName;
 
-        while (cursor.moveToNext()) {
-
-            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
-            name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-        }
-
-        cursor.close();
-        db.close();
-        return name;
+//        String name = "?";
+//        CursorContainer container = getCursor(placeID, "name");
+//        SQLiteDatabase db = container.db();
+//        Cursor cursor = container.cursor();
+//
+//        while (cursor.moveToNext()) {
+//
+//            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
+//            name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+//        }
+//
+//        cursor.close();
+//        db.close();
+//        return name;
 
     }
 

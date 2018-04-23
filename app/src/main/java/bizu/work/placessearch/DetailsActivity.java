@@ -74,6 +74,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         return place_id;
     }
+
+
     private void saveToDB(String response) {
 
         Database db = new Database(this);
