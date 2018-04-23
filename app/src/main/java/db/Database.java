@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import bizu.work.placessearch.SortBy;
 
@@ -173,6 +174,10 @@ public class Database  extends SQLiteOpenHelper{
 
             col = COLUMN_NAME;
         }
+        else if (cursorFor.equals("photos")) {
+
+            col = COLUMN_PHOTOS;
+        }
         String[] columns = {
                 col
         };
@@ -191,10 +196,10 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
-    public String getPhotosDelim() {
-
-        return delim;
-    }
+//    public String getPhotosDelim() {
+//
+//        return delim;
+//    }
 
     private void  saveReviewsToDB(String response) {
 
@@ -236,9 +241,6 @@ public class Database  extends SQLiteOpenHelper{
 
 
 
-
-
-
             latitude = responseJSON.getDouble("centerLat");
             longitude = responseJSON.getDouble("centerLon");
             rating = result.getDouble("rating");
@@ -252,7 +254,7 @@ public class Database  extends SQLiteOpenHelper{
             photosArray = responseJSON.getJSONArray("photosArray");
             photosStr = mergePhotoURLs(photosArray);
 
-            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
+//            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
 //            Log.i("in saveDetailsToDB", "-------place_id---------------------------------: " + place_id);
 //            Log.i("in saveDetailsToDB", "-------formatted_phone_number---------------------------------: " + formatted_phone_number);
 //            Log.i("in saveDetailsToDB", "-------photosStr---------------------------------: " + photosStr);
@@ -616,29 +618,54 @@ public class Database  extends SQLiteOpenHelper{
         return row;
     }
 
-    public ArrayList<String> getDetailsPhotos(String response, boolean fromDB) {
+    public ArrayList<String> getDetailsPhotos(String placeID) {
 
         ArrayList<String> arr = new ArrayList<>();
-        if (fromDB) {
+        CursorContainer container = getCursor(placeID, "photos");
+        SQLiteDatabase db = container.db();
+        Cursor cursor = container.cursor();
+
+
+//        if (fromDB) {
 
             try {
 
-                arr.add("https://www.hdwallpapers.in/walls/new_year_high_quality-wide.jpg");
-                arr.add("https://www.hdwallpapers.in/walls/fantasy_world_of_flowers-wide.jpg");
-                arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
-                arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
+                while (cursor.moveToNext()) {
 
+                    String URLs = cursor.getString(0);
+                    String [] photosArray = URLs.split(delim);
+
+                    arr = new ArrayList<>(Arrays.asList(photosArray));
+
+//                    for (String url : arr) {
+//
+//                        Log.i("in getDetailsPhotos", "--------------------photo url--------------: " + url);
+//                    }
+
+
+//                    arr.add("https://www.hdwallpapers.in/walls/new_year_high_quality-wide.jpg");
+//                    arr.add("https://www.hdwallpapers.in/walls/fantasy_world_of_flowers-wide.jpg");
+//                    arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
+//                    arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
+
+                }
+//                Log.i("in getDetailsPhotos", "--------------------cursor finished--------------");
             }
 
             catch(Exception e){
                 // TODO: output no results/failed to get results error here
                 Log.d("error", e.toString());
+                Log.i("in getDetailsPhotos", "--------------------ERROR--------------");
+            }
+            finally {
+                cursor.close();
+                db.close();
             }
 
-        }
-        else {
-            //parse the response, save to db and return the jsonobj
-        }
+//        }
+//        else {
+//            //parse the response, save to db and return the jsonobj
+//        }
 
         return arr;
     }

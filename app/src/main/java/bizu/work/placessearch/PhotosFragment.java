@@ -21,7 +21,7 @@ import db.Database;
 
 public class PhotosFragment extends Fragment {
 
-    private String response;
+    private String placeID;
 
     public PhotosFragment() {
     }
@@ -40,7 +40,7 @@ public class PhotosFragment extends Fragment {
         View v = inflater.inflate(R.layout.photos_fragment, container, false);
 
         DetailsActivity activity = (DetailsActivity) getActivity();
-        response = activity.getDetailsData();
+        placeID = activity.getDetailsPlaceID();
 
         populatePhotosTab(v);
 
@@ -52,7 +52,7 @@ public class PhotosFragment extends Fragment {
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.photos_fragment);
 
         Database db = new Database(getActivity());
-        ArrayList<String> photosArray = db.getDetailsPhotos(response, true);
+        ArrayList<String> photosArray = db.getDetailsPhotos(placeID);
 
         for (String url : photosArray) {
 
