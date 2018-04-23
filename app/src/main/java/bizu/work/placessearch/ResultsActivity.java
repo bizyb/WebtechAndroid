@@ -65,7 +65,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             // we have a new search query. Drop all existing entries, except for those
             // that have been favorited
             Database db = new Database(this);
-            db.dropRows();
+            db.dropRows("favorites", null, null);
             insertionOrderOffset = db.getCount(); // number of favorited entries
             pageNum = 1;
 

@@ -125,6 +125,8 @@ public class SearchServices {
 //        final String url = "http://ip-api.com/json";
         Log.d("url", url);
 
+        Log.i("in search", "search--------------------placeID-------------: " + placeID);
+
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -141,6 +143,8 @@ public class SearchServices {
                             intent.putExtra("resultType", "SEARCH_RESULTS");
                         }
                         else {
+
+                            Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
                             intent =  new Intent(activity, DetailsActivity.class);
                             intent.putExtra("placeID", placeID);
                             intent.putExtra("loadFromDB", "false");

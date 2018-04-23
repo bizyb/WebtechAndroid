@@ -140,15 +140,26 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
-    public void dropRows() {
+    public void dropRows(String dropFor, String placeID, String reviewSource) {
 
         // remove all existing entries from the db except for the ones that have been
         // favorited
         // TODO: does this do cascade deletion?
 
         SQLiteDatabase db = this.getWritableDatabase();
-        String whereClause = COLUMN_FAVORITED + "=?";
-        db.delete(TABLE_NEARBY_PLACES, whereClause, new String[]{"0"});
+        if (dropFor.equals("favorites")) {
+
+            String whereClause = COLUMN_FAVORITED + "=?";
+            db.delete(TABLE_NEARBY_PLACES, whereClause, new String[]{"0"});
+        }
+
+        else if (dropFor.equals("reviews")) {
+
+            String whereClause = COLUMN_PLACE_ID + "=? " + COLUMN_REVIEW_SOURCE + "=? ";
+            db.delete(TABLE_REVIEWS, whereClause, new String[]{placeID, reviewSource});
+
+        }
+
 
     }
 
@@ -215,7 +226,8 @@ public class Database  extends SQLiteOpenHelper{
 //        int epoch;
 //        int rating;
 
-
+        // drop existing reviews for this place and reviewSource
+        dropRows("reviews", placeID, reviewsFrom);
 
         SQLiteDatabase db = this.getWritableDatabase();
         try {
@@ -227,7 +239,7 @@ public class Database  extends SQLiteOpenHelper{
                 String authorName = row.getString(0);
                 String authorURL = row.getString(1);
                 String language = row.getString(2);
-                String avatr = row.getString(3);
+                String avatar = row.getString(3);
                 int rating = row.getInt(4);
                 String relativeTime = row.getString(5);
                 String text = row.getString(6);
@@ -240,7 +252,7 @@ public class Database  extends SQLiteOpenHelper{
                 values.put(COLUMN_AUTHOR_NAME, authorName);
                 values.put(COLUMN_AUTHOR_URL, authorURL);
                 values.put(COLUMN_LANGUAGE, language);
-                values.put(COLUMN_AVATAR, avatr);
+                values.put(COLUMN_AVATAR, avatar);
                 values.put(COLUMN_RATING, rating);
                 values.put(COLUMN_RELATIVE_TIME, relativeTime);
                 values.put(COLUMN_TEXT, text);
@@ -623,31 +635,17 @@ public class Database  extends SQLiteOpenHelper{
                 row.put("date", date);
                 row.put("rating", rating);
 
+                Log.i("in getSortedReviews", "getSortedReviews--------------------AUTHOR--------------: "+ author);
+
                 reviews.put(row);
 
-//                for (int i = 0; i < 10; i++) {
-//                    reviews.put(row);
-//                }
-
-
             }
-
-//            row.put("author", author);
-//            row.put("authorURL", authorURL);
-//            row.put("avatar", avatar);
-//            row.put("text", text);
-//            row.put("date", date);
-//            row.put("rating", rating);
-//
-//            for (int i = 0; i < 10; i++) {
-//                reviews.put(row);
-//            }
 
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.d("error", e.toString());
-            Log.i("in mergePhotoURLs", "mergePhotoURLs--------------------ERROR--------------");
+            Log.i("in getSortedReviews", "getSortedReviews--------------------ERROR--------------");
         }
         finally {
             cursor.close();

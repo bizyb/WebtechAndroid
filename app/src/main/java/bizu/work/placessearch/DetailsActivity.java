@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -69,6 +70,8 @@ public class DetailsActivity extends AppCompatActivity {
         place_id = intent.getStringExtra("placeID");
         saveToDB(response);
         setPageTitle();
+
+        Log.i("in oncCreate", "------onCreate DetailAcitivity--------------placeID-------------: " + place_id);
 
     }
 

@@ -481,25 +481,12 @@ public class Table {
     public void populateReviews(TableLayout table, String source, SortBy sortBy) {
 
         String placeID = getPlaceID();
+        JSONArray reviews = new JSONArray();
+
         try {
 
-                JSONArray reviews = new JSONArray();
-//                if (fromDB) {
-
-                    // just populate the table
-                    Database db = new Database(activity);
-                    reviews = db.getSortedReviews(placeID, source, sortBy);
-
-//                }
-//                else {
-//
-//                    String key = "google_reviews_" + placeID;
-//                    if (source.equals("Yelp")) {
-//
-//                        key = "yelp_reviews_" + placeID;
-//                    }
-//                }
-
+                Database db = new Database(activity);
+                reviews = db.getSortedReviews(placeID, source, sortBy);
 
                 for (int i = 0; i < reviews.length(); i++) {
 
@@ -513,6 +500,8 @@ public class Table {
                     Integer rating = row.getInt("rating");
                     text.replace('\n', ' ');
                     table.addView(getReviewRow(author, authorURL, avatar, text, date, rating));
+                    Log.i("in populateReviews", "populateReviews--------------------AUTHOR--------------: "+ author);
+                    Log.i("in populateReviews", "populateReviews--------------------reviews.length()--------------: "+ reviews.length() + "");
 
                     //TODO: loop here; if not fromDB, save it to db
                 }
@@ -521,6 +510,7 @@ public class Table {
             catch(Exception e){
                 // TODO: output no results/failed to get results error here
                 Log.e("error", e.toString());
+                Log.i("in populateReviews", "populateReviews--------------------ERORR--------------");
             }
 
     }
