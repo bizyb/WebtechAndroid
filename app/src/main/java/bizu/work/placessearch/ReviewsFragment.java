@@ -32,6 +32,7 @@ public class ReviewsFragment extends Fragment {
 
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
+//        Log.i("in oncCreate", "------onCreate reivewFragment--------------placeID-------------: " + placeID);
 
         populateDropdown(v, R.id.review_source, R.array.review_source);
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
@@ -65,7 +66,7 @@ public class ReviewsFragment extends Fragment {
         table.setPadding(0,20, 0,20 );
 
         Table tableObj = new Table(getActivity(), null, v, null);
-        tableObj.populateReviews(table, "Google",SortBy.DEFAULT_ORDER);
+        tableObj.populateReviews(table, placeID, "Google",SortBy.DEFAULT_ORDER);
 
     }
 

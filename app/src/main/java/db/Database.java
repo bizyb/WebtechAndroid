@@ -156,7 +156,8 @@ public class Database  extends SQLiteOpenHelper{
         else if (dropFor.equals("reviews")) {
 
             String whereClause = COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
-            db.delete(TABLE_REVIEWS, whereClause, new String[]{placeID, reviewSource});
+            int count = db.delete(TABLE_REVIEWS, whereClause, new String[]{placeID, reviewSource});
+            Log.i("in dropRows", "dropRows--------------------drop count--------------: "+ count + "");
 
         }
 
@@ -604,20 +605,16 @@ public class Database  extends SQLiteOpenHelper{
 
         JSONArray reviews = new JSONArray();
 
-        String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_REVIEW_SOURCE + "=?";
+        String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
+//        query += " AND " + COLUMN_PLACE_ID + "=?";
+        Log.i("in getSortedReviews", "getSortedReviews--------------------placeID--------------: "+ placeID);
+        Log.i("in getSortedReviews", "getSortedReviews--------------------reviewsFrom--------------: "+ reviewsFrom);
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, new String[] {reviewsFrom});
+        Cursor cursor = db.rawQuery(query, new String[] {placeID, reviewsFrom});
 
         try {
 
-
-
-//            String author = "Kai Colucci";
-//            String authorURL = "https://www.google.com/maps/contrib/111028753854868402896/reviews";
-//            String avatar = "https://lh3.googleusercontent.com/-LDBFaAenwDc/AAAAAAAAAAI/AAAAAAAAAWA/OFIsFer2zZA/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg";
-//            String text = "Absolutely not worth the hour + wait but if it’s 30 minutes or so I’d say probably worth it. Just go to Lokal across the street for some drinks. \n\nPizza is incredible. My party discussed for quite some time what makes the crust so good and we came to the, not verified, conclusion that it must come from the bagel shop that is literally next door. \n\nAnd then it’s also a brewery! Only tried the ‘quarters only’ but it was 10/10. A bit expensive but worth it for sure.";
-//            String date = "2018-03-17 1:46:13";
-//            Integer rating = 3;
 
             while (cursor.moveToNext()) {
 

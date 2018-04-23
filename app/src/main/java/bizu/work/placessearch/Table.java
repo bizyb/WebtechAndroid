@@ -223,12 +223,12 @@ public class Table {
     }
 
 
-    private String getPlaceID() {
-
-        String placeID = "ChIJfWmJOsfSD4gRVMPC4R4Q10w";
-
-        return placeID;
-    }
+//    private String getPlaceID() {
+//
+//        String placeID = "ChIJfWmJOsfSD4gRVMPC4R4Q10w";
+//
+//        return placeID;
+//    }
 
 
     private void setIcon(ImageView imageView, String url) {
@@ -478,13 +478,14 @@ public class Table {
         return dollarSigns;
     }
 
-    public void populateReviews(TableLayout table, String source, SortBy sortBy) {
+    public void populateReviews(TableLayout table, String placeID, String source, SortBy sortBy) {
 
-        String placeID = getPlaceID();
+//        String placeID = getPlaceID();
         JSONArray reviews = new JSONArray();
 
         try {
 
+            Log.i("in populateReviews", "populateReviews--------------------before calling get sorted--------------");
                 Database db = new Database(activity);
                 reviews = db.getSortedReviews(placeID, source, sortBy);
             Log.i("in populateReviews", "populateReviews--------------------reviews.toString()--------------: "+ reviews.toString());
