@@ -50,17 +50,8 @@ public class FavoritesFragment extends Fragment  {
 
 
             TableLayout table = tableObj.populateTable("favorites", pageFromDB);
-
-//            Paginator paginator = new Paginator(activity, null, null, this);
-
-            getLayoutInflater().inflate(R.layout.table_layout, table, true);
             table.setPadding(0,50, 0,50 );
-//            if (pageFromDB > 0) {
-//                paginator.showPagination(pageFromDB);
-//            }
-//            else {
-//                paginator.showPagination(pageFromDB);
-//            }
+
 
         }
         else {

@@ -84,16 +84,7 @@ public class Table {
         setIcon(catIcon, iconURL);
         catIcon.setScaleType(ImageView.ScaleType.FIT_XY);
 
-
-        // Favorites icon
-
-        //todo: parameterize icon selection based on whether or not the row is in the favorites db table
         setResultsFav(favIcon, placeID, tableFor);
-
-//        favIcon.setPadding(50, 10, 50, 3);
-//        favIcon.setLayoutParams(new TableRow.LayoutParams(1));
-//        Drawable heart = activity.getResources().getDrawable(R.drawable.ic_favorite_plain);
-//        favIcon.setImageDrawable(heart);
 
         // Place name
         String nameNaddr = "<strong>" + name + "</strong>";
@@ -194,7 +185,6 @@ public class Table {
 
         TextView textView = layout.findViewById(R.id.toast);
         textView.setText(message);
-        Log.i("in resultsFa", "resultsFavClickHandler--------------------message--------------: " + message);
         Toast toast = new Toast(activity);
         toast.setGravity(Gravity.BOTTOM, 0, 100);
         toast.setDuration(Toast.LENGTH_LONG);
