@@ -487,9 +487,12 @@ public class Table {
 
                 Database db = new Database(activity);
                 reviews = db.getSortedReviews(placeID, source, sortBy);
+            Log.i("in populateReviews", "populateReviews--------------------reviews.toString()--------------: "+ reviews.toString());
 
                 for (int i = 0; i < reviews.length(); i++) {
 
+
+                    Log.i("in populateReviews", "populateReviews--------------------reviews.length()--------------: "+ reviews.length() + "");
                     JSONObject row = reviews.getJSONObject(i);
 
                     String author = row.getString("author");
@@ -500,8 +503,7 @@ public class Table {
                     Integer rating = row.getInt("rating");
                     text.replace('\n', ' ');
                     table.addView(getReviewRow(author, authorURL, avatar, text, date, rating));
-                    Log.i("in populateReviews", "populateReviews--------------------AUTHOR--------------: "+ author);
-                    Log.i("in populateReviews", "populateReviews--------------------reviews.length()--------------: "+ reviews.length() + "");
+
 
                     //TODO: loop here; if not fromDB, save it to db
                 }

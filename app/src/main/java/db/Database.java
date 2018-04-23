@@ -155,7 +155,7 @@ public class Database  extends SQLiteOpenHelper{
 
         else if (dropFor.equals("reviews")) {
 
-            String whereClause = COLUMN_PLACE_ID + "=? " + COLUMN_REVIEW_SOURCE + "=? ";
+            String whereClause = COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
             db.delete(TABLE_REVIEWS, whereClause, new String[]{placeID, reviewSource});
 
         }
@@ -610,7 +610,7 @@ public class Database  extends SQLiteOpenHelper{
 
         try {
 
-            JSONObject row = new JSONObject();
+
 
 //            String author = "Kai Colucci";
 //            String authorURL = "https://www.google.com/maps/contrib/111028753854868402896/reviews";
@@ -621,6 +621,7 @@ public class Database  extends SQLiteOpenHelper{
 
             while (cursor.moveToNext()) {
 
+                JSONObject row = new JSONObject();
                 String author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_NAME));
                 String authorURL = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_URL));
                 String avatar = cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR));
