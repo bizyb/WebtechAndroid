@@ -21,9 +21,9 @@ import bizu.work.placessearch.SortBy;
 public class Database  extends SQLiteOpenHelper{
 
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    private static final String DATABASE_NAME = "abc.db";
+    private static final String DATABASE_NAME = "PlacesSearch.db";
 
     private static final String TABLE_NEARBY_PLACES = "nearby_places";
     private static final String TABLE_REVIEWS = "reviews";
@@ -217,7 +217,7 @@ public class Database  extends SQLiteOpenHelper{
         double latitude;
         double longitude;
         double rating;
-        int price_level;
+//        int price_level;
         String formatted_address;
         String formatted_phone_number;
         String name;
@@ -242,7 +242,7 @@ public class Database  extends SQLiteOpenHelper{
             latitude = responseJSON.getDouble("centerLat");
             longitude = responseJSON.getDouble("centerLon");
             rating = result.getDouble("rating");
-            price_level = result.getInt("price_level");
+//            price_level = result.getInt("price_level");
             formatted_address = result.getString("formatted_address");
             formatted_phone_number = result.getString("formatted_phone_number");
             name = result.getString("name");
@@ -266,13 +266,14 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_LATITUDE, latitude);
             values.put(COLUMN_LONGITUDE, longitude);
             values.put(COLUMN_RATING, rating);
-            values.put(COLUMN_PRICE_LEVEL, price_level);
+//            values.put(COLUMN_PRICE_LEVEL, price_level);
             values.put(COLUMN_VICINITY, formatted_address);
             values.put(COLUMN_PHONE_NUMBER, formatted_phone_number);
             values.put(COLUMN_NAME, name);
             values.put(COLUMN_GOOGLE_PAGE, google_page);
             values.put(COLUMN_WEBSITE, website);
             values.put(COLUMN_PHOTOS, photosStr);
+//            values.put(COLUMN_PLACE_ID, place_id);
 
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {place_id});
@@ -564,28 +565,52 @@ public class Database  extends SQLiteOpenHelper{
         //TODO: save to db if for the first time; otherwise check fromDB flag
         // and act accordingly
 
+//        ("SELECT EmployeeName FROM Employee WHERE EmpNo=?", new String[] {empNo + ""});
+
+//        rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
+
+        String query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_PLACE_ID + "=?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[] {place_id});
+
         try {
 
-            String name = "University of Southern California";
-            String vicinity = "Los Angeles, CA 90007, USA";
-            String phoneNumber = "(213) 740-2311";
-            String priceLevel = "$$";
-            String rating = "****";
-            String googlePage = "https://stackoverflow.com/questions/6763111/how-to-change-color-of-textview-hyperlink";
-            String website = "http://usc.edu";
+//            String name = "University of Southern California";
+//            String vicinity = "Los Angeles, CA 90007, USA";
+//            String phoneNumber = "(213) 740-2311";
+//            String priceLevel = "$$";
+//            String rating = "****";
+//            String googlePage = "https://stackoverflow.com/questions/6763111/how-to-change-color-of-textview-hyperlink";
+//            String website = "http://usc.edu";
 
-            row.put("name", name);
-            row.put("formatted_address", vicinity);
-            row.put("formatted_phone_number", phoneNumber);
-            row.put("price_level", priceLevel);
-            row.put("rating", rating);
-            row.put("url", googlePage);
-            row.put("website", website);
+            while (cursor.moveToNext()) {
+
+                String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+                String vicinity = cursor.getString(cursor.getColumnIndex(COLUMN_VICINITY));
+                String phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER));
+                int priceLevel = cursor.getInt(cursor.getColumnIndex(COLUMN_PRICE_LEVEL));
+                String rating = cursor.getString(cursor.getColumnIndex(COLUMN_RATING)) + "";
+                String googlePage = cursor.getString(cursor.getColumnIndex(COLUMN_GOOGLE_PAGE));
+                String website = cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE));
+
+                String priceLevelStr = '$' * priceLevel + "";
+                row.put("name", name);
+                row.put("formatted_address", vicinity);
+                row.put("formatted_phone_number", phoneNumber);
+                row.put("price_level", priceLevelStr);
+                row.put("rating", rating);
+                row.put("url", googlePage);
+                row.put("website", website);
+            }
 
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.d("error", e.toString());
+        }
+        finally {
+            cursor.close();
+            db.close();
         }
 
         return row;
@@ -639,7 +664,7 @@ public class Database  extends SQLiteOpenHelper{
 
         while (cursor.moveToNext()) {
 
-            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
+//            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
             name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
         }
 

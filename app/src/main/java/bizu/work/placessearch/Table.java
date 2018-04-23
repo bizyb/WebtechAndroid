@@ -413,7 +413,7 @@ public class Table {
 
         if (rowFor.equals("Rating")) {
 
-            setRatingStars(rating, 3.6f, -1);
+            setRatingStars(rating, Float.parseFloat(data), -1);
             relativeLayout.addView(rating);
             relativeLayout.setPadding(-180, -50, 0, 0);
 
