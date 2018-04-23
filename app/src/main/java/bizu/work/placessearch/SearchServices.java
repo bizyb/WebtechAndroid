@@ -111,6 +111,8 @@ public class SearchServices {
             url = "http://bizyb.us-east-2.elasticbeanstalk.com/places-details-endpoint";
             url += "?placeID=" + placeID;
 
+            //TODO: check if details (not just nearby results) are already in db; if so, load that.
+
         }
         else {
 
@@ -139,6 +141,7 @@ public class SearchServices {
                         else {
                             intent =  new Intent(activity, DetailsActivity.class);
                             intent.putExtra("placeID", placeID);
+                            intent.putExtra("loadFromDB", "false");
                         }
                         intent.putExtra("response", response.toString());
                         progressBar.dismiss();

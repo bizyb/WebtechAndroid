@@ -65,14 +65,26 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         response = intent.getStringExtra("response");
         place_id = intent.getStringExtra("placeID");
+        saveToDB(response);
         setPageTitle();
 
     }
 
-    public String getDetailsData() {
+    public String getDetailsPlaceID() {
 
-        return response;
+        return place_id;
     }
+    private void saveToDB(String response) {
+
+        Database db = new Database(this);
+        db.saveDetailsToDB(response);
+
+    }
+
+//    public String getDetailsData() {
+//
+//        return response;
+//    }
 
     private void setPageTitle() {
 
