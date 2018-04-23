@@ -12,25 +12,45 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:id="@+id/details_forward_arrow"
-                android:src="@drawable/ic_forward_arrow"/>
+                android:layout_gravity="left"
+                android:singleLine="true"
+                android:maxWidth="250dp"
+                android:paddingRight="0dp"
+                android:textColor="#ffffff"
+                android:id="@+id/action_bar_title"
+                android:textColorHighlight="#fff"
+                android:textSize="25sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:id="@+id/details_fav_icon"
-                android:src="@drawable/ic_heart"/>
+                android:gravity="right">
+
+                <ImageView
+                    android:id="@+id/details_forward_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="30dp"
+                    android:src="@drawable/ic_forward_arrow" />
+
+                <ImageView
+                    android:id="@+id/details_fav_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/ic_heart" />
+
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout

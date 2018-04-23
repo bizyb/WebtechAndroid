@@ -327,28 +327,28 @@ public class Table {
 
     }
 
-    public TableLayout getDetailsInfoTable(TableLayout table, String response, boolean fromDB) {
+    public TableLayout getDetailsInfoTable(TableLayout table, String placeID) {
 
         JSONObject results = null;
         Database db = new Database(activity);
 
-        if (fromDB) {
+//        if (fromDB) {
             // response == place_id
-            results = db.getDetailsInfo(response);
-        }
-        else {
-            // save the new info to db
-            try {
-
-                JSONObject responseJSON = new JSONObject(response);
-                results = responseJSON.getJSONObject("results");
-
-            }
-            catch(Exception e){
-                // TODO: output no results/failed to get results error here
-                Log.d("error", e.toString());
-            }
-        }
+            results = db.getDetailsInfo(placeID);
+//        }
+//        else {
+//            // save the new info to db
+//            try {
+//
+//                JSONObject responseJSON = new JSONObject(response);
+//                results = responseJSON.getJSONObject("results");
+//
+//            }
+//            catch(Exception e){
+//                // TODO: output no results/failed to get results error here
+//                Log.d("error", e.toString());
+//            }
+//        }
 
         String address, phoneNumber, priceLevel, googlePage, website, rating;
 

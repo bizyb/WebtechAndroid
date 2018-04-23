@@ -80,6 +80,8 @@ public class Database  extends SQLiteOpenHelper{
                             + COLUMN_FAV_INSERTION_ORDER + " INTEGER,"
                             + COLUMN_RATING + " REAL,"
                             + COLUMN_PHOTOS + " TEXT,"
+                            + COLUMN_LATITUDE + " REAL,"
+                            + COLUMN_LONGITUDE + " REAL,"
                             + COLUMN_GOOGLE_PAGE + " TEXT,"
                             + COLUMN_WEBSITE + " TEXT,"
                             + COLUMN_VICINITY + " TEXT" + ")";
@@ -92,8 +94,6 @@ public class Database  extends SQLiteOpenHelper{
             + COLUMN_LANGUAGE + " TEXT,"
             + COLUMN_AVATAR + " TEXT,"
             + COLUMN_RATING + " INTEGER,"
-            + COLUMN_LATITUDE + " REAL,"
-            + COLUMN_LONGITUDE + " REAL,"
             + COLUMN_RELATIVE_TIME + " TEXT,"
             + COLUMN_TEXT + " TEXT,"
             + COLUMN_EPOCH_TIME + " INTEGER,"
@@ -234,8 +234,13 @@ public class Database  extends SQLiteOpenHelper{
             JSONObject responseJSON = new JSONObject(response);
             result = responseJSON.getJSONObject("result");
 
-            latitude = result.getDouble("centerLat");
-            longitude = result.getDouble("centerLon");
+
+
+
+
+
+            latitude = responseJSON.getDouble("centerLat");
+            longitude = responseJSON.getDouble("centerLon");
             rating = result.getDouble("rating");
             price_level = result.getInt("price_level");
             formatted_address = result.getString("formatted_address");
@@ -244,10 +249,15 @@ public class Database  extends SQLiteOpenHelper{
             google_page = result.getString("url");
             place_id = result.getString("place_id");
             website = result.getString("website");
-            photosArray = result.getJSONArray("photosArray");
+            photosArray = responseJSON.getJSONArray("photosArray");
             photosStr = mergePhotoURLs(photosArray);
 
-
+//            Log.i("in saveDetailsToDB", "-------name---------------------------------: " + name);
+//            Log.i("in saveDetailsToDB", "-------place_id---------------------------------: " + place_id);
+//            Log.i("in saveDetailsToDB", "-------formatted_phone_number---------------------------------: " + formatted_phone_number);
+//            Log.i("in saveDetailsToDB", "-------photosStr---------------------------------: " + photosStr);
+//
+//
             ContentValues values = new ContentValues();
 
             this.placeName = name;
@@ -620,22 +630,22 @@ public class Database  extends SQLiteOpenHelper{
 
     public String getPlaceName(String placeID) {
 
-        return placeName;
 
-//        String name = "?";
-//        CursorContainer container = getCursor(placeID, "name");
-//        SQLiteDatabase db = container.db();
-//        Cursor cursor = container.cursor();
-//
-//        while (cursor.moveToNext()) {
-//
-//            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
-//            name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-//        }
-//
-//        cursor.close();
-//        db.close();
-//        return name;
+
+        String name = "?";
+        CursorContainer container = getCursor(placeID, "name");
+        SQLiteDatabase db = container.db();
+        Cursor cursor = container.cursor();
+
+        while (cursor.moveToNext()) {
+
+            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
+            name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+        }
+
+        cursor.close();
+        db.close();
+        return name;
 
     }
 

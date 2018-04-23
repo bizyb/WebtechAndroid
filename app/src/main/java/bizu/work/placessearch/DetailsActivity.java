@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -74,7 +76,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         return place_id;
     }
+    public String getDetailsData() {
 
+        return "xyz";
+    }
 
     private void saveToDB(String response) {
 
@@ -92,10 +97,14 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Set the global toolbar title for all the fragments
 
-        place_id = "";
         Database db = new Database(this);
         String title = db.getPlaceName(place_id);
-        getSupportActionBar().setTitle(title);
+
+        TextView textView = this.findViewById(R.id.action_bar_title);
+        textView.setText(title);
+
+        getSupportActionBar().setTitle("");
+
     }
 
 

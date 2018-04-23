@@ -10,7 +10,7 @@ import android.widget.TableLayout;
 
 public class InfoFragment extends Fragment {
 
-    private String response;
+    private String placeID;
 
     public InfoFragment() {}
 
@@ -28,7 +28,7 @@ public class InfoFragment extends Fragment {
         View v = inflater.inflate(R.layout.info_fragment, container, false);
 
         DetailsActivity activity = (DetailsActivity) getActivity();
-        response = activity.getDetailsData();
+        placeID = activity.getDetailsPlaceID();
 
         populateInfoTab(v);
 
@@ -43,8 +43,8 @@ public class InfoFragment extends Fragment {
         table.removeAllViews();
         table.setPadding(0,40, 0,50 );
 
-        Table tableObj = new Table(getActivity(), response, v, null);
-        tableObj.getDetailsInfoTable(table, response, true);
+        Table tableObj = new Table(getActivity(), null, v, null);
+        tableObj.getDetailsInfoTable(table, placeID);
 
 
     }

@@ -63,8 +63,10 @@ public class SearchServices {
         keywordStr = keyword.getText().toString();
         distanceStr = distance.getText().toString();
         customLoc = "-1";
-        centerLat = "51.503186";
-        centerLon = "-0.126446";
+        centerLat = "34.0266 ";
+        centerLon = "-118.2831";
+
+
 //        currLoc = getCurrentLocation();
 
         if (otherLocBtn.isChecked()) {
