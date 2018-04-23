@@ -217,7 +217,7 @@ public class Database  extends SQLiteOpenHelper{
         double latitude;
         double longitude;
         double rating;
-//        int price_level;
+        int price_level;
         String formatted_address;
         String formatted_phone_number;
         String name;
@@ -242,7 +242,7 @@ public class Database  extends SQLiteOpenHelper{
             latitude = responseJSON.getDouble("centerLat");
             longitude = responseJSON.getDouble("centerLon");
             rating = result.getDouble("rating");
-//            price_level = result.getInt("price_level");
+            price_level = result.getInt("price_level");
             formatted_address = result.getString("formatted_address");
             formatted_phone_number = result.getString("formatted_phone_number");
             name = result.getString("name");
@@ -252,7 +252,7 @@ public class Database  extends SQLiteOpenHelper{
             photosArray = responseJSON.getJSONArray("photosArray");
             photosStr = mergePhotoURLs(photosArray);
 
-//            Log.i("in saveDetailsToDB", "-------name---------------------------------: " + name);
+            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
 //            Log.i("in saveDetailsToDB", "-------place_id---------------------------------: " + place_id);
 //            Log.i("in saveDetailsToDB", "-------formatted_phone_number---------------------------------: " + formatted_phone_number);
 //            Log.i("in saveDetailsToDB", "-------photosStr---------------------------------: " + photosStr);
@@ -266,7 +266,7 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_LATITUDE, latitude);
             values.put(COLUMN_LONGITUDE, longitude);
             values.put(COLUMN_RATING, rating);
-//            values.put(COLUMN_PRICE_LEVEL, price_level);
+            values.put(COLUMN_PRICE_LEVEL, price_level);
             values.put(COLUMN_VICINITY, formatted_address);
             values.put(COLUMN_PHONE_NUMBER, formatted_phone_number);
             values.put(COLUMN_NAME, name);
@@ -588,16 +588,16 @@ public class Database  extends SQLiteOpenHelper{
                 String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
                 String vicinity = cursor.getString(cursor.getColumnIndex(COLUMN_VICINITY));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER));
-                int priceLevel = cursor.getInt(cursor.getColumnIndex(COLUMN_PRICE_LEVEL));
+                String priceLevel = cursor.getInt(cursor.getColumnIndex(COLUMN_PRICE_LEVEL)) + "";
                 String rating = cursor.getString(cursor.getColumnIndex(COLUMN_RATING)) + "";
                 String googlePage = cursor.getString(cursor.getColumnIndex(COLUMN_GOOGLE_PAGE));
                 String website = cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE));
 
-                String priceLevelStr = '$' * priceLevel + "";
+//                String priceLevelStr = '$' * priceLevel + "";
                 row.put("name", name);
                 row.put("formatted_address", vicinity);
                 row.put("formatted_phone_number", phoneNumber);
-                row.put("price_level", priceLevelStr);
+                row.put("price_level", priceLevel);
                 row.put("rating", rating);
                 row.put("url", googlePage);
                 row.put("website", website);

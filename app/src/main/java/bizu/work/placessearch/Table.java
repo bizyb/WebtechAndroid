@@ -411,6 +411,10 @@ public class Table {
         RatingBar rating = new RatingBar(activity);
         RelativeLayout relativeLayout = new RelativeLayout(activity);
 
+        if (rowFor.equals("Price Level")) {
+
+            data = getPriceLevel(data);
+        }
         if (rowFor.equals("Rating")) {
 
             setRatingStars(rating, Float.parseFloat(data), -1);
@@ -462,6 +466,16 @@ public class Table {
         }
 
         return row;
+    }
+
+    private String getPriceLevel(String data) {
+
+        int count = Integer.parseInt(data);
+        String dollarSigns = "";
+
+        for (int i = 0; i < count; i++) { dollarSigns += "$"; }
+
+        return dollarSigns;
     }
 
     public void populateReviews(TableLayout table, String source, boolean fromDB, SortBy sortBy) {
