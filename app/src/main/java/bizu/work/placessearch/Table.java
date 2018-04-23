@@ -1,6 +1,7 @@
 package bizu.work.placessearch;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -34,6 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import db.Database;
 
@@ -87,13 +89,14 @@ public class Table {
         setResultsFav(favIcon, placeID, tableFor);
 
         // Place name
-        String nameNaddr = "<strong>" + name + "</strong>";
-        nameNaddr += "<br>" + vicinity;
-        placeName.setText(Html.fromHtml(nameNaddr));
-
-        placeName.setMaxWidth(1000);
-        placeName.setMinWidth(1000);
-        placeName.setMinHeight(200);
+        setResultsPlaceName(placeName, name, vicinity, placeID);
+//        String nameNaddr = "<strong>" + name + "</strong>";
+//        nameNaddr += "<br>" + vicinity;
+//        placeName.setText(Html.fromHtml(nameNaddr));
+//
+//        placeName.setMaxWidth(1000);
+//        placeName.setMinWidth(1000);
+//        placeName.setMinHeight(200);
 
         tr.addView(catIcon, new TableRow.LayoutParams(1));
         tr.addView(placeName, new TableRow.LayoutParams(2));
@@ -102,6 +105,33 @@ public class Table {
 
 
         return tr;
+    }
+
+    private void setResultsPlaceName(TextView placeName, String name, String vicinity, final String placeID) {
+
+
+        String nameNaddr = "<strong>" + name + "</strong>";
+        nameNaddr += "<br>" + vicinity;
+        placeName.setText(Html.fromHtml(nameNaddr));
+
+        placeName.setMaxWidth(1000);
+        placeName.setMinWidth(1000);
+        placeName.setMinHeight(200);
+
+        // Set a click listener. When clicked/touched, show a progress bar while fetching
+        // the details page. When the results are ready, dismiss the progress bar and
+        // load the details activity.
+        placeName.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                SearchServices ss = new SearchServices(activity, view);
+                ss.search(placeID);
+
+            }
+        });
+
     }
 
     private void setResultsFav(final ImageView favIcon, final String placeID, final String tableFor) {
@@ -254,7 +284,7 @@ public class Table {
                 vicinity = r.getString("vicinity");
                 iconURL = r.getString("icon");
                 placeID = r.getString("place_id");
-                Log.i("in populateTable", "populateTable--------------------2--------------");
+//                Log.i("in populateTable", "populateTable--------------------2--------------");
 
 
                 if (pageFromDB < 0) { saveToDB(r, optional); }

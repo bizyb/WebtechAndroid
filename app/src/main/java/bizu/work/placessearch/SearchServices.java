@@ -102,13 +102,22 @@ public class SearchServices {
         return queryString;
     }
 
-    public void search() {
+    public void search(final String placeID) {
 
-        String queryString = getGETParams();
-        RequestQueue queue = Volley.newRequestQueue(view.getContext());
+        RequestQueue queue = Volley.newRequestQueue(activity);
+        String url = "";
 
+        if (placeID != null) {
+            url = "http://bizyb.us-east-2.elasticbeanstalk.com/places-details-endpoint";
+            url += "?placeID=" + placeID;
 
-        final String url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+        }
+        else {
+
+            String queryString = getGETParams();
+            url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+        }
+
 //        final String url = "http://ip-api.com/json";
         Log.d("url", url);
 
@@ -120,12 +129,20 @@ public class SearchServices {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
+                        Intent intent = new Intent(activity, ResultsActivity.class);
                         Log.d("Response", response.toString());
-                        Intent resultsIntent = new Intent(activity, ResultsActivity.class);
-                        resultsIntent.putExtra("response", response.toString());
-                        resultsIntent.putExtra("resultType", "SEARCH_RESULTS");
+
+                        if (placeID == null) {
+
+                            intent.putExtra("resultType", "SEARCH_RESULTS");
+                        }
+                        else {
+                            intent =  new Intent(activity, DetailsActivity.class);
+                            intent.putExtra("placeID", placeID);
+                        }
+                        intent.putExtra("response", response.toString());
                         progressBar.dismiss();
-                        activity.startActivity(resultsIntent);
+                        activity.startActivity(intent);
                     }
                 },
                 new Response.ErrorListener()
@@ -143,11 +160,12 @@ public class SearchServices {
         showProgressBar();
     }
 
+
     public void showProgressBar() {
 
         String msg = activity.getResources().getString(R.string.fetching_results);
 
-        progressBar = new ProgressDialog(view.getContext(), R.style.FetchingResultsStyle);
+        progressBar = new ProgressDialog(activity, R.style.FetchingResultsStyle);
         progressBar.setCancelable(true);
         progressBar.setMessage(msg);
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);

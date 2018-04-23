@@ -64,7 +64,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         response = intent.getStringExtra("response");
-//        place_id = intent.getStringExtra("place_id");
+        place_id = intent.getStringExtra("placeID");
         setPageTitle();
 
     }

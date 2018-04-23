@@ -236,7 +236,7 @@ public class SearchFragment extends Fragment {
         if (formIsValid()) {
 
             SearchServices ss = new SearchServices(getActivity(), v);
-            ss.search();
+            ss.search(null);
         }
 
     }
