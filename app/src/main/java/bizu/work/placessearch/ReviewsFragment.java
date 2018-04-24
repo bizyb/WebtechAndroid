@@ -15,8 +15,9 @@ import android.widget.TableLayout;
 public class ReviewsFragment extends Fragment {
 
     private String placeID;
-    String reviewsFromGlobal;
-    SortBy sortByGlobal;
+    String reviewsFrom;
+    SortBy sortBy;
+    View v;
 
     public ReviewsFragment() {
     }
@@ -32,7 +33,7 @@ public class ReviewsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Populate the dropdown list and inflate the layout fragment
-        View v = inflater.inflate(R.layout.reviews_fragment, container, false);
+        v = inflater.inflate(R.layout.reviews_fragment, container, false);
 
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
@@ -44,9 +45,9 @@ public class ReviewsFragment extends Fragment {
         setSpinnerListeners(v);
 
 //        Button btnClear = (Button) v.findViewById(R.id.btn_clear);
-        reviewsFromGlobal = "Google";
-        sortByGlobal = SortBy.DEFAULT_ORDER;
-        populateReviews(v, reviewsFromGlobal, sortByGlobal);
+        reviewsFrom = "Google";
+        sortBy = SortBy.DEFAULT_ORDER;
+        populateReviews();
 
 
 
@@ -69,7 +70,7 @@ public class ReviewsFragment extends Fragment {
 
     }
 
-    private void populateReviews(View v, String reviewsFrom, SortBy sortBy) {
+    private void populateReviews() {
 
         TableLayout table = v.findViewById(R.id.reviews_table);
         table.removeAllViews();
@@ -101,22 +102,23 @@ public class ReviewsFragment extends Fragment {
                 String value = item.toString();
                 switch(value) {
                     case "Google reviews":
-                        reviewsFromGlobal = "Google";
+                        reviewsFrom = "Google";
                         break;
                     case "Yelp reviews":
-                        reviewsFromGlobal = "Yelp";
+                        reviewsFrom = "Yelp";
                         break;
                     default:
-                        reviewsFromGlobal = "Google";
+                        reviewsFrom = "Google";
                         break;
                 }
-                Log.i("reviewsFromGlobal", "------reviewsFromGlobal------reviewsFromGlobal--------reviewsFromGlobal-------------: " + reviewsFromGlobal);
+                populateReviews();
+//                Log.i("reviewsFromGlobal", "------reviewsFromGlobal------reviewsFromGlobal--------reviewsFromGlobal-------------: " + reviewsFromGlobal);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // this doesn't really apply
-                reviewsFromGlobal = "Google";
+                reviewsFrom = "Google";
             }
 
         });
@@ -126,35 +128,36 @@ public class ReviewsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
                 Object item = parentView.getItemAtPosition(position);
-                String sortBy = item.toString();
-                Log.i("sortBy", "------sortBy------sortBy--------sortBy-------------: " + sortBy);
-                switch (sortBy) {
+                String value = item.toString();
+//                Log.i("sortBy", "------sortBy------sortBy--------sortBy-------------: " + sortBy);
+                switch (value) {
 
                     case "Default Order":
-                        sortByGlobal = SortBy.DEFAULT_ORDER;
+                        sortBy = SortBy.DEFAULT_ORDER;
                         break;
                     case "Highest Rating":
-                        sortByGlobal = SortBy.HIGHEST_RATING;
+                        sortBy = SortBy.HIGHEST_RATING;
                         break;
                     case "Lowest Rating":
-                        sortByGlobal = SortBy.LOWEST_RATING;
+                        sortBy = SortBy.LOWEST_RATING;
                         break;
                     case "Most Recent":
-                        sortByGlobal = SortBy.MOST_RECENT;
+                        sortBy = SortBy.MOST_RECENT;
                         break;
                     case "Least Recent":
-                        sortByGlobal = SortBy.LEAST_RECENT;
+                        sortBy = SortBy.LEAST_RECENT;
                         break;
                     default:
-                        sortByGlobal = SortBy.DEFAULT_ORDER;
+                        sortBy = SortBy.DEFAULT_ORDER;
                         break;
                     }
+                populateReviews();
                 }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // this doesn't really apply
-                sortByGlobal = SortBy.DEFAULT_ORDER;
+                sortBy = SortBy.DEFAULT_ORDER;
             }
 
         });
