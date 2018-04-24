@@ -3,7 +3,7 @@
     android:id="@+id/info_fragment"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:drawableLeft="@drawable/ic_info"
+    android:drawableLeft="@drawable/info_outline"
     android:drawablePadding="10dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"

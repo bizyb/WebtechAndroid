@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     String  currentLoc;
     private int[] tabIcons = {
-            R.drawable.ic_magnifying_glass_white,
-            R.drawable.ic_heart,
+            R.drawable.search,
+            R.drawable.heart_fill_white,
     };
 
     @Override

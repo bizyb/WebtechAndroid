@@ -3,7 +3,7 @@
     android:id="@+id/photos_fragment"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:drawableLeft="@drawable/ic_phtos"
+    android:drawableLeft="@drawable/photos"
     android:layout_gravity="center"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"

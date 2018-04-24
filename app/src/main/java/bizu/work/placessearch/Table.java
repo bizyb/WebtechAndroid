@@ -138,13 +138,13 @@ public class Table {
 
         // Set the favorites icon based on whether the place is already in the favorites list
 
-        int id = R.drawable.ic_favorite_plain;
+        int id = R.drawable.heart_outline_black;
         boolean isFavorited = false;
 
         final Database db = new Database(activity);
         if (db.checkState(placeID, "favorites")) {
 
-            id = R.drawable.ic_favorite_red;
+            id = R.drawable.heart_fill_red;
             isFavorited = true;
         }
 
@@ -172,7 +172,7 @@ public class Table {
         // change the color to plain
 
         Database db = new Database(activity);
-        int id = R.drawable.ic_favorite_plain;
+        int id = R.drawable.heart_outline_black;
         boolean isFavorited = db.addToFav(placeID);
 
         String placeName = db.getPlaceName(placeID);
@@ -181,7 +181,7 @@ public class Table {
 
         if (isFavorited) {
 
-            id =  R.drawable.ic_favorite_red;
+            id =  R.drawable.heart_fill_red;
             showToast(placeName, false);
         }
         else {

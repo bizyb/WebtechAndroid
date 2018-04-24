@@ -3,7 +3,7 @@
     android:id="@+id/reviews_fragment"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:drawableLeft="@drawable/ic_reviews"
+    android:drawableLeft="@drawable/review"
     android:layout_gravity="center"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"

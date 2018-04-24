@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:paddingRight="30dp"
-                    android:src="@drawable/ic_forward_arrow" />
+                    android:src="@drawable/share" />
 
                 <ImageView
                     android:id="@+id/details_fav_icon"
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="50dp"
                     android:paddingRight="10dp"
-                    android:src="@drawable/ic_heart" />
+                    android:src="@drawable/heart_outline_white" />
 
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>

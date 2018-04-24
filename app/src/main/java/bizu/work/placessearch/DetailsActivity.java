@@ -32,10 +32,10 @@ public class DetailsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.ic_info,
-            R.drawable.ic_phtos,
-            R.drawable.ic_directions_black_24dp,
-            R.drawable.ic_reviews,
+            R.drawable.info_outline,
+            R.drawable.photos,
+            R.drawable.maps,
+            R.drawable.review,
     };
 
     @Override
