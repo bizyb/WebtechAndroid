@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 
@@ -37,8 +39,13 @@ public class ReviewsFragment extends Fragment {
         populateDropdown(v, R.id.review_source, R.array.review_source);
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
 
-        //TODO: set listeners for spinner selection and pass that to get sorted reviews
-        populateReviews(v);
+        setSpinnerListeners(v);
+
+//        Button btnClear = (Button) v.findViewById(R.id.btn_clear);
+
+        populateReviews(v, "Google", SortBy.DEFAULT_ORDER);
+
+
 
         return v;
     }
@@ -59,16 +66,36 @@ public class ReviewsFragment extends Fragment {
 
     }
 
-    private void populateReviews(View v) {
+    private void populateReviews(View v, String reviewsFrom, SortBy sortBy) {
 
         TableLayout table = v.findViewById(R.id.reviews_table);
         table.removeAllViews();
         table.setPadding(0,20, 0,20 );
 
         Table tableObj = new Table(getActivity(), null, v, null);
-        tableObj.populateReviews(table, placeID, "Google",SortBy.DEFAULT_ORDER);
+        tableObj.populateReviews(table, placeID, reviewsFrom, sortBy);
 
     }
 
 
+    /*
+    * Set review dropdown click listeners. If review source is selected, get the current sort option
+    * selected and vice versa since only one of them would fire a signal at a time.
+    * */
+    private void setSpinnerListeners(View v) {
+
+        Spinner reviewSourceSpinner = (Spinner) v.findViewById(R.id.review_source);
+        reviewSourceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                Object item = parent.getItemAtPosition(pos);
+                Log.i("in setSpinnerListeners", "------setSpinnerListeners------selected--------item-------------: " + item.toString());
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+
+                Object item = parent.getItemAtPosition(0);
+                Log.i("in setSpinnerListeners", "------setSpinnerListeners------selected--------item-------------: " + item.toString());
+            }
+        });
+
+    }
 }

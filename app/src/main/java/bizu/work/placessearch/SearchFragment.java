@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +25,7 @@ import org.json.JSONObject;
 
 public class SearchFragment extends Fragment {
 
-
+    private String category;
     public SearchFragment() {
     }
 
@@ -40,7 +42,7 @@ public class SearchFragment extends Fragment {
 
         // Populate the dropdown list and inflate the layout fragment
         View v = inflater.inflate(R.layout.search_form, container, false);
-        populateDropdown(v);
+//        populateDropdown(v);
 
         // Set onclick listeners
         Button btnClear = (Button) v.findViewById(R.id.btn_clear);
@@ -51,6 +53,8 @@ public class SearchFragment extends Fragment {
         final EditText distance = (EditText) v.findViewById(R.id.distance_input);
         final EditText otherLocInput = (EditText) v.findViewById(R.id.other_loc_input);
 
+        category = "Default";
+        setSpinnerListeners(v);
 
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +119,8 @@ public class SearchFragment extends Fragment {
                 android.R.layout.simple_spinner_dropdown_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
+//        spinner.setDropDownVerticalOffset(500);
+
 
     }
 
@@ -218,6 +224,28 @@ public class SearchFragment extends Fragment {
         return isValid;
     }
 
+    private void setSpinnerListeners(View v) {
+
+        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+        
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                Object item = parentView.getItemAtPosition(position);
+                category = item.toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+               // this doesn't really apply
+                category = "Default";
+            }
+
+        });
+
+    }
+
     private void showToast() {
 
         LayoutInflater inflater = getLayoutInflater();
@@ -236,6 +264,7 @@ public class SearchFragment extends Fragment {
         if (formIsValid()) {
 
             SearchServices ss = new SearchServices(getActivity(), v);
+            JSONObject formData = getFormData();
             ss.search(null);
         }
 
@@ -255,9 +284,13 @@ public class SearchFragment extends Fragment {
         otherLocInput.setText("");
         errorMsg1.setVisibility(View.INVISIBLE);
         errorMsg2.setVisibility(View.INVISIBLE);
+
         populateDropdown(v);
         resetRadioBtn();
 
     }
 
+    public JSONObject getFormData() {
+        return formData;
+    }
 }
