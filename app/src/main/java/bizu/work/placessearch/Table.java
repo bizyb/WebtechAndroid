@@ -233,7 +233,7 @@ public class Table {
 
     private void setIcon(ImageView imageView, String url) {
 
-        Picasso.get().load(url).into(imageView);
+        Picasso.get().load(url).resize(150, 150).into(imageView);
     }
 
     public TableLayout populateTable(String tableFor, int pageFromDB, int... optional) {
@@ -557,8 +557,6 @@ public class Table {
         textRow.addView(textView);
         dateRow.addView(dateView);
         imageRow.addView(imageView);
-        imageView.setMaxWidth(50);
-        imageView.setMaxHeight(50);
         setImageListener(imageView, textView);
 
         rightTable.addView(authorRow, new TableRow.LayoutParams(1));
@@ -652,6 +650,16 @@ public class Table {
                 }
 
                 imageView.setPadding(50, topPadding, 50, 50);
+//                imageView.setAdjustViewBounds(true);
+//                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//                android.view.ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+//                layoutParams.width = 100;
+//                layoutParams.height = 100;
+//                imageView.setLayoutParams(layoutParams);
+//                imageView.setMaxWidth(50);
+//                imageView.setMaxHeight(50);
+//                textView.setMinWidth(900);
+//                imageView.getRootView().setMinimumWidth(900);
             }
         });
 
