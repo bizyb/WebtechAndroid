@@ -539,6 +539,7 @@ public class Table {
         ImageView imageView = new ImageView(activity);
 
 
+
         setAuthorName(authorView, author, authorURL);
 
         setRatingStars(ratingBar, -1.0f, rating);
@@ -549,12 +550,15 @@ public class Table {
         dateView.setText(date);
         textView.setText(text);
         textView.setMaxWidth(900);
+        textView.setMinWidth(900);
 
         authorRow.addView(authorView);
         ratingRow.addView(relativeLayout);
         textRow.addView(textView);
         dateRow.addView(dateView);
         imageRow.addView(imageView);
+        imageView.setMaxWidth(50);
+        imageView.setMaxHeight(50);
         setImageListener(imageView, textView);
 
         rightTable.addView(authorRow, new TableRow.LayoutParams(1));

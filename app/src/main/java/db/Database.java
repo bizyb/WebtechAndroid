@@ -302,6 +302,7 @@ public class Database  extends SQLiteOpenHelper{
         String website;
         JSONArray photosArray;
         JSONArray googleReviews;
+        JSONArray yelpReviews;
         String photosStr;
         String place_id;
 
@@ -327,8 +328,10 @@ public class Database  extends SQLiteOpenHelper{
             photosArray = responseJSON.getJSONArray("photosArray");
             photosStr = mergePhotoURLs(photosArray);
 
-            String key = "google_reviews_" + place_id;
-            googleReviews = responseJSON.getJSONArray(key);
+            String googleKey = "google_reviews_" + place_id;
+            String yelpKey = "yelp_reviews_" + place_id;
+            googleReviews = responseJSON.getJSONArray(googleKey);
+            yelpReviews = responseJSON.getJSONArray(yelpKey);
 
 
 //            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
@@ -358,6 +361,7 @@ public class Database  extends SQLiteOpenHelper{
                     new String[] {place_id});
 
             saveReviewsToDB(googleReviews, place_id, "Google");
+            saveReviewsToDB(yelpReviews, place_id, "Yelp");
     }
      catch(Exception e){
         // TODO: output no results/failed to get results error here
@@ -600,12 +604,39 @@ public class Database  extends SQLiteOpenHelper{
         return results;
     }
 
+    private String getSortingColumn(SortBy sortBy) {
+
+        String column = COLUMN_DEFAULT_INDEX;
+
+        switch(sortBy) {
+
+            case HIGHEST_RATING:
+                column = "-" + COLUMN_RATING;
+                break;
+            case LOWEST_RATING:
+                column = COLUMN_RATING;
+                break;
+            case MOST_RECENT:
+                column = "-" + COLUMN_EPOCH_TIME;
+                break;
+            case LEAST_RECENT:
+                column = COLUMN_EPOCH_TIME;
+                break;
+            default:
+                column = COLUMN_DEFAULT_INDEX;
+                break;
+        }
+
+        return column;
+    }
+
     public JSONArray getSortedReviews(String placeID, String reviewsFrom, SortBy sortBy) {
 
 
         JSONArray reviews = new JSONArray();
 
         String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
+        query += " ORDER BY " + getSortingColumn(sortBy);
 //        query += " AND " + COLUMN_PLACE_ID + "=?";
         Log.i("in getSortedReviews", "getSortedReviews--------------------placeID--------------: "+ placeID);
         Log.i("in getSortedReviews", "getSortedReviews--------------------reviewsFrom--------------: "+ reviewsFrom);
