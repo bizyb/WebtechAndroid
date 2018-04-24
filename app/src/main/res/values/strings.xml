@@ -79,7 +79,7 @@
 
     <string-array name="review_sort_method">
         <item>Default Order</item>
-        <item> Highest Rating</item>
+        <item>Highest Rating</item>
         <item>Lowest Rating</item>
         <item>Most Recent</item>
         <item>Least Recent</item>

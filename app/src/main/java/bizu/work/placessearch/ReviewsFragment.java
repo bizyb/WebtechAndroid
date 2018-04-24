@@ -15,6 +15,8 @@ import android.widget.TableLayout;
 public class ReviewsFragment extends Fragment {
 
     private String placeID;
+    String reviewsFromGlobal;
+    SortBy sortByGlobal;
 
     public ReviewsFragment() {
     }
@@ -42,8 +44,9 @@ public class ReviewsFragment extends Fragment {
         setSpinnerListeners(v);
 
 //        Button btnClear = (Button) v.findViewById(R.id.btn_clear);
-
-        populateReviews(v, "Google", SortBy.DEFAULT_ORDER);
+        reviewsFromGlobal = "Google";
+        sortByGlobal = SortBy.DEFAULT_ORDER;
+        populateReviews(v, reviewsFromGlobal, sortByGlobal);
 
 
 
@@ -84,18 +87,78 @@ public class ReviewsFragment extends Fragment {
     * */
     private void setSpinnerListeners(View v) {
 
-        Spinner reviewSourceSpinner = (Spinner) v.findViewById(R.id.review_source);
-        reviewSourceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Object item = parent.getItemAtPosition(pos);
-                Log.i("in setSpinnerListeners", "------setSpinnerListeners------selected--------item-------------: " + item.toString());
-            }
-            public void onNothingSelected(AdapterView<?> parent) {
+//        populateDropdown(v, R.id.review_source, R.array.review_source);
+//        populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
 
-                Object item = parent.getItemAtPosition(0);
-                Log.i("in setSpinnerListeners", "------setSpinnerListeners------selected--------item-------------: " + item.toString());
+        Spinner reviewSource = (Spinner) v.findViewById(R.id.review_source);
+        Spinner sortingOption = (Spinner) v.findViewById(R.id.review_sort_option);
+
+        reviewSource.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                Object item = parentView.getItemAtPosition(position);
+                String value = item.toString();
+                switch(value) {
+                    case "Google reviews":
+                        reviewsFromGlobal = "Google";
+                        break;
+                    case "Yelp reviews":
+                        reviewsFromGlobal = "Yelp";
+                        break;
+                    default:
+                        reviewsFromGlobal = "Google";
+                        break;
+                }
+                Log.i("reviewsFromGlobal", "------reviewsFromGlobal------reviewsFromGlobal--------reviewsFromGlobal-------------: " + reviewsFromGlobal);
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // this doesn't really apply
+                reviewsFromGlobal = "Google";
+            }
+
         });
 
+        sortingOption.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                Object item = parentView.getItemAtPosition(position);
+                String sortBy = item.toString();
+                Log.i("sortBy", "------sortBy------sortBy--------sortBy-------------: " + sortBy);
+                switch (sortBy) {
+
+                    case "Default Order":
+                        sortByGlobal = SortBy.DEFAULT_ORDER;
+                        break;
+                    case "Highest Rating":
+                        sortByGlobal = SortBy.HIGHEST_RATING;
+                        break;
+                    case "Lowest Rating":
+                        sortByGlobal = SortBy.LOWEST_RATING;
+                        break;
+                    case "Most Recent":
+                        sortByGlobal = SortBy.MOST_RECENT;
+                        break;
+                    case "Least Recent":
+                        sortByGlobal = SortBy.LEAST_RECENT;
+                        break;
+                    default:
+                        sortByGlobal = SortBy.DEFAULT_ORDER;
+                        break;
+                    }
+                }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // this doesn't really apply
+                sortByGlobal = SortBy.DEFAULT_ORDER;
+            }
+
+        });
     }
 }
+
+//
