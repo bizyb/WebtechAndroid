@@ -1,5 +1,6 @@
 package bizu.work.placessearch;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -85,7 +86,8 @@ public class DetailsActivity extends AppCompatActivity {
         placeWebsite = db.getPlaceName(place_id, "website");
 
         setPageTitle();
-        SetShareFavListeners();
+        setTwitterListener();
+        setDetailsFavListener();
 
         Log.i("in oncCreate", "------onCreate DetailAcitivity--------------placeID-------------: " + place_id);
 
@@ -94,7 +96,7 @@ public class DetailsActivity extends AppCompatActivity {
     /*
     * Set twitter share button and fav icon click listener.
     * */
-    private void SetShareFavListeners() {
+    private void setTwitterListener() {
 
         ImageView twitterLink = findViewById(R.id.details_twitter);
         twitterLink.setClickable(true);
@@ -121,6 +123,35 @@ public class DetailsActivity extends AppCompatActivity {
         intent.setData(Uri.parse(url));
 
         startActivity(intent);
+    }
+
+    /*
+    * Set details activity fav icon click listener. If the place is already in favorites,
+    * highlight the icon.
+    * */
+    private void setDetailsFavListener() {
+
+        final ImageView favIcon = findViewById(R.id.details_fav_icon);
+        favIcon.setClickable(true);
+        final Activity activity = this;
+
+        // Call the fav button click handler twice to set the icon state of what it was in the
+        // results/favorites page to be the same in the details page
+        Table tableObj = new Table(activity, null, null, null);
+        tableObj.resultsFavClickHandler(favIcon, place_id, "Details", false);
+        tableObj.resultsFavClickHandler(favIcon, place_id, "Details", false);
+
+        favIcon.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+                Table tableObj = new Table(activity, null, null, null);
+                tableObj.resultsFavClickHandler(favIcon, place_id, "Details", true);
+
+            }
+        });
     }
 
 

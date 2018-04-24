@@ -159,20 +159,24 @@ public class Table {
 
             @Override
             public void onClick(View v) {
-                resultsFavClickHandler(favIcon, placeID, tableFor);
+                resultsFavClickHandler(favIcon, placeID, tableFor, true);
 
             }
         });
 
     }
 
-    private void resultsFavClickHandler(final ImageView favIcon, final String placeID, String tableFor) {
+    public void resultsFavClickHandler(final ImageView favIcon, final String placeID,
+                                       String tableFor, boolean doShowToast) {
 
         // update the state of the favorites button. If favorited, change color to red. Otherwise,
         // change the color to plain
 
         Database db = new Database(activity);
         int id = R.drawable.heart_outline_black;
+        if (tableFor.equals("Details")) {
+            id = R.drawable.heart_outline_white;
+        }
         boolean isFavorited = db.addToFav(placeID);
 
         String placeName = db.getPlaceName(placeID, "Name");
@@ -182,10 +186,14 @@ public class Table {
         if (isFavorited) {
 
             id =  R.drawable.heart_fill_red;
-            showToast(placeName, false);
+            if (tableFor.equals("Details")) {
+                id = R.drawable.heart_fill_white;
+            }
+
+            if (doShowToast) {showToast(placeName, false);};
         }
         else {
-            showToast(placeName, true);
+            if (doShowToast) {showToast(placeName, true);}
         }
 
         Drawable heart = activity.getResources().getDrawable(id);
