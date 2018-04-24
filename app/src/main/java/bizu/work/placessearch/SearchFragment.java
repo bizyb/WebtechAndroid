@@ -319,17 +319,38 @@ public class SearchFragment extends Fragment {
         TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
         TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
 
+//        RadioButton currLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_current_loc);
+        RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
+
+        String otherLocValue = otherLocInput.getText().toString();
+        double centerLat = Double.parseDouble(activity.getCurrentLocation().split(",")[0]);
+        double centerLon =  Double.parseDouble(activity.getCurrentLocation().split(",")[1]);
+
+        if (otherLocBtn.isChecked()) {
+
+            centerLat = -1;
+            centerLon = -1;
+
+        }
+        else {
+            otherLocValue = "-1";
+        }
+
+        String distanceValue = distance.getText().toString();
+        String categoryValue = category.toLowerCase().replace(' ', '_');
+        if (distanceValue.equals("")) {distanceValue = "10";}
+
+
         JSONObject formData = new JSONObject();
         try {
-            String distanceValue = distance.getText().toString();
-            String categoryValue = category.toLowerCase().replace(' ', '_');
-            if (distanceValue.equals("")) {distanceValue = "10";}
+
 
             formData.put("keyword", keyword.getText().toString());
             formData.put("distance", distanceValue);
-            formData.put("otherLoc", otherLocInput.getText().toString());
+            formData.put("customLoc", otherLocValue);
             formData.put("category", categoryValue);
-            formData.put("currentLoc", activity.getCurrentLocation());
+            formData.put("centerLat", centerLat);
+            formData.put("centerLon", centerLon);
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
