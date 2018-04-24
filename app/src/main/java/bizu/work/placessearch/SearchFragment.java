@@ -291,6 +291,8 @@ public class SearchFragment extends Fragment {
 
     private void clearForm(View v) {
 
+        JSONObject formData = getFormData();
+        Log.d("formData------------------formData-------------: ", formData.toString());
 
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
@@ -320,12 +322,13 @@ public class SearchFragment extends Fragment {
         JSONObject formData = new JSONObject();
         try {
             String distanceValue = distance.getText().toString();
+            String categoryValue = category.toLowerCase().replace(' ', '_');
             if (distanceValue.equals("")) {distanceValue = "10";}
 
             formData.put("keyword", keyword.getText().toString());
             formData.put("distance", distanceValue);
             formData.put("otherLoc", otherLocInput.getText().toString());
-            formData.put("category", category);
+            formData.put("category", categoryValue);
             formData.put("currentLoc", activity.getCurrentLocation());
         }
         catch(Exception e){
