@@ -27,6 +27,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import db.Database;
+
 public class SearchServices {
 
     private ProgressDialog progressBar;
@@ -135,13 +137,12 @@ public class SearchServices {
 
         RequestQueue queue = Volley.newRequestQueue(activity);
         String url = "";
+        boolean loadFromDB = false;
 
         if (placeID != null) {
             url = "http://bizyb.us-east-2.elasticbeanstalk.com/places-details-endpoint";
             url += "?placeID=" + placeID;
-
-            //TODO: check if details (not just nearby results) are already in db; if so, load that.
-
+            loadFromDB = new Database(activity).detailsInDB(placeID);
         }
         else {
 
@@ -154,51 +155,57 @@ public class SearchServices {
 
         Log.i("in search", "search--------------------placeID-------------: " + placeID);
 
-        // prepare the Request
-        JsonObjectRequest getRequest = new JsonObjectRequest(
-                Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // display response
-                        Intent intent = new Intent(activity, ResultsActivity.class);
-                        Log.d("Response", response.toString());
+        if (loadFromDB) {
 
-                        if (placeID == null) {
+            Intent intent =  new Intent(activity, DetailsActivity.class);
+            intent.putExtra("placeID", placeID);
+            intent.putExtra("loadFromDB", "true");
+            intent.putExtra("response", "");
+            activity.startActivity(intent);
+        }
+        else {
+            JsonObjectRequest getRequest = new JsonObjectRequest(
+                    Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // display response
+                            Intent intent = new Intent(activity, ResultsActivity.class);
+                            Log.d("Response", response.toString());
 
-                            intent.putExtra("resultType", "SEARCH_RESULTS");
+                            if (placeID == null) {
+
+                                intent.putExtra("resultType", "SEARCH_RESULTS");
+                            } else {
+
+                                Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
+                                intent = new Intent(activity, DetailsActivity.class);
+                                intent.putExtra("placeID", placeID);
+                                intent.putExtra("loadFromDB", "false");
+                            }
+                            intent.putExtra("response", response.toString());
+                            progressBar.dismiss();
+                            activity.startActivity(intent);
                         }
-                        else {
-
-                            Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
-                            intent =  new Intent(activity, DetailsActivity.class);
-                            intent.putExtra("placeID", placeID);
-                            intent.putExtra("loadFromDB", "false");
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("Error.Response", error.toString());
+                            Log.e("in search", "in search--------------------ERROR--------------");
+                            progressBar.dismiss();
                         }
-                        intent.putExtra("response", response.toString());
-                        progressBar.dismiss();
-                        activity.startActivity(intent);
                     }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Error.Response", error.toString());
-                        Log.e("in search", "in search--------------------ERROR--------------");
-                        progressBar.dismiss();
-                    }
-                }
-        );
-        getRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            );
+            getRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    10000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        // add it to the RequestQueue
-        queue.add(getRequest);
-        showProgressBar(placeID);
+            // add it to the RequestQueue
+            queue.add(getRequest);
+            showProgressBar(placeID);
+        }
     }
 
 

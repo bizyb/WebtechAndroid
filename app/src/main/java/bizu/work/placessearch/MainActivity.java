@@ -58,14 +58,22 @@ public class MainActivity extends AppCompatActivity {
         currentLoc = null;
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-
-
         getLocation();
 
     }
     public void getLocation() {
 
+//        Location l = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//        if (l != null){
+//            double lat = l.getLatitude();
+//            double lng = l.getLongitude();
+//            currentLoc = lat + "," + lng + "";
+//            Log.i("in getLocation", "getLocation--------------------currentLoc 1-------------: " + currentLoc);
+//
+//        }
 
+        Log.i("in getLocation", "getLocation--------------------getLocation-------------");
         if( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this,
@@ -77,11 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
+            Log.i("in getLocation", "getLocation--------------------permission granted-------------");
             if (location != null){
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
                 currentLoc = lat + "," + lng + "";
+                Log.i("in getLocation", "getLocation--------------------currentLoc-------------: " + currentLoc);
 
             }
         }
@@ -103,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
     public String getCurrentLocation() {
 
+        Log.i("in getCurrentLocation", "getCurrentLocation--------------------getCurrentLocation-------------: " + currentLoc);
+        if (currentLoc == null) {currentLoc = "-1,-3";}
         return currentLoc;
     }
 

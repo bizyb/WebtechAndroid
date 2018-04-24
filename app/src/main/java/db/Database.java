@@ -38,6 +38,7 @@ public class Database  extends SQLiteOpenHelper{
     private static final String COLUMN_PAGE_NUM = "page_num";
     private static final String COLUMN_INSERTION_ORDER = "insertion_order";
     private static final String COLUMN_FAV_INSERTION_ORDER = "fav_insertion_order";
+    private static final String COLUMN_DETAILS_AVAILABLE = "details_available";
 
     //Applicable to Details
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
@@ -85,6 +86,7 @@ public class Database  extends SQLiteOpenHelper{
                             + COLUMN_LONGITUDE + " REAL,"
                             + COLUMN_GOOGLE_PAGE + " TEXT,"
                             + COLUMN_WEBSITE + " TEXT,"
+                            + COLUMN_DETAILS_AVAILABLE + " INTEGER,"
                             + COLUMN_VICINITY + " TEXT" + ")";
 
     private String CREATE_REVIEWS_TABLE = "CREATE TABLE " + TABLE_REVIEWS + "("
@@ -363,7 +365,7 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_GOOGLE_PAGE, google_page);
             values.put(COLUMN_WEBSITE, website);
             values.put(COLUMN_PHOTOS, photosStr);
-//            values.put(COLUMN_PLACE_ID, place_id);
+            values.put(COLUMN_DETAILS_AVAILABLE, 1);
 
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {place_id});
@@ -523,6 +525,7 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_CATEGORY_ICON, category_icon);
             values.put(COLUMN_VICINITY, vicinity);
             values.put(COLUMN_INSERTION_ORDER, insertionOrder);
+            values.put(COLUMN_DETAILS_AVAILABLE, 0);
 //
             db.insert(TABLE_NEARBY_PLACES, null, values);
 //
@@ -866,19 +869,39 @@ public class Database  extends SQLiteOpenHelper{
 
     public int getCount(String...optional) {
 
-        int count = 0;
+        int count;
+        boolean checkForDetails = false;
         String query = "SELECT  * FROM " + TABLE_NEARBY_PLACES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
 
         if (optional.length > 0) {
 
             if (optional[0].equals("favorites")) {
                 query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_FAVORITED + " =1";
             }
+            else if (optional[0].equals("detailsAvailability")) {
+                String placeID = optional[1];
+                query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_DETAILS_AVAILABLE + "=?";
+                query += " AND " + COLUMN_PLACE_ID + "=?";
+                cursor = db.rawQuery(query, new String[] {"1", placeID});
+                checkForDetails = true;
+
+
+
+
+//                String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
+//                query += " ORDER BY " + getSortingColumn(sortBy);
+////        query += " AND " + COLUMN_PLACE_ID + "=?";
+//                Log.i("in getSortedReviews", "getSortedReviews--------------------placeID--------------: "+ placeID);
+//                Log.i("in getSortedReviews", "getSortedReviews--------------------reviewsFrom--------------: "+ reviewsFrom);
+//
+//                SQLiteDatabase db = this.getReadableDatabase();
+//                Cursor cursor = db.rawQuery(query, new String[] {"1", placeID});
+            }
         }
+        if (!checkForDetails) { cursor = db.rawQuery(query, null);}
 
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
         count = cursor.getCount();
 
         cursor.close();
@@ -886,6 +909,11 @@ public class Database  extends SQLiteOpenHelper{
 //        Log.i("count", count + "");
         return count;
 
+    }
+
+    public boolean detailsInDB(String placeID) {
+
+        return getCount("detailsAvailability", placeID) != 0;
     }
 
     /* A wrapper class to hold a cursor and db file descriptors so that the client can close

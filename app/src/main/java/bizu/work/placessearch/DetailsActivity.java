@@ -76,9 +76,10 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         response = intent.getStringExtra("response");
         place_id = intent.getStringExtra("placeID");
-        saveToDB(response);
 
-
+        // Save to the database only if the place has not already been downloaded
+        String loadFromDB = intent.getStringExtra("loadFromDB");
+        if (loadFromDB.equals("false")) {saveToDB(response);}
 
         Database db = new Database(this);
         placeName = db.getPlaceName(place_id, "name");
