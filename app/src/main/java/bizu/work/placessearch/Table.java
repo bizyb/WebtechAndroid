@@ -127,7 +127,7 @@ public class Table {
             public void onClick(View v) {
 
                 SearchServices ss = new SearchServices(activity, view);
-                ss.search(placeID);
+                ss.search(placeID, null);
 
             }
         });

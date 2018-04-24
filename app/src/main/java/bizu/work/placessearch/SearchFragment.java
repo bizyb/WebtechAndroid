@@ -284,15 +284,15 @@ public class SearchFragment extends Fragment {
             SearchServices ss = new SearchServices(getActivity(), v);
             JSONObject formData = getFormData();
             Log.d("formData------------------formData-------------: ", formData.toString());
-            ss.search(null);
+            ss.search(null, formData);
         }
 
     }
 
     private void clearForm(View v) {
 
-        JSONObject formData = getFormData();
-        Log.d("formData------------------formData-------------: ", formData.toString());
+//        JSONObject formData = getFormData();
+//        Log.d("formData------------------formData-------------: ", formData.toString());
 
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
@@ -319,17 +319,20 @@ public class SearchFragment extends Fragment {
         TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
         TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
 
-//        RadioButton currLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_current_loc);
         RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
 
         String otherLocValue = otherLocInput.getText().toString();
         double centerLat = Double.parseDouble(activity.getCurrentLocation().split(",")[0]);
         double centerLon =  Double.parseDouble(activity.getCurrentLocation().split(",")[1]);
 
+        String keywordValue = keyword.getText().toString();
+        keywordValue = keywordValue.replace(' ', '+');
+
         if (otherLocBtn.isChecked()) {
 
             centerLat = -1;
             centerLon = -1;
+            otherLocValue = otherLocValue.replace(' ', '+');
 
         }
         else {
@@ -345,7 +348,7 @@ public class SearchFragment extends Fragment {
         try {
 
 
-            formData.put("keyword", keyword.getText().toString());
+            formData.put("keyword", keywordValue);
             formData.put("distance", distanceValue);
             formData.put("customLoc", otherLocValue);
             formData.put("category", categoryValue);

@@ -42,69 +42,94 @@ public class SearchServices {
         return "-1";
     }
 
-    private String getGETParams() {
+    private String getGETParams(JSONObject formData) {
 
-        String keywordStr;
-        String distanceStr;
-        String customLoc;
-        String centerLat;
-        String centerLon;
-        String category;
-        Spinner spinner;
-
-        Map<String, String> GETParams = new HashMap<String, String>();
-
-        EditText keyword = (EditText) activity.findViewById(R.id.keyword_input);;
-        EditText distance = (EditText) activity.findViewById((R.id.distance_input));
-        EditText otherLocInput = (EditText) activity.findViewById(R.id.other_loc_input);
-        RadioButton currLocBtn = (RadioButton) activity.findViewById(R.id.radio_current_loc);
-        RadioButton otherLocBtn = (RadioButton) activity.findViewById(R.id.radio_other_loc);
-
-        keywordStr = keyword.getText().toString();
-        distanceStr = distance.getText().toString();
-        customLoc = "-1";
-        centerLat = "34.0266 ";
-        centerLon = "-118.2831";
-
-
-//        currLoc = getCurrentLocation();
-
-        if (otherLocBtn.isChecked()) {
-
-            customLoc = otherLocInput.getText().toString();
-        }
-
-        if (distanceStr.length() == 0) {
-
-            distanceStr = "10";
-        }
-        spinner = (Spinner) view.findViewById(R.id.spinner);
-        if (spinner == null) {category = "Default"; }
-        else {
-            category = spinner.getSelectedItem().toString();
-        }
-
-
-        GETParams.put("keyword", keywordStr);
-        GETParams.put("category", category);
-        GETParams.put("distance", distanceStr);
-        GETParams.put("curr_page_num", 0 + "");
-        GETParams.put("customLoc", customLoc);
-        GETParams.put("centerLat", centerLat);
-        GETParams.put("centerLon", centerLon);
+//        String keywordStr;
+//        String distanceStr;
+//        String customLoc;
+//        String centerLat;
+//        String centerLon;
+//        String category;
+//        Spinner spinner;
+//
+//        Map<String, String> GETParams = new HashMap<String, String>();
+//
+//        EditText keyword = (EditText) activity.findViewById(R.id.keyword_input);;
+//        EditText distance = (EditText) activity.findViewById((R.id.distance_input));
+//        EditText otherLocInput = (EditText) activity.findViewById(R.id.other_loc_input);
+//        RadioButton currLocBtn = (RadioButton) activity.findViewById(R.id.radio_current_loc);
+//        RadioButton otherLocBtn = (RadioButton) activity.findViewById(R.id.radio_other_loc);
+//
+//        keywordStr = keyword.getText().toString();
+//        distanceStr = distance.getText().toString();
+//        customLoc = "-1";
+//        centerLat = "34.0266 ";
+//        centerLon = "-118.2831";
+//
+//
+////        currLoc = getCurrentLocation();
+//
+//        if (otherLocBtn.isChecked()) {
+//
+//            customLoc = otherLocInput.getText().toString();
+//        }
+//
+//        if (distanceStr.length() == 0) {
+//
+//            distanceStr = "10";
+//        }
+//        spinner = (Spinner) view.findViewById(R.id.spinner);
+//        if (spinner == null) {category = "Default"; }
+//        else {
+//            category = spinner.getSelectedItem().toString();
+//        }
+//
+//
+//        GETParams.put("keyword", keywordStr);
+//        GETParams.put("category", category);
+//        GETParams.put("distance", distanceStr);
+//        GETParams.put("curr_page_num", 0 + "");
+//        GETParams.put("customLoc", customLoc);
+//        GETParams.put("centerLat", centerLat);
+//        GETParams.put("centerLon", centerLon);
 
         String queryString = "?";
 
-        for (Map.Entry<String, String> entry: GETParams.entrySet()) {
+        try {
 
-            queryString += entry.getKey() + "=" + entry.getValue() + "&";
+            queryString += "keyword=" + formData.getString("keyword");
+            queryString += "&distance=" + formData.getString("distance");
+            queryString += "&customLoc=" + formData.getString("customLoc");
+            queryString += "&category=" + formData.getString("category");
+            queryString += "&centerLat=" + formData.getString("centerLat");
+            queryString += "&centerLon=" + formData.getString("centerLon");
+            queryString += "&requestType=" + formData.getString("nearbyPlaces");
 
+//            formData.put("keyword", keyword.getText().toString());
+//            formData.put("distance", distanceValue);
+//            formData.put("customLoc", otherLocValue);
+//            formData.put("category", categoryValue);
+//            formData.put("centerLat", centerLat);
+//            formData.put("centerLon", centerLon);
         }
-        queryString += "requestType=" + "nearbyPlaces";
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+//            Log.i("in populateTable", "populateTable--------------------3--------------");
+        }
+
+//        String queryString = "?";
+//
+//        for (Map.Entry<String, String> entry: GETParams.entrySet()) {
+//
+//            queryString += entry.getKey() + "=" + entry.getValue() + "&";
+//
+//        }
+//        queryString += "requestType=" + "nearbyPlaces";
         return queryString;
     }
 
-    public void search(final String placeID) {
+    public void search(final String placeID, final JSONObject formData) {
 
         RequestQueue queue = Volley.newRequestQueue(activity);
         String url = "";
@@ -118,7 +143,7 @@ public class SearchServices {
         }
         else {
 
-            String queryString = getGETParams();
+            String queryString = getGETParams(formData);
             url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
         }
 
