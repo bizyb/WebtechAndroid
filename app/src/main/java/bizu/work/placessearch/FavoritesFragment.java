@@ -45,11 +45,14 @@ public class FavoritesFragment extends Fragment  {
 
         Database db = new Database(activity);
         Table tableObj = new Table(activity, null, v, this);
+//        boolean isPopulated = false;
+        TableLayout table;
 
         if (db.getCount("favorites") > 0) {
 
 
-            TableLayout table = tableObj.populateTable("favorites", pageFromDB);
+            tableObj.populateTable("favorites", pageFromDB);
+            table = tableObj.getTableObj();
             table.setPadding(0,50, 0,50 );
 
 

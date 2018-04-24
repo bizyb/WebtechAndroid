@@ -827,7 +827,7 @@ public class Database  extends SQLiteOpenHelper{
 
         while (cursor.moveToNext()) {
 
-            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
+            Log.i("in getPlaceName", "getPlaceName--------------------columnName--------------: " + cursor.getColumnName(0));
             value = cursor.getString(0);
             Log.i("in getPlaceName", "getPlaceName--------------------name--------------: " + value);
         }

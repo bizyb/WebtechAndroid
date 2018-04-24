@@ -72,19 +72,19 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         }
 
         Table tableObj = new Table(this, response, null, null);
-        TableLayout table = tableObj.populateTable("results", pageFromDB, insertionOrderOffset);
-
-        Paginator paginator = new Paginator(this, response, this, null);
-
-        getLayoutInflater().inflate(R.layout.table_layout, table, true);
-        if (pageFromDB > 0) {
-            paginator.showPagination(pageFromDB);
-        }
-        else {
-            paginator.showPagination(pageNum);
-        }
+        boolean isPopulated = tableObj.populateTable("results", pageFromDB, insertionOrderOffset);
 
 
+        if (isPopulated) {
+
+            Paginator paginator = new Paginator(this, response, this, null);
+            getLayoutInflater().inflate(R.layout.table_layout, tableObj.getTableObj(), true);
+            if (pageFromDB > 0) {
+                paginator.showPagination(pageFromDB);
+            } else {
+                paginator.showPagination(pageNum);
+            }
+         }
 
     }
 

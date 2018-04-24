@@ -44,6 +44,7 @@ public class Table {
     private String response;
     private Activity activity;
     private View view;
+    private TableLayout instanceTable;
     FavoritesFragment favInstance;
 //    private int pageNum;
 
@@ -54,6 +55,7 @@ public class Table {
         this.response = response;
         this.view = view;
         this.favInstance = favInstance;
+        this.instanceTable = null;
 //        pageNum = 0;
     }
 
@@ -244,7 +246,7 @@ public class Table {
         Picasso.get().load(url).resize(150, 150).into(imageView);
     }
 
-    public TableLayout populateTable(String tableFor, int pageFromDB, int... optional) {
+    public boolean populateTable(String tableFor, int pageFromDB, int... optional) {
 
         TableLayout table = (TableLayout) activity.findViewById(R.id.main_table);
 
@@ -300,6 +302,14 @@ public class Table {
                 TableRow row = getTableRow(name, vicinity, iconURL, placeID, tableFor);
                 table.addView(row);
             }
+            if (results.length() == 0) {
+
+                showEmpty("searchResults");
+                return  false;
+            }
+            else {
+                instanceTable = table;
+            }
 
         }
 
@@ -309,7 +319,12 @@ public class Table {
             Log.i("in populateTable", "populateTable--------------------3--------------");
         }
 
-        return table;
+        return true;
+    }
+
+    public TableLayout getTableObj() {
+
+        return instanceTable;
     }
 
     private void saveToDB(JSONObject r, int...optional) {
@@ -610,6 +625,12 @@ public class Table {
             message = "No Favorites";
             table = view.findViewById(R.id.main_table);
         }
+        else if (forTab.equals("searchResults")) {
+
+            message = "No results";
+            table = activity.findViewById(R.id.main_table);
+        }
+
 
         table.removeAllViews();
         TextView textView = new TextView(activity);
