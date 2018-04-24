@@ -68,7 +68,6 @@ public class SearchFragment extends Fragment {
         category = "Default";
         setSpinnerListeners(v);
 
-
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,7 +282,8 @@ public class SearchFragment extends Fragment {
         if (formIsValid()) {
 
             SearchServices ss = new SearchServices(getActivity(), v);
-//            JSONObject formData = getFormData();
+            JSONObject formData = getFormData();
+            Log.d("formData------------------formData-------------: ", formData.toString());
             ss.search(null);
         }
 
@@ -291,8 +291,6 @@ public class SearchFragment extends Fragment {
 
     private void clearForm(View v) {
 
-        JSONObject formData = getFormData();
-        Log.d("formData------------------formData-------------: ", formData.toString());
 
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
@@ -333,7 +331,7 @@ public class SearchFragment extends Fragment {
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-            Log.i("in populateTable", "populateTable--------------------3--------------");
+//            Log.i("in populateTable", "populateTable--------------------3--------------");
         }
         return formData;
     }

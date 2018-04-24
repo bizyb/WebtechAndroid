@@ -57,12 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
         currentLoc = null;
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        getLocation();
 
-//        this.deleteDatabase("PlacesSearch.db");
+
+
+        getLocation();
 
     }
     public void getLocation() {
+
+
         if( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this,
@@ -73,13 +76,12 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
         } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if (location != null){
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
                 currentLoc = lat + "," + lng + "";
-//                Log.d("setLocationListener------------------setLocationListener-------------: ", location.getLatitude() + "");
 
             }
         }
