@@ -105,7 +105,7 @@ public class SearchServices {
             queryString += "&category=" + formData.getString("category");
             queryString += "&centerLat=" + formData.getString("centerLat");
             queryString += "&centerLon=" + formData.getString("centerLon");
-            queryString += "&requestType=" + formData.getString("nearbyPlaces");
+            queryString += "&requestType=" + "nearbyPlaces";
 
 //            formData.put("keyword", keyword.getText().toString());
 //            formData.put("distance", distanceValue);
