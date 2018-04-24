@@ -110,7 +110,7 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void openBrowser(View v){
+    public void openBrowser(View v){
 
         //Get url from tag
         String url = (String)v.getTag();

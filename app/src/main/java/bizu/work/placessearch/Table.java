@@ -582,8 +582,22 @@ public class Table {
         mainRow.addView(rightTable, new TableRow.LayoutParams(2));
 
         mainRow.setPadding(50, 50, 50, 50);
+        setReviewRowClickListener(mainRow, authorURL);
         return mainRow;
 
+    }
+
+    private void setReviewRowClickListener(TableRow row, String url) {
+
+
+        row.setTag(url);
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetailsActivity dActivity = (DetailsActivity) activity;
+                dActivity.openBrowser(v);
+            }
+        });
     }
 
     public void showEmpty(String forTab) {
@@ -672,7 +686,6 @@ public class Table {
         });
 
     }
-
 
     private class URLSpanNoUnderline extends URLSpan {
         public URLSpanNoUnderline(String url) {
