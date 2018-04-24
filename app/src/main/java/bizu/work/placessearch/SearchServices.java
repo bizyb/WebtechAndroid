@@ -198,13 +198,14 @@ public class SearchServices {
 
         // add it to the RequestQueue
         queue.add(getRequest);
-        showProgressBar();
+        showProgressBar(placeID);
     }
 
 
-    public void showProgressBar() {
+    public void showProgressBar(String placeID) {
 
         String msg = activity.getResources().getString(R.string.fetching_results);
+        if (placeID != null) {msg = "Fetching details";}
 
         progressBar = new ProgressDialog(activity, R.style.FetchingResultsStyle);
         progressBar.setCancelable(true);
