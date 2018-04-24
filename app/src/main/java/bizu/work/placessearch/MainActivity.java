@@ -1,14 +1,22 @@
 package bizu.work.placessearch;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    final int REQUEST_LOCATION = 1;
+    LocationManager locationManager;
+    String  currentLoc;
     private int[] tabIcons = {
             R.drawable.ic_magnifying_glass_white,
             R.drawable.ic_heart,
@@ -44,8 +55,53 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
+        currentLoc = null;
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        getLocation();
+
 //        this.deleteDatabase("PlacesSearch.db");
 
+    }
+    public void getLocation() {
+        if( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null){
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+                currentLoc = lat + "," + lng + "";
+//                Log.d("setLocationListener------------------setLocationListener-------------: ", location.getLatitude() + "");
+
+            }
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_LOCATION:
+                getLocation();
+                break;
+        }
+    }
+
+    public String getCurrentLocation() {
+
+        return currentLoc;
     }
 
 

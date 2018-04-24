@@ -1,6 +1,7 @@
 package bizu.work.placessearch;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -34,8 +35,8 @@ import static android.content.Context.LOCATION_SERVICE;
 public class SearchFragment extends Fragment {
 
     private String category;
-    private String currentLoc;
-    LocationManager locationManager;
+//    private String currentLoc;
+    private MainActivity activity;
     public SearchFragment() {
     }
 
@@ -63,20 +64,10 @@ public class SearchFragment extends Fragment {
         final EditText distance = (EditText) v.findViewById(R.id.distance_input);
         final EditText otherLocInput = (EditText) v.findViewById(R.id.other_loc_input);
 
+        activity = (MainActivity) getActivity();
         category = "Default";
-        currentLoc = "-1,-1";
         setSpinnerListeners(v);
-        
-        CustomLocation loc = new CustomLocation(this);
-        loc.setLocationListener();
-//        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-//
-//        locationManager=(LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-//        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
-//                2000,
-//                10, locationListenerGPS);
-//        isLocationEnabled();
-//        setLocationListener();
+
 
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,40 +119,9 @@ public class SearchFragment extends Fragment {
         return v;
     }
 
-    public void setCurLocation(double lat, double lng) {
-
-        currentLoc = lat + "," + lng + "";
-    }
-
-//    private void setLocationListener() {
-
+//    public void setCurLocation(double lat, double lng) {
 //
-//        LocationListener locationListenerGPS=new LocationListener() {
-//            @Override
-//            public void onLocationChanged(android.location.Location location) {
-//                double latitude=location.getLatitude();
-//                double longitude=location.getLongitude();
-//                currentLoc = latitude + "," + longitude + "";
-//                String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
-//                Toast.makeText(getContext(),msg,Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//
-//            }
-//        };
-
+//        currentLoc = lat + "," + lng + "";
 //    }
 
 
@@ -368,7 +328,7 @@ public class SearchFragment extends Fragment {
             formData.put("distance", distanceValue);
             formData.put("otherLoc", otherLocInput.getText().toString());
             formData.put("category", category);
-            formData.put("currentLoc", currentLoc);
+            formData.put("currentLoc", activity.getCurrentLocation());
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
