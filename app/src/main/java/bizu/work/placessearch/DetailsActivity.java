@@ -2,6 +2,7 @@ package bizu.work.placessearch;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,13 +12,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,9 @@ import db.Database;
 public class DetailsActivity extends AppCompatActivity {
 
     private String place_id;
+    private String placeName;
+    private String placeWebsite;
+    private String placeAddress;
     private String response;
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -69,11 +76,54 @@ public class DetailsActivity extends AppCompatActivity {
         response = intent.getStringExtra("response");
         place_id = intent.getStringExtra("placeID");
         saveToDB(response);
+
+
+
+        Database db = new Database(this);
+        placeName = db.getPlaceName(place_id, "name");
+        placeAddress =  db.getPlaceName(place_id, "address");
+        placeWebsite = db.getPlaceName(place_id, "website");
+
         setPageTitle();
+        SetShareFavListeners();
 
         Log.i("in oncCreate", "------onCreate DetailAcitivity--------------placeID-------------: " + place_id);
 
     }
+
+    /*
+    * Set twitter share button and fav icon click listener.
+    * */
+    private void SetShareFavListeners() {
+
+        ImageView twitterLink = findViewById(R.id.details_twitter);
+        twitterLink.setClickable(true);
+        String url = getTwitterURL();
+        twitterLink.setTag(url);
+        twitterLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openBrowser(v);
+            }
+        });
+    }
+
+    private void openBrowser(View v){
+
+        //Get url from tag
+        String url = (String)v.getTag();
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+
+        //pass the url to intent data
+        intent.setData(Uri.parse(url));
+
+        startActivity(intent);
+    }
+
+
 
     public String getDetailsPlaceID() {
 
@@ -100,11 +150,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Set the global toolbar title for all the fragments
 
-        Database db = new Database(this);
-        String title = db.getPlaceName(place_id);
-
         TextView textView = this.findViewById(R.id.action_bar_title);
-        textView.setText(title);
+        textView.setText(placeName);
 
         getSupportActionBar().setTitle("");
 
@@ -144,6 +191,23 @@ public class DetailsActivity extends AppCompatActivity {
         adapter.addFrag(new MapFragment(), null);
         adapter.addFrag(new ReviewsFragment(), null);;
         viewPager.setAdapter(adapter);
+    }
+
+    private String getTwitterURL() {
+
+        String url = "";
+        String text = "Check out " + placeName + " located at "+ placeAddress + ". Website: ";
+        text += placeWebsite + "  #TravelAndEntertainmentSearch";
+        try {
+            text = URLEncoder.encode(text, "UTF-8");
+            url = "https://twitter.com/intent/tweet?text=" + text;
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+            Log.i("in getTwitterURL", "--------------------ERROR--------------");
+        }
+        return url;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

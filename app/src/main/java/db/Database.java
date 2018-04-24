@@ -190,6 +190,14 @@ public class Database  extends SQLiteOpenHelper{
 
             col = COLUMN_PHOTOS;
         }
+        else if (cursorFor.equals("address")) {
+
+            col = COLUMN_VICINITY;
+        }
+        else if (cursorFor.equals("website")) {
+
+            col = COLUMN_WEBSITE;
+        }
         String[] columns = {
                 col
         };
@@ -800,29 +808,29 @@ public class Database  extends SQLiteOpenHelper{
 //        String name = "University of Southern California";
 //        return name;
 //    }
-    public String getPlaceID() {
+//    public String getPlaceID() {
+//
+//        return placeID;
+//    }
 
-        return placeID;
-    }
-
-    public String getPlaceName(String placeID) {
+    public String getPlaceName(String placeID, String requestFor) {
 
 
+        String value = "?";
 
-        String name = "?";
-        CursorContainer container = getCursor(placeID, "name");
+        CursorContainer container = getCursor(placeID, requestFor);
         SQLiteDatabase db = container.db();
         Cursor cursor = container.cursor();
 
         while (cursor.moveToNext()) {
 
-//            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
-            name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+            Log.i("in resultsFa", "resultsFavClickHandler--------------------columnName--------------: " + cursor.getColumnName(0));
+            value = cursor.getString(0);
         }
 
         cursor.close();
         db.close();
-        return name;
+        return value;
 
     }
 

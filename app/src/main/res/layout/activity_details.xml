@@ -35,7 +35,7 @@
                 android:gravity="right">
 
                 <ImageView
-                    android:id="@+id/details_forward_arrow"
+                    android:id="@+id/details_twitter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"

@@ -175,7 +175,7 @@ public class Table {
         int id = R.drawable.heart_outline_black;
         boolean isFavorited = db.addToFav(placeID);
 
-        String placeName = db.getPlaceName(placeID);
+        String placeName = db.getPlaceName(placeID, "Name");
 
 
 
