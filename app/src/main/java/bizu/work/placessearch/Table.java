@@ -179,7 +179,7 @@ public class Table {
         }
         boolean isFavorited = db.addToFav(placeID);
 
-        String placeName = db.getPlaceName(placeID, "Name");
+        String placeName = db.getPlaceName(placeID, "name");
 
 
 
