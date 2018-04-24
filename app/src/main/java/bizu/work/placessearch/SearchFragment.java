@@ -26,6 +26,7 @@ import org.json.JSONObject;
 public class SearchFragment extends Fragment {
 
     private String category;
+    private String currentLoc;
     public SearchFragment() {
     }
 
@@ -54,6 +55,7 @@ public class SearchFragment extends Fragment {
         final EditText otherLocInput = (EditText) v.findViewById(R.id.other_loc_input);
 
         category = "Default";
+        currentLoc = "-1,-1";
         setSpinnerListeners(v);
 
         btnClear.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +266,7 @@ public class SearchFragment extends Fragment {
         if (formIsValid()) {
 
             SearchServices ss = new SearchServices(getActivity(), v);
-            JSONObject formData = getFormData();
+//            JSONObject formData = getFormData();
             ss.search(null);
         }
 
@@ -272,8 +274,10 @@ public class SearchFragment extends Fragment {
 
     private void clearForm(View v) {
 
+        JSONObject formData = getFormData();
+        Log.d("formData------------------formData-------------: ", formData.toString());
+
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
-        ;
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
         TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
@@ -291,6 +295,29 @@ public class SearchFragment extends Fragment {
     }
 
     public JSONObject getFormData() {
+
+        EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
+        EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
+        EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
+        TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
+        TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
+
+        JSONObject formData = new JSONObject();
+        try {
+            String distanceValue = distance.getText().toString();
+            if (distanceValue.equals("")) {distanceValue = "10";}
+
+            formData.put("keyword", keyword.getText().toString());
+            formData.put("distance", distanceValue);
+            formData.put("otherLoc", otherLocInput.getText().toString());
+            formData.put("category", category);
+            formData.put("currentLoc", currentLoc);
+        }
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+            Log.i("in populateTable", "populateTable--------------------3--------------");
+        }
         return formData;
     }
 }
