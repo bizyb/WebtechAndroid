@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -183,11 +185,16 @@ public class SearchServices {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("Error.Response", error.toString());
+                        Log.e("Error.Response", error.toString());
+                        Log.e("in search", "in search--------------------ERROR--------------");
                         progressBar.dismiss();
                     }
                 }
         );
+        getRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         // add it to the RequestQueue
         queue.add(getRequest);
