@@ -64,14 +64,14 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 //        if (preferenceSettings != null) {
 
             response = preferenceSettings.getString(STATE_RESPONSE, null);
-            resultType = preferenceSettings.getString(STATE_RESULT_TYPE, "SEARCH_RESULTS");
+            resultType = preferenceSettings.getString(STATE_RESULT_TYPE, "PAGINATION");
             pageFromDBGlobal = preferenceSettings.getInt(STATE_PAGE_FROM_DB, -1);
 
-        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + resultType);
+        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + "PAGINATION");
         Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
         Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
 //        }
-        if (response == null) {
+        if (pageFromDBGlobal < 1) {
 
             Intent intent = getIntent();
             response = intent.getStringExtra("response");
@@ -157,7 +157,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             } else {
                 paginator.showPagination(pageNum);
             }
-            saveToPreferences(response, resultType, pageFromDB);
+            saveToPreferences(response, resultType, pageNum);
          }
 
     }
