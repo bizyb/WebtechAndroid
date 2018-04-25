@@ -100,15 +100,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 //        response = activity.getDetailsData();
         travelMode = "Driving";
 
-
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
         populateDropdown(v);
         setSpinnerListeners(v);
-//        setInputListeners(v);
-
 
         btnRequestDirection = v.findViewById(R.id.map_from_label);
         btnRequestDirection.setOnClickListener(this);
@@ -116,39 +113,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
         PlacesAutocompleteTextView autoComplete = v.findViewById(R.id.map_from_input);
         setMapListener(autoComplete);
-//        box.setOnPlaceSelectedListener(autoCompleteListener)
-//        box.setOnPlaceSelectedListener(this);
-//            @Override
-//            public void onPlaceSelected(Place place) {
-//                // TODO: Get info about the selected place.
-//                Log.i("setInputListeners", "---setInputListeners-----inside-------    " + place.getName());
-//            }
-//
-//            @Override
-//            public void onError(Status status) {
-//                // TODO: Handle the error.
-//                Log.i("error", "An error occurred: " + status);
-//            }
-//        });
-
-
-
-
 
         return v;
     }
 
-//    @Override
-//    public void onPlaceSelected(Place place) {
-//        // TODO: Get info about the selected place.
-//        Log.i("setInputListeners", "---setInputListeners-----inside-------    " + place.getName());
-//    }
-//
-//    @Override
-//    public void onError(Status status) {
-//        // TODO: Handle the error.
-//        Log.i("error", "An error occurred: " + status);
-//    }
 
     @Override
     public void onClick(View v) {
@@ -166,7 +134,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         destLat = Double.parseDouble(lat);
         destLon = Double.parseDouble(lng);
 
-        origin = new LatLng(destLat, destLon);
+        destination = new LatLng(destLat, destLon);
     }
 
     @Override
@@ -219,13 +187,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     public void requestDirection() {
 
 //        Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
-        //reset the map
-        googleMap.clear();
+        //reset the map in case there's an existing route
+        if (googleMap != null) { googleMap.clear();}
 
         GoogleDirection.withServerKey(MAP_API_KEY)
                 .from(origin)
                 .to(destination)
-                .transportMode(travelMode)
+                .transportMode(getTravelMode())
                 .execute(this);
     }
 
@@ -242,10 +210,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
                         double lat = details.geometry.location.lat;
                         double lng = details.geometry.location.lng;
-                        destination = new LatLng(lat, lng);
+                        origin = new LatLng(lat, lng);
                         requestDirection();
-//                        Log.i("setInputListeners", "---selected item-----------------------    " + lat + "");
-
                     }
 
                     @Override
@@ -333,6 +299,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
                 // your code here
                 Object item = parentView.getItemAtPosition(position);
                 travelMode = item.toString();
+                if (origin != null) {requestDirection();}
             }
 
             @Override
@@ -345,4 +312,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     }
 
+    public String getTravelMode() {
+
+        String mode = TransportMode.DRIVING;
+        
+        switch(travelMode) {
+            case "Bicycling":
+                mode = TransportMode.BICYCLING;
+                break;
+            case "Transit":
+                mode = TransportMode.TRANSIT;
+                break;
+            case "Walking":
+                mode = TransportMode.WALKING;
+                break;
+            default:
+                mode = TransportMode.DRIVING;
+                break;
+        }
+        return mode;
+    }
 }
