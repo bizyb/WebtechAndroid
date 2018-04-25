@@ -109,6 +109,7 @@ public class DetailsActivity extends AppCompatActivity {
                 openBrowser(v);
             }
         });
+//        twitterLink.setPadding(50, 0, 50 ,0);
     }
 
     public void openBrowser(View v){
@@ -133,6 +134,8 @@ public class DetailsActivity extends AppCompatActivity {
     private void setDetailsFavListener() {
 
         final ImageView favIcon = findViewById(R.id.details_fav_icon);
+//        favIcon.setPadding(200, 0, 50, 0);
+//        favIcon.setMaxWidth(50);
         favIcon.setClickable(true);
         final Activity activity = this;
 
@@ -161,10 +164,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         return place_id;
     }
-    public String getDetailsData() {
-
-        return "xyz";
-    }
+//    public String getDetailsData() {
+//
+//        return "xyz";
+//    }
 
     private void saveToDB(String response) {
 

@@ -411,7 +411,7 @@ public class Table {
 
                 table.addView(getDetailsRow(website, "Website", true, false));
             }
-    
+
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
@@ -423,7 +423,6 @@ public class Table {
     }
 
     private void setRatingStars(RatingBar rating, float ratingF, int ratingI) {
-
 
         rating.setNumStars(5);
 
