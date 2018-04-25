@@ -5,17 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,14 +19,8 @@ import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
-import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -41,38 +30,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.seatgeek.placesautocomplete.DetailsCallback;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
 import com.seatgeek.placesautocomplete.model.PlaceDetails;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import db.Database;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, DirectionCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback, DirectionCallback{
 
 
-    private String response;
     MapView mapView;
     GoogleMap googleMap;
-    private String mapFrom;
-    private String mapTo;
     private String travelMode;
     private String placeName;
     private String placeID;
     private double destLat;
     private double destLon;
     private final String MAP_API_KEY = "AIzaSyA_NhluopOgKm1DhlpxCZebkdwgPqOfItQ";
-//    private LatLng origin = new LatLng(37.7849569, -122.4068855);
-//    private LatLng destination = new LatLng(37.7814432, -122.4460177);
     private LatLng origin;
     private LatLng destination;
     private TextView btnRequestDirection;
-    private EditText mapFromInput;
 
 
     public MapFragment() {
@@ -83,9 +63,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
         super.onCreate(savedInstanceState);
 
-
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,8 +74,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
         placeName = new Database(getActivity()).getPlaceName(placeID, "name");
-        setLatLng();
-//        response = activity.getDetailsData();
+        setLatLng();;
         travelMode = "Driving";
 
         mapView = (MapView) v.findViewById(R.id.map);
@@ -110,20 +87,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         btnRequestDirection = v.findViewById(R.id.map_from_label);
         btnRequestDirection.setOnClickListener(this);
 
-
         PlacesAutocompleteTextView autoComplete = v.findViewById(R.id.map_from_input);
         setMapListener(autoComplete);
 
         return v;
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.map_from_label) {
-            requestDirection();
-        }
     }
 
     private void setLatLng() {
@@ -224,48 +191,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         });
     }
 
-//    @Override
-//    public void onMapReady(GoogleMap map) {
-//
-//        Log.i("onMapReady", "----placeName-----placeName-------    " + placeName);
-//        MapsInitializer.initialize(getActivity());
-//        LatLng place = new LatLng(destLat, destLon);
-//
-//        map.setMyLocationEnabled(true);
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 12));
-//
-//        Marker marker = map.addMarker(new MarkerOptions()
-//                .title(placeName)
-//                .position(place));
-//        marker.showInfoWindow();
-//
-//    }
-
-//    public void getDirections(final GoogleMap map) {
-//
-//        LatLng origin = new LatLng(37.7849569, -122.4068855);
-//        LatLng destination = new LatLng(37.7814432, -122.4460177);
-//        GoogleDirection.withServerKey(MAP_API_KEY)
-//                .from(origin)
-//                .to(destination)
-//                .execute(new DirectionCallback() {
-//                    @Override
-//                    public void onDirectionSuccess(Direction direction, String rawBody) {
-//                        Route route = direction.getRouteList().get(0);
-//                        Leg leg = route.getLegList().get(0);
-//                        ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
-//                        PolylineOptions polylineOptions = DirectionConverter.createPolyline(getActivity(), directionPositionList, 5, Color.RED);
-//                        map.addPolyline(polylineOptions);
-//                    }
-//
-//                    @Override
-//                    public void onDirectionFailure(Throwable t) {
-//                        // Do something here
-//                    }
-//                });
-//
-//
-//    }
 
     @Override
     public void onResume() {
@@ -315,7 +240,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     public String getTravelMode() {
 
         String mode = TransportMode.DRIVING;
-        
+
         switch(travelMode) {
             case "Bicycling":
                 mode = TransportMode.BICYCLING;
