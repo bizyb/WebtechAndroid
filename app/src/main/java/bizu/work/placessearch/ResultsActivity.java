@@ -2,7 +2,9 @@ package bizu.work.placessearch;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +28,16 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
     private Toolbar toolbar;
     private ProgressDialog progressBar;
     private  int pageNum;
+    private int pageFromDBGlobal;
+    private String response;
+    private String resultType;
+    private final String STATE_RESPONSE = "responseKey";
+    private final String STATE_RESULT_TYPE = "resultTypeKey";
+    private final String STATE_PAGE_FROM_DB = "pageFromDBKey";
+
+    private SharedPreferences preferenceSettings;
+    private SharedPreferences.Editor preferenceEditor;
+    private final int PREFERENCE_MODE_PRIVATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +60,73 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             }
         });
 
-        Intent intent = getIntent();
-        String response = intent.getStringExtra("response");
-        String resultType = intent.getStringExtra("resultType");
-        populateResults(response, resultType, -1);
+        preferenceSettings = PreferenceManager.getDefaultSharedPreferences(this);
+//        if (preferenceSettings != null) {
+
+            response = preferenceSettings.getString(STATE_RESPONSE, null);
+            resultType = preferenceSettings.getString(STATE_RESULT_TYPE, "SEARCH_RESULTS");
+            pageFromDBGlobal = preferenceSettings.getInt(STATE_PAGE_FROM_DB, -1);
+
+        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + resultType);
+        Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
+        Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
+//        }
+        if (response == null) {
+
+            Intent intent = getIntent();
+            response = intent.getStringExtra("response");
+            resultType = intent.getStringExtra("resultType");
+            pageFromDBGlobal = -1;
+
+//            saveToPreferences(response, resultType, pageFromDBGlobal);
+
+            Log.i("onSaveInstanceState", "----else--------------resultType------------    " + resultType);
+        }
+
+        Log.i("onSaveInstanceState", "----outside-----resultType-------    " + resultType);
+        Log.i("onSaveInstanceState", "----outside-----response-------    " + response);
+        Log.i("onSaveInstanceState", "----outside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
+        populateResults(response, resultType, pageFromDBGlobal);
 
     }
+
+    private void saveToPreferences(String response, String resultType, int pageFromDBGlobal) {
+
+        preferenceSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        preferenceEditor = preferenceSettings.edit();
+
+        preferenceEditor.putString(STATE_RESPONSE, response);
+        preferenceEditor.putString(STATE_RESULT_TYPE, resultType);
+        preferenceEditor.putInt(STATE_PAGE_FROM_DB, pageFromDBGlobal);
+        preferenceEditor.commit();
+
+
+    }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        // Save the user's current game state
+//
+//        savedInstanceState.putString(STATE_RESPONSE, response);
+//        savedInstanceState.putString(STATE_RESULT_TYPE, resultType);
+//        savedInstanceState.putInt(STATE_PAGE_FROM_DB, pageFromDBGlobal);
+//
+//
+//        Log.i("onSaveInstanceState", "onSaveInstanceState---------------------------    " + savedInstanceState.toString());
+//
+//        // Always call the superclass so it can save the view hierarchy state
+//        super.onSaveInstanceState(savedInstanceState);
+//    }
+//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//        // Always call the superclass so it can restore the view hierarchy
+//        super.onRestoreInstanceState(savedInstanceState);
+//
+//        // Restore state members from saved instance
+//        mCurrentScore = savedInstanceState.getInt(STATE_SCORE);
+//        mCurrentLevel = savedInstanceState.getInt(STATE_LEVEL);
+//    }
+
+
 
     private void populateResults(String response, String resultType, int pageFromDB) {
 
@@ -84,6 +157,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             } else {
                 paginator.showPagination(pageNum);
             }
+            saveToPreferences(response, resultType, pageFromDB);
          }
 
     }
