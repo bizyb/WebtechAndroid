@@ -27,6 +27,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
+import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
+import com.seatgeek.placesautocomplete.model.Place;
+
 import org.json.JSONObject;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -62,7 +66,7 @@ public class SearchFragment extends Fragment {
         RadioButton currLocBtn = (RadioButton) v.findViewById(R.id.radio_current_loc);
         final EditText keyword = (EditText) v.findViewById(R.id.keyword_input);
         final EditText distance = (EditText) v.findViewById(R.id.distance_input);
-        final EditText otherLocInput = (EditText) v.findViewById(R.id.other_loc_input);
+        final PlacesAutocompleteTextView otherLocInput = (PlacesAutocompleteTextView) v.findViewById(R.id.other_loc_input);
 
         activity = (MainActivity) getActivity();
         category = "Default";
@@ -114,6 +118,16 @@ public class SearchFragment extends Fragment {
                 setOnFocusEvent(R.id.other_loc_input, hasFocus);
             }
         });
+        otherLocInput.setOnPlaceSelectedListener(
+                new OnPlaceSelectedListener() {
+                    @Override
+                    public void onPlaceSelected(final Place place) {
+                        // do something awesome with the selected place
+                    }
+                }
+        );
+
+//        setAutoComplete();
 
         return v;
     }
@@ -315,7 +329,7 @@ public class SearchFragment extends Fragment {
 
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
-        EditText otherLocInput = (EditText) getActivity().findViewById(R.id.other_loc_input);
+        PlacesAutocompleteTextView otherLocInput = (PlacesAutocompleteTextView) getActivity().findViewById(R.id.other_loc_input);
         TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
         TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
 

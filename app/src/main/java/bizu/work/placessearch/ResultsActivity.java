@@ -67,10 +67,10 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             resultType = preferenceSettings.getString(STATE_RESULT_TYPE, "PAGINATION");
             pageFromDBGlobal = preferenceSettings.getInt(STATE_PAGE_FROM_DB, -1);
 
-        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + "PAGINATION");
-        Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
-        Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
-//        }
+//        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + "PAGINATION");
+//        Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
+//        Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
+////        }
         if (pageFromDBGlobal < 1) {
 
             Intent intent = getIntent();
@@ -80,12 +80,12 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
 //            saveToPreferences(response, resultType, pageFromDBGlobal);
 
-            Log.i("onSaveInstanceState", "----else--------------resultType------------    " + resultType);
+//            Log.i("onSaveInstanceState", "----else--------------resultType------------    " + resultType);
         }
-
-        Log.i("onSaveInstanceState", "----outside-----resultType-------    " + resultType);
-        Log.i("onSaveInstanceState", "----outside-----response-------    " + response);
-        Log.i("onSaveInstanceState", "----outside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
+//
+//        Log.i("onSaveInstanceState", "----outside-----resultType-------    " + resultType);
+//        Log.i("onSaveInstanceState", "----outside-----response-------    " + response);
+//        Log.i("onSaveInstanceState", "----outside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
         populateResults(response, resultType, pageFromDBGlobal);
 
     }
@@ -103,35 +103,10 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        // Save the user's current game state
-//
-//        savedInstanceState.putString(STATE_RESPONSE, response);
-//        savedInstanceState.putString(STATE_RESULT_TYPE, resultType);
-//        savedInstanceState.putInt(STATE_PAGE_FROM_DB, pageFromDBGlobal);
-//
-//
-//        Log.i("onSaveInstanceState", "onSaveInstanceState---------------------------    " + savedInstanceState.toString());
-//
-//        // Always call the superclass so it can save the view hierarchy state
-//        super.onSaveInstanceState(savedInstanceState);
-//    }
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        // Always call the superclass so it can restore the view hierarchy
-//        super.onRestoreInstanceState(savedInstanceState);
-//
-//        // Restore state members from saved instance
-//        mCurrentScore = savedInstanceState.getInt(STATE_SCORE);
-//        mCurrentLevel = savedInstanceState.getInt(STATE_LEVEL);
-//    }
-
-
-
     private void populateResults(String response, String resultType, int pageFromDB) {
 
 
-        Log.i("pagination", "in ppopulateResults pageFromDB=---------------------------    " + pageFromDB);
+//        Log.i("pagination", "in ppopulateResults pageFromDB=---------------------------    " + pageFromDB);
         int insertionOrderOffset = 0;
         if (resultType.equals("SEARCH_RESULTS")) {
 
@@ -168,8 +143,8 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
         if (nextBtn != null) {
             String next_page_token = (String) nextBtn.getTag();
-            Log.i("token", "next_page_token-----------------length-------------------: " + next_page_token.length() + "");
-            Log.i("token", "next_page_token------------------------------------: " + next_page_token + "");
+//            Log.i("token", "next_page_token-----------------length-------------------: " + next_page_token.length() + "");
+//            Log.i("token", "next_page_token------------------------------------: " + next_page_token + "");
             if (next_page_token.length() > 1) {
                 // we have API token so make a new request
                 getNewResult(next_page_token);
