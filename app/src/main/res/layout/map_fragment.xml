@@ -62,7 +62,7 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinner_map"
             android:layout_marginTop="-5dp"
             android:layout_marginBottom="20dp"
             android:layout_width="fill_parent"

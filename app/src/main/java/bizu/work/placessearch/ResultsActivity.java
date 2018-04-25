@@ -61,16 +61,24 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         });
 
         preferenceSettings = PreferenceManager.getDefaultSharedPreferences(this);
+//        preferenceSettings.edit().clear();
 //        if (preferenceSettings != null) {
 
             response = preferenceSettings.getString(STATE_RESPONSE, null);
             resultType = preferenceSettings.getString(STATE_RESULT_TYPE, "PAGINATION");
             pageFromDBGlobal = preferenceSettings.getInt(STATE_PAGE_FROM_DB, -1);
 
-//        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + "PAGINATION");
-//        Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
-//        Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
+        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + "PAGINATION");
+        Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
+        Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
 ////        }
+        //debug
+        //debug
+        //debug
+        pageFromDBGlobal= -1;
+        //debug
+        //debug
+
         if (pageFromDBGlobal < 1) {
 
             Intent intent = getIntent();
@@ -83,9 +91,9 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 //            Log.i("onSaveInstanceState", "----else--------------resultType------------    " + resultType);
         }
 //
-//        Log.i("onSaveInstanceState", "----outside-----resultType-------    " + resultType);
-//        Log.i("onSaveInstanceState", "----outside-----response-------    " + response);
-//        Log.i("onSaveInstanceState", "----outside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
+        Log.i("onSaveInstanceState", "----outside-----resultType-------    " + resultType);
+        Log.i("onSaveInstanceState", "----outside-----response-------    " + response);
+        Log.i("onSaveInstanceState", "----outside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
         populateResults(response, resultType, pageFromDBGlobal);
 
     }
@@ -116,6 +124,8 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             db.dropRows("favorites", null, null);
             insertionOrderOffset = db.getCount(); // number of favorited entries
             pageNum = 1;
+
+//            saveToPreferences(null, null, -1);
 
         }
 

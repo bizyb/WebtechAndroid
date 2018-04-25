@@ -200,6 +200,14 @@ public class Database  extends SQLiteOpenHelper{
 
             col = COLUMN_WEBSITE;
         }
+        else if (cursorFor.equals("latitude")) {
+
+            col = COLUMN_LATITUDE;
+        }
+        else if (cursorFor.equals("longitude")) {
+
+            col = COLUMN_LONGITUDE;
+        }
         String[] columns = {
                 col
         };
@@ -324,7 +332,7 @@ public class Database  extends SQLiteOpenHelper{
             result = responseJSON.getJSONObject("result");
 
 
-
+            // todo: centerlat and centerLon refer to the search origin, not the place lat/lng
             latitude = responseJSON.getDouble("centerLat");
             longitude = responseJSON.getDouble("centerLon");
             rating = result.getDouble("rating");
@@ -820,6 +828,7 @@ public class Database  extends SQLiteOpenHelper{
 
 
         String value = "?";
+        double d;
 
         CursorContainer container = getCursor(placeID, requestFor);
         SQLiteDatabase db = container.db();
@@ -828,7 +837,15 @@ public class Database  extends SQLiteOpenHelper{
         while (cursor.moveToNext()) {
 
             Log.i("in getPlaceName", "getPlaceName--------------------columnName--------------: " + cursor.getColumnName(0));
-            value = cursor.getString(0);
+            if (requestFor.equals("latitude") || requestFor.equals("longitude")) {
+
+                d = cursor.getDouble(0);
+                value = d + "";
+            }
+            else {
+                value = cursor.getString(0);
+            }
+
             Log.i("in getPlaceName", "getPlaceName--------------------name--------------: " + value);
         }
 
