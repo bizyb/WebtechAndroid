@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -52,7 +51,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
     private final String MAP_API_KEY = "AIzaSyA_NhluopOgKm1DhlpxCZebkdwgPqOfItQ";
     private LatLng origin;
     private LatLng destination;
-    private TextView btnRequestDirection;
 
 
     public MapFragment() {
@@ -83,9 +81,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
 
         populateDropdown(v);
         setSpinnerListeners(v);
-
-        btnRequestDirection = v.findViewById(R.id.map_from_label);
-        btnRequestDirection.setOnClickListener(this);
 
         PlacesAutocompleteTextView autoComplete = v.findViewById(R.id.map_from_input);
         setMapListener(autoComplete);
@@ -123,7 +118,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
 
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
-        Snackbar.make(btnRequestDirection, "Success with status : " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(btnRequestDirection, "Success with status : " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
         if (direction.isOK()) {
             Route route = direction.getRouteList().get(0);
             googleMap.addMarker(new MarkerOptions().position(origin));
@@ -133,15 +128,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
             googleMap.addPolyline(DirectionConverter.createPolyline(getActivity(), directionPositionList, 5, Color.RED));
             setCameraWithCoordinationBounds(route);
 
-            btnRequestDirection.setVisibility(View.GONE);
-        } else {
-            Snackbar.make(btnRequestDirection, direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+//            btnRequestDirection.setVisibility(View.GONE);
         }
+//        else {
+//            Snackbar.make(btnRequestDirection, direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
     public void onDirectionFailure(Throwable t) {
-        Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
     }
 
     private void setCameraWithCoordinationBounds(Route route) {
