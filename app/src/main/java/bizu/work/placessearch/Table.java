@@ -331,10 +331,10 @@ public class Table {
 
         try {
 
-            String name = r.getString("name");
-            String vicinity = r.getString("vicinity");
-            String iconURL = r.getString("icon");
-            String place_id = r.getString("place_id");
+            String name = r.optString("name");
+            String vicinity = r.optString("vicinity");
+            String iconURL = r.optString("icon");
+            String place_id = r.optString("place_id");
             int favorited = 0;
 
             Database db = new Database(activity);
@@ -377,21 +377,41 @@ public class Table {
 
         try {
 
-            address = results.getString("formatted_address");
-            phoneNumber = results.getString("formatted_phone_number");
-            priceLevel = results.getString("price_level");
-            rating = results.getString("rating");
-            googlePage = results.getString("url");
-            website = results.getString("website");
+            address = results.optString("formatted_address");
+            phoneNumber = results.optString("formatted_phone_number");
+            priceLevel = results.optString("price_level");
+            rating = results.optString("rating");
+            googlePage = results.optString("url");
+            website = results.optString("website");
 
-            table.addView(getDetailsRow(address, "Address", false, false));
-            table.addView(getDetailsRow(phoneNumber, "Phone Number", false, true));
-            table.addView(getDetailsRow(priceLevel, "Price Level", false, false));
-            table.addView(getDetailsRow(rating, "Rating", false, false));
-            table.addView(getDetailsRow(googlePage, "Google Page", true, false));
-            table.addView(getDetailsRow(website, "Website", true, false));
+            int priceLevelInt = Integer.parseInt(priceLevel);
+            int ratingInt = Integer.parseInt(rating);
 
+            /* Only add rows with values*/
+            if (address != null || address != "") {
 
+                table.addView(getDetailsRow(address, "Address", false, false));
+            }
+            if (phoneNumber != null || phoneNumber != "") {
+                table.addView(getDetailsRow(phoneNumber, "Phone Number", false, true));
+            }
+            if (priceLevelInt > 0) {
+
+                table.addView(getDetailsRow(priceLevel, "Price Level", false, false));
+            }
+            if (ratingInt > 0) {
+
+                table.addView(getDetailsRow(rating, "Rating", false, false));
+            }
+            if (googlePage != null || googlePage != "") {
+
+                table.addView(getDetailsRow(googlePage, "Google Page", true, false));
+            }
+            if (website != null || website != "") {
+
+                table.addView(getDetailsRow(website, "Website", true, false));
+            }
+    
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
