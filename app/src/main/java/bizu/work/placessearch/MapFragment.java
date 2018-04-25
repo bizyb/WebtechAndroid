@@ -2,6 +2,7 @@ package bizu.work.placessearch;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import db.Database;
@@ -83,16 +85,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap map) {
 
+        Log.i("onMapReady", "----placeName-----placeName-------    " + placeName);
         MapsInitializer.initialize(getActivity());
         LatLng place = new LatLng(destLat, destLon);
 
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 12));
 
-        map.addMarker(new MarkerOptions()
+        Marker marker = map.addMarker(new MarkerOptions()
                 .title(placeName)
                 .position(place));
-
+        marker.showInfoWindow();
     }
 
     @Override
