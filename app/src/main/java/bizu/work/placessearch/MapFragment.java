@@ -2,14 +2,21 @@ package bizu.work.placessearch;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,6 +27,10 @@ import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +42,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.seatgeek.placesautocomplete.DetailsCallback;
+import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
+import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
+import com.seatgeek.placesautocomplete.model.PlaceDetails;
 
 import org.w3c.dom.Text;
 
@@ -55,6 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     private LatLng origin = new LatLng(37.7849569, -122.4068855);
     private LatLng destination = new LatLng(37.7814432, -122.4460177);
     private TextView btnRequestDirection;
+    private EditText mapFromInput;
 
 
     public MapFragment() {
@@ -64,6 +80,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
@@ -87,22 +105,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
         populateDropdown(v);
         setSpinnerListeners(v);
+//        setInputListeners(v);
+
 
         btnRequestDirection = v.findViewById(R.id.map_from_label);
         btnRequestDirection.setOnClickListener(this);
-//        btnRequestDirection.setOnClickListener(new View.OnClickListener() {
+
+
+        PlacesAutocompleteTextView autoComplete = v.findViewById(R.id.map_from_input);
+        setMapListener(autoComplete);
+//        box.setOnPlaceSelectedListener(autoCompleteListener)
+//        box.setOnPlaceSelectedListener(this);
 //            @Override
-//            public void onClick(View v) {
-//                requestDirection();
+//            public void onPlaceSelected(Place place) {
+//                // TODO: Get info about the selected place.
+//                Log.i("setInputListeners", "---setInputListeners-----inside-------    " + place.getName());
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//                // TODO: Handle the error.
+//                Log.i("error", "An error occurred: " + status);
 //            }
 //        });
 
-//        requestDirection();
-//        getDirections(map);
+
+
 
 
         return v;
     }
+
+//    @Override
+//    public void onPlaceSelected(Place place) {
+//        // TODO: Get info about the selected place.
+//        Log.i("setInputListeners", "---setInputListeners-----inside-------    " + place.getName());
+//    }
+//
+//    @Override
+//    public void onError(Status status) {
+//        // TODO: Handle the error.
+//        Log.i("error", "An error occurred: " + status);
+//    }
 
     @Override
     public void onClick(View v) {
@@ -267,4 +311,93 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         });
 
     }
+
+//    public void setMapListener(PlacesAutocompleteTextView place) {
+//
+//
+//        AutoCompleteTextView auto = (AutoCompleteTextView) place;
+//        auto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                final String item = parent.getSelectedItem().toString();
+//                if (item != null) {
+//                    Log.i("setInputListeners", "---selected item-----------------------    " + item);
+//                }
+////
+//            }
+//        });
+//    }
+
+    public void setMapListener(final PlacesAutocompleteTextView autoComplete) {
+
+
+//        AutoCompleteTextView auto = (AutoCompleteTextView) autoComplete;
+
+        autoComplete.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
+            @Override
+            public void onPlaceSelected(@NonNull com.seatgeek.placesautocomplete.model.Place place) {
+
+                autoComplete.getDetailsFor(place, new DetailsCallback() {
+                    @Override
+                    public void onSuccess(final PlaceDetails details) {
+
+                        double lat = details.geometry.location.lat;
+                        Log.i("setInputListeners", "---selected item-----------------------    " + lat + "");
+//                        Log.d("test", "details " + details);
+//                        mStreet.setText(details.name);
+//                        for (AddressComponent component : details.address_components) {
+//                            for (AddressComponentType type : component.types) {
+//                                switch (type) {
+//                                    case STREET_NUMBER:
+//                                        break;
+//                                    case ROUTE:
+//                                        break;
+//                                    case NEIGHBORHOOD:
+//                                        break;
+//                                    case SUBLOCALITY_LEVEL_1:
+//                                        break;
+//                                    case SUBLOCALITY:
+//                                        break;
+//                                    case LOCALITY:
+//                                        mCity.setText(component.long_name);
+//                                        break;
+//                                    case ADMINISTRATIVE_AREA_LEVEL_1:
+//                                        mState.setText(component.short_name);
+//                                        break;
+//                                    case ADMINISTRATIVE_AREA_LEVEL_2:
+//                                        break;
+//                                    case COUNTRY:
+//                                        break;
+//                                    case POSTAL_CODE:
+//                                        mZip.setText(component.long_name);
+//                                        break;
+//                                    case POLITICAL:
+//                                        break;
+//                                }
+//                            }
+//                        }
+                    }
+
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//
+////                String item = place.toString();
+////                if (item != null) {
+//                double lat = place.getPlace().latitude;
+//                    Log.i("setInputListeners", "---selected item-----------------------    " + lat + "");
+////                }
+//            }
+
+
+
+                    @Override
+                    public void onFailure(final Throwable failure) {
+                        Log.d("test", "failure " + failure);
+                        Log.e("setInputListeners", "---ERROR----------------------------------ERROR------");
+                    }
+                });
+            }
+        });
+    }
+
 }

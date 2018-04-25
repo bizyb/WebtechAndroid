@@ -330,8 +330,8 @@ public class SearchFragment extends Fragment {
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         PlacesAutocompleteTextView otherLocInput = (PlacesAutocompleteTextView) getActivity().findViewById(R.id.other_loc_input);
-        TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
-        TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
+//        TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
+//        TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
 
         RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
 
