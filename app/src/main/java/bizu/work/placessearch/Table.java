@@ -385,7 +385,7 @@ public class Table {
             website = results.optString("website");
 
             int priceLevelInt = Integer.parseInt(priceLevel);
-            int ratingInt = Integer.parseInt(rating);
+            int ratingInt = (int)Double.parseDouble(rating);
 
             /* Only add rows with values*/
             if (address != null || address != "") {
@@ -412,10 +412,13 @@ public class Table {
                 table.addView(getDetailsRow(website, "Website", true, false));
             }
 
+            Log.d("db", "saving to getDetailsInfoTable......................rating....------------: " + rating);
+
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
-            Log.d("error", e.toString());
+            Log.e("error", e.toString());
+            Log.d("db", "saving to getDetailsInfoTable......................error....------------: ");
         }
 
         return table;

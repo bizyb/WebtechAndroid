@@ -50,27 +50,27 @@ public class PhotosFragment extends Fragment {
 
     public void populatePhotosTab(String placeIDLocal) {
 
-        LinearLayout linearLayout = (LinearLayout) getActivity().findViewById(R.id.photos_container);
-        if (linearLayout == null) {
-            linearLayout = v.findViewById(R.id.photos_container);
-        }
-
-        Database db = new Database(getActivity());
-        ArrayList<String> photosArray = db.getDetailsPhotos(placeIDLocal);
-
-
-        for (String url : photosArray) {
-
-
-            ImageView image = new ImageView(getActivity());
-            image.setPadding(0, 0, 0, 50);
-
-
-            image.setAdjustViewBounds(true);
-            Picasso.get().load(url).into(image);
-            linearLayout.addView(image);
-
-        }
+//        LinearLayout linearLayout = (LinearLayout) getActivity().findViewById(R.id.photos_container);
+//        if (linearLayout == null) {
+//            linearLayout = v.findViewById(R.id.photos_container);
+//        }
+//
+//        Database db = new Database(getActivity());
+//        ArrayList<String> photosArray = db.getDetailsPhotos(placeIDLocal);
+//
+//
+//        for (String url : photosArray) {
+//
+//
+//            ImageView image = new ImageView(getActivity());
+//            image.setPadding(0, 0, 0, 50);
+//
+//
+//            image.setAdjustViewBounds(true);
+//            Picasso.get().load(url).into(image);
+//            linearLayout.addView(image);
+//
+//        }
 
     }
 
