@@ -67,8 +67,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     private double destLat;
     private double destLon;
     private final String MAP_API_KEY = "AIzaSyA_NhluopOgKm1DhlpxCZebkdwgPqOfItQ";
-    private LatLng origin = new LatLng(37.7849569, -122.4068855);
-    private LatLng destination = new LatLng(37.7814432, -122.4460177);
+//    private LatLng origin = new LatLng(37.7849569, -122.4068855);
+//    private LatLng destination = new LatLng(37.7814432, -122.4460177);
+    private LatLng origin;
+    private LatLng destination;
     private TextView btnRequestDirection;
     private EditText mapFromInput;
 
@@ -163,6 +165,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         String lng = db.getPlaceName(placeID, "longitude");
         destLat = Double.parseDouble(lat);
         destLon = Double.parseDouble(lng);
+
+        origin = new LatLng(destLat, destLon);
     }
 
     @Override
@@ -214,12 +218,44 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     public void requestDirection() {
 
-        Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
+        //reset the map
+        googleMap.clear();
+
         GoogleDirection.withServerKey(MAP_API_KEY)
                 .from(origin)
                 .to(destination)
-                .transportMode(TransportMode.DRIVING)
+                .transportMode(travelMode)
                 .execute(this);
+    }
+
+
+    public void setMapListener(final PlacesAutocompleteTextView autoComplete) {
+
+        autoComplete.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
+            @Override
+            public void onPlaceSelected(@NonNull com.seatgeek.placesautocomplete.model.Place place) {
+
+                autoComplete.getDetailsFor(place, new DetailsCallback() {
+                    @Override
+                    public void onSuccess(final PlaceDetails details) {
+
+                        double lat = details.geometry.location.lat;
+                        double lng = details.geometry.location.lng;
+                        destination = new LatLng(lat, lng);
+                        requestDirection();
+//                        Log.i("setInputListeners", "---selected item-----------------------    " + lat + "");
+
+                    }
+
+                    @Override
+                    public void onFailure(final Throwable failure) {
+                        Log.d("test", "failure " + failure);
+                        Log.e("setInputListeners", "---ERROR----------------------------------ERROR------");
+                    }
+                });
+            }
+        });
     }
 
 //    @Override
@@ -271,9 +307,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         super.onResume();
     }
 
-
-
-
     public void populateDropdown(View v) {
 
         String[] values = getResources().getStringArray(R.array.driving_mode);
@@ -310,94 +343,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
         });
 
-    }
-
-//    public void setMapListener(PlacesAutocompleteTextView place) {
-//
-//
-//        AutoCompleteTextView auto = (AutoCompleteTextView) place;
-//        auto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                final String item = parent.getSelectedItem().toString();
-//                if (item != null) {
-//                    Log.i("setInputListeners", "---selected item-----------------------    " + item);
-//                }
-////
-//            }
-//        });
-//    }
-
-    public void setMapListener(final PlacesAutocompleteTextView autoComplete) {
-
-
-//        AutoCompleteTextView auto = (AutoCompleteTextView) autoComplete;
-
-        autoComplete.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
-            @Override
-            public void onPlaceSelected(@NonNull com.seatgeek.placesautocomplete.model.Place place) {
-
-                autoComplete.getDetailsFor(place, new DetailsCallback() {
-                    @Override
-                    public void onSuccess(final PlaceDetails details) {
-
-                        double lat = details.geometry.location.lat;
-                        Log.i("setInputListeners", "---selected item-----------------------    " + lat + "");
-//                        Log.d("test", "details " + details);
-//                        mStreet.setText(details.name);
-//                        for (AddressComponent component : details.address_components) {
-//                            for (AddressComponentType type : component.types) {
-//                                switch (type) {
-//                                    case STREET_NUMBER:
-//                                        break;
-//                                    case ROUTE:
-//                                        break;
-//                                    case NEIGHBORHOOD:
-//                                        break;
-//                                    case SUBLOCALITY_LEVEL_1:
-//                                        break;
-//                                    case SUBLOCALITY:
-//                                        break;
-//                                    case LOCALITY:
-//                                        mCity.setText(component.long_name);
-//                                        break;
-//                                    case ADMINISTRATIVE_AREA_LEVEL_1:
-//                                        mState.setText(component.short_name);
-//                                        break;
-//                                    case ADMINISTRATIVE_AREA_LEVEL_2:
-//                                        break;
-//                                    case COUNTRY:
-//                                        break;
-//                                    case POSTAL_CODE:
-//                                        mZip.setText(component.long_name);
-//                                        break;
-//                                    case POLITICAL:
-//                                        break;
-//                                }
-//                            }
-//                        }
-                    }
-
-//            @Override
-//            public void onPlaceSelected(Place place) {
-//
-////                String item = place.toString();
-////                if (item != null) {
-//                double lat = place.getPlace().latitude;
-//                    Log.i("setInputListeners", "---selected item-----------------------    " + lat + "");
-////                }
-//            }
-
-
-
-                    @Override
-                    public void onFailure(final Throwable failure) {
-                        Log.d("test", "failure " + failure);
-                        Log.e("setInputListeners", "---ERROR----------------------------------ERROR------");
-                    }
-                });
-            }
-        });
     }
 
 }
