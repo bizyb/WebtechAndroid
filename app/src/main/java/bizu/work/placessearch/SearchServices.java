@@ -48,55 +48,6 @@ public class SearchServices {
 
     private String getGETParams(JSONObject formData) {
 
-//        String keywordStr;
-//        String distanceStr;
-//        String customLoc;
-//        String centerLat;
-//        String centerLon;
-//        String category;
-//        Spinner spinner;
-//
-//        Map<String, String> GETParams = new HashMap<String, String>();
-//
-//        EditText keyword = (EditText) activity.findViewById(R.id.keyword_input);;
-//        EditText distance = (EditText) activity.findViewById((R.id.distance_input));
-//        EditText otherLocInput = (EditText) activity.findViewById(R.id.other_loc_input);
-//        RadioButton currLocBtn = (RadioButton) activity.findViewById(R.id.radio_current_loc);
-//        RadioButton otherLocBtn = (RadioButton) activity.findViewById(R.id.radio_other_loc);
-//
-//        keywordStr = keyword.getText().toString();
-//        distanceStr = distance.getText().toString();
-//        customLoc = "-1";
-//        centerLat = "34.0266 ";
-//        centerLon = "-118.2831";
-//
-//
-////        currLoc = getCurrentLocation();
-//
-//        if (otherLocBtn.isChecked()) {
-//
-//            customLoc = otherLocInput.getText().toString();
-//        }
-//
-//        if (distanceStr.length() == 0) {
-//
-//            distanceStr = "10";
-//        }
-//        spinner = (Spinner) view.findViewById(R.id.spinner);
-//        if (spinner == null) {category = "Default"; }
-//        else {
-//            category = spinner.getSelectedItem().toString();
-//        }
-//
-//
-//        GETParams.put("keyword", keywordStr);
-//        GETParams.put("category", category);
-//        GETParams.put("distance", distanceStr);
-//        GETParams.put("curr_page_num", 0 + "");
-//        GETParams.put("customLoc", customLoc);
-//        GETParams.put("centerLat", centerLat);
-//        GETParams.put("centerLon", centerLon);
-
         String queryString = "?";
 
         try {
@@ -109,12 +60,6 @@ public class SearchServices {
             queryString += "&centerLon=" + formData.getString("centerLon");
             queryString += "&requestType=" + "nearbyPlaces";
 
-//            formData.put("keyword", keyword.getText().toString());
-//            formData.put("distance", distanceValue);
-//            formData.put("customLoc", otherLocValue);
-//            formData.put("category", categoryValue);
-//            formData.put("centerLat", centerLat);
-//            formData.put("centerLon", centerLon);
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
@@ -122,26 +67,28 @@ public class SearchServices {
 //            Log.i("in populateTable", "populateTable--------------------3--------------");
         }
 
-//        String queryString = "?";
-//
-//        for (Map.Entry<String, String> entry: GETParams.entrySet()) {
-//
-//            queryString += entry.getKey() + "=" + entry.getValue() + "&";
-//
-//        }
-//        queryString += "requestType=" + "nearbyPlaces";
         return queryString;
     }
 
+    /*
+    * Make results and details search requests. For details, decouple yelp review request by
+    * indicating as such in the querystring. Otherwise, calls to Yelp in the backend would
+    * be too slow. Since we don't need the reviews right away, we'll just save them to the
+    * database with a callback when they arrive.
+    * */
     public void search(final String placeID, final JSONObject formData) {
 
-        RequestQueue queue = Volley.newRequestQueue(activity);
+//        RequestQueue queue = Volley.newRequestQueue(activity);
         String url = "";
+        String yelpURL = null;
+        String photosURL = null;
         boolean loadFromDB = false;
 
         if (placeID != null) {
             url = "http://bizyb.us-east-2.elasticbeanstalk.com/places-details-endpoint";
             url += "?placeID=" + placeID;
+            yelpURL = url + "&requestForYelp=true";
+            photosURL = url + "&requestForPhotos=true";
             loadFromDB = new Database(activity).detailsInDB(placeID);
         }
         else {
@@ -151,7 +98,8 @@ public class SearchServices {
         }
 
 //        final String url = "http://ip-api.com/json";
-        Log.d("url", url);
+        Log.i("in search", "search--------------------url-------------: " + url);
+        Log.i("in search", "search--------------------yelp-------------: " + yelpURL);
 
         Log.i("in search", "search--------------------placeID-------------: " + placeID);
 
@@ -164,48 +112,113 @@ public class SearchServices {
             activity.startActivity(intent);
         }
         else {
-            JsonObjectRequest getRequest = new JsonObjectRequest(
-                    Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // display response
-                            Intent intent = new Intent(activity, ResultsActivity.class);
-                            Log.d("Response", response.toString());
+            requestHelper(url, placeID, false, false);
+            if (yelpURL != null) { requestHelper(yelpURL, placeID, true, false);}
+            if (photosURL != null) { requestHelper(yelpURL, placeID, false, true);}
 
-                            if (placeID == null) {
+        }
+//        else {
+//            JsonObjectRequest getRequest = new JsonObjectRequest(
+//                    Request.Method.GET, url, null,
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            // display response
+//                            Intent intent = new Intent(activity, ResultsActivity.class);
+//                            Log.d("Response", response.toString());
+//
+//                            if (placeID == null) {
+//
+//                                intent.putExtra("resultType", "SEARCH_RESULTS");
+//                            } else {
+//
+//                                Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
+//                                intent = new Intent(activity, DetailsActivity.class);
+//                                intent.putExtra("placeID", placeID);
+//                                intent.putExtra("loadFromDB", "false");
+//                            }
+//                            intent.putExtra("response", response.toString());
+//                            progressBar.dismiss();
+//                            activity.startActivity(intent);
+//                        }
+//                    },
+//                    new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            Log.e("Error.Response", error.toString());
+//                            Log.e("in search", "in search--------------------ERROR--------------");
+//                            progressBar.dismiss();
+//                        }
+//                    }
+//            );
+//            getRequest.setRetryPolicy(new DefaultRetryPolicy(
+//                    10000,
+//                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//
+//            // add it to the RequestQueue
+//            queue.add(getRequest);
+//            showProgressBar(placeID);
+//        }
+    }
 
-                                intent.putExtra("resultType", "SEARCH_RESULTS");
-                            } else {
+    private void requestHelper(final String url, final String placeID, final  boolean getYelpReviews,
+                               final boolean getPhotos) {
 
-                                Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
-                                intent = new Intent(activity, DetailsActivity.class);
-                                intent.putExtra("placeID", placeID);
-                                intent.putExtra("loadFromDB", "false");
-                            }
-                            intent.putExtra("response", response.toString());
+        RequestQueue queue = Volley.newRequestQueue(activity);
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        Intent intent = new Intent(activity, ResultsActivity.class);
+                        Log.d("Response", response.toString());
+
+                        if (placeID == null) {
+
+                            intent.putExtra("resultType", "SEARCH_RESULTS");
+                        } else {
+
+                            Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
+                            intent = new Intent(activity, DetailsActivity.class);
+                            intent.putExtra("placeID", placeID);
+                            intent.putExtra("loadFromDB", "false");
+                        }
+                        intent.putExtra("response", response.toString());
+                        if (getYelpReviews) {
+
+                            new Database(activity).saveYelpReviews(response.toString());
+                        }
+                        else if (getPhotos) {
+
+                            new Database(activity).savePhotos(response.toString(), placeID);
+                        }
+                        else {
                             progressBar.dismiss();
                             activity.startActivity(intent);
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("Error.Response", error.toString());
-                            Log.e("in search", "in search--------------------ERROR--------------");
-                            progressBar.dismiss();
-                        }
-                    }
-            );
-            getRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    10000,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-            // add it to the RequestQueue
-            queue.add(getRequest);
-            showProgressBar(placeID);
-        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error.Response", error.toString());
+                        Log.e("in search", "in search--------------------ERROR--------------url: " + url);
+                        progressBar.dismiss();
+                    }
+                }
+        );
+        getRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // add it to the RequestQueue
+        queue.add(getRequest);
+        if (!getYelpReviews && !getPhotos) { showProgressBar(placeID);}
     }
 
 

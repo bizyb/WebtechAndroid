@@ -300,6 +300,60 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
+    public void saveYelpReviews(String response) {
+
+        JSONObject result = new JSONObject();
+        try {
+
+            JSONObject responseJSON = new JSONObject(response);
+            result = responseJSON.getJSONObject("result");
+            String  place_id = result.getString("place_id");
+            String yelpKey = "yelp_reviews_" + place_id;
+            JSONArray yelpReviews = responseJSON.getJSONArray(yelpKey);
+            saveReviewsToDB(yelpReviews, place_id, "Yelp");
+        }
+
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+            Log.i("in saveYelpReviews", "-------saveYelpReviews-----------ERROR-----------------------");
+        }
+
+    }
+
+    public void savePhotos(String response, String placeID) {
+
+        JSONObject result = new JSONObject();
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+
+            JSONArray photosArray;
+            String photosStr;
+
+            JSONObject responseJSON = new JSONObject(response);
+            photosArray = responseJSON.getJSONArray("photosArray");
+            photosStr = mergePhotoURLs(photosArray);
+
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_PHOTOS, photosStr);
+
+            db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
+                    new String[] {placeID});
+
+        }
+
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+            Log.i("in saveYelpReviews", "-------saveYelpReviews-----------ERROR-----------------------");
+        }
+        finally {
+            db.close();
+        }
+
+    }
+
+
     /*
     * Save details info to the database. Note: this routine is executed during the transition from
     * ResultsActivity to DetailsActivity. The information for details is incomplete at this stage.
@@ -318,10 +372,10 @@ public class Database  extends SQLiteOpenHelper{
         String name;
         String google_page;
         String website;
-        JSONArray photosArray;
+//        JSONArray photosArray;
         JSONArray googleReviews;
-        JSONArray yelpReviews;
-        String photosStr;
+//        JSONArray yelpReviews;
+//        String photosStr;
         String place_id;
 
         JSONObject result = new JSONObject();
@@ -343,13 +397,13 @@ public class Database  extends SQLiteOpenHelper{
             google_page = result.getString("url");
             place_id = result.getString("place_id");
             website = result.getString("website");
-            photosArray = responseJSON.getJSONArray("photosArray");
-            photosStr = mergePhotoURLs(photosArray);
+//            photosArray = responseJSON.getJSONArray("photosArray");
+//            photosStr = mergePhotoURLs(photosArray);
 
             String googleKey = "google_reviews_" + place_id;
-            String yelpKey = "yelp_reviews_" + place_id;
+//            String yelpKey = "yelp_reviews_" + place_id;
             googleReviews = responseJSON.getJSONArray(googleKey);
-            yelpReviews = responseJSON.getJSONArray(yelpKey);
+//            yelpReviews = responseJSON.getJSONArray(yelpKey);
 
 
 //            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
@@ -372,14 +426,14 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_NAME, name);
             values.put(COLUMN_GOOGLE_PAGE, google_page);
             values.put(COLUMN_WEBSITE, website);
-            values.put(COLUMN_PHOTOS, photosStr);
+//            values.put(COLUMN_PHOTOS, photosStr);
             values.put(COLUMN_DETAILS_AVAILABLE, 1);
 
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {place_id});
 
             saveReviewsToDB(googleReviews, place_id, "Google");
-            saveReviewsToDB(yelpReviews, place_id, "Yelp");
+//            saveReviewsToDB(yelpReviews, place_id, "Yelp");
     }
      catch(Exception e){
         // TODO: output no results/failed to get results error here
@@ -897,25 +951,18 @@ public class Database  extends SQLiteOpenHelper{
 
             if (optional[0].equals("favorites")) {
                 query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_FAVORITED + " =1";
-            }
-            else if (optional[0].equals("detailsAvailability")) {
+            } else if (optional[0].equals("detailsAvailability")) {
                 String placeID = optional[1];
                 query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_DETAILS_AVAILABLE + "=?";
                 query += " AND " + COLUMN_PLACE_ID + "=?";
-                cursor = db.rawQuery(query, new String[] {"1", placeID});
+                cursor = db.rawQuery(query, new String[]{"1", placeID});
                 checkForDetails = true;
-
-
-
-
-//                String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
-//                query += " ORDER BY " + getSortingColumn(sortBy);
-////        query += " AND " + COLUMN_PLACE_ID + "=?";
-//                Log.i("in getSortedReviews", "getSortedReviews--------------------placeID--------------: "+ placeID);
-//                Log.i("in getSortedReviews", "getSortedReviews--------------------reviewsFrom--------------: "+ reviewsFrom);
-//
-//                SQLiteDatabase db = this.getReadableDatabase();
-//                Cursor cursor = db.rawQuery(query, new String[] {"1", placeID});
+            } else if (optional[0].equals("yelp")) {
+                String placeID = optional[1];
+                query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_REVIEW_SOURCE + "=?";
+                query += " AND " + COLUMN_PLACE_ID + "=?";
+                cursor = db.rawQuery(query, new String[]{"Yelp", placeID});
+                checkForDetails = true;
             }
         }
         if (!checkForDetails) { cursor = db.rawQuery(query, null);}
@@ -929,9 +976,18 @@ public class Database  extends SQLiteOpenHelper{
 
     }
 
+    /*
+    * For place details, both the Google API results and Yelp reviews need to be in the
+    * database. Because we decouple the request for Yelp reviews, we want to be sure that
+    * the place details is complete before we return true. Otherwise, we'll need to make a new
+    * request.
+    * */
     public boolean detailsInDB(String placeID) {
 
-        return getCount("detailsAvailability", placeID) != 0;
+        int yelpCount = getCount("yelp", placeID);
+        int other =  getCount("detailsAvailability", placeID);
+
+        return yelpCount > 0 && other > 0;
     }
 
     /* A wrapper class to hold a cursor and db file descriptors so that the client can close
