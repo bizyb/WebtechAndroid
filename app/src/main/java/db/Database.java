@@ -308,7 +308,7 @@ public class Database  extends SQLiteOpenHelper{
 
             JSONObject responseJSON = new JSONObject(response);
             result = responseJSON.getJSONObject("result");
-            String  place_id = result.getString("place_id");
+            String  place_id = result.optString("place_id");
             String yelpKey = "yelp_reviews_" + place_id;
             JSONArray yelpReviews = responseJSON.getJSONArray(yelpKey);
             saveReviewsToDB(yelpReviews, place_id, "Yelp");
@@ -341,7 +341,7 @@ public class Database  extends SQLiteOpenHelper{
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {placeID});
 
-            new PhotosFragment().populatePhotosTab(placeID);
+//            new PhotosFragment().populatePhotosTab(placeID);
 
         }
 
@@ -449,7 +449,7 @@ public class Database  extends SQLiteOpenHelper{
                 if (i == photosArray.length() - 1) {
 
                     photos += photosArray.getString(i);
-                    Log.i("in mergePhotoURLs", "-------mergePhotoURLs-----------url----------------------: " + photosArray.getString(i));
+                    Log.i("in mergePhotoURLs", "-------photos have arrived----------------------: " + photosArray.getString(i));
                 }
                 else {
                     photos += photosArray.getString(i) + delim;
@@ -807,7 +807,7 @@ public class Database  extends SQLiteOpenHelper{
 
     public ArrayList<String> getDetailsPhotos(String placeID) {
 
-        ArrayList<String> arr = new ArrayList<>();
+        ArrayList<String> arr = null;
         CursorContainer container = getCursor(placeID, "photos");
         SQLiteDatabase db = container.db();
         Cursor cursor = container.cursor();
@@ -820,9 +820,9 @@ public class Database  extends SQLiteOpenHelper{
                 while (cursor.moveToNext()) {
 
                     String URLs = cursor.getString(0);
-                    String [] photosArray = URLs.split(delim);
+                    String [] photosArray = URLs != null ? URLs.split(delim) : null;
 
-                    arr = new ArrayList<>(Arrays.asList(photosArray));
+                    arr = photosArray != null ?  new ArrayList<>(Arrays.asList(photosArray)) : null;
 
 //                    for (String url : arr) {
 //
@@ -841,8 +841,8 @@ public class Database  extends SQLiteOpenHelper{
 
             catch(Exception e){
                 // TODO: output no results/failed to get results error here
-                Log.d("error", e.toString());
-                Log.i("in getDetailsPhotos", "--------------------ERROR--------------");
+                Log.e("error", e.toString());
+                Log.i("in getDetailsPhotos", "------------------------------------------------------------------------ERROR--------------");
             }
             finally {
                 cursor.close();

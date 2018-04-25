@@ -641,6 +641,9 @@ public class Table {
 
         String message = "";
         TableLayout table = new TableLayout(activity);
+        LinearLayout layout = new LinearLayout(activity);
+        boolean useLayout = false;
+
 
         if (forTab.equals("favorites")) {
 
@@ -652,6 +655,11 @@ public class Table {
             message = "No results";
             table = activity.findViewById(R.id.main_table);
         }
+        else  if (forTab.equals("photos")) {
+            message = "No Photos";
+            layout = view.findViewById(R.id.photos_container);
+            useLayout = true;
+        }
 
 
         table.removeAllViews();
@@ -659,7 +667,9 @@ public class Table {
         textView.setText(message);
 
         textView.setPadding(500, 1100, 0,0);
-        table.addView(textView);
+        if (useLayout) {layout.addView(textView);}
+        else {  table.addView(textView); }
+
     }
 
 
