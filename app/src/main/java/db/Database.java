@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import bizu.work.placessearch.PhotosFragment;
 import bizu.work.placessearch.SortBy;
 
 
@@ -340,6 +341,8 @@ public class Database  extends SQLiteOpenHelper{
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {placeID});
 
+            new PhotosFragment().populatePhotosTab(placeID);
+
         }
 
         catch(Exception e){
@@ -372,10 +375,7 @@ public class Database  extends SQLiteOpenHelper{
         String name;
         String google_page;
         String website;
-//        JSONArray photosArray;
         JSONArray googleReviews;
-//        JSONArray yelpReviews;
-//        String photosStr;
         String place_id;
 
         JSONObject result = new JSONObject();
@@ -387,31 +387,20 @@ public class Database  extends SQLiteOpenHelper{
 
 
             // todo: centerlat and centerLon refer to the search origin, not the place lat/lng
-            latitude = responseJSON.getDouble("centerLat");
-            longitude = responseJSON.getDouble("centerLon");
-            rating = result.getDouble("rating");
-            price_level = result.getInt("price_level");
-            formatted_address = result.getString("formatted_address");
-            formatted_phone_number = result.getString("formatted_phone_number");
-            name = result.getString("name");
-            google_page = result.getString("url");
-            place_id = result.getString("place_id");
-            website = result.getString("website");
-//            photosArray = responseJSON.getJSONArray("photosArray");
-//            photosStr = mergePhotoURLs(photosArray);
+            latitude = responseJSON.optDouble("centerLat");
+            longitude = responseJSON.optDouble("centerLon");
+            rating = result.optDouble("rating");
+            price_level = result.optInt("price_level", -1);
+            formatted_address = result.optString("formatted_address");
+            formatted_phone_number = result.optString("formatted_phone_number");
+            name = result.optString("name");
+            google_page = result.optString("url");
+            place_id = result.optString("place_id");
+            website = result.optString("website");
 
             String googleKey = "google_reviews_" + place_id;
-//            String yelpKey = "yelp_reviews_" + place_id;
             googleReviews = responseJSON.getJSONArray(googleKey);
-//            yelpReviews = responseJSON.getJSONArray(yelpKey);
 
-
-//            Log.i("in saveDetailsToDB", "-------price_level---------------------------------: " + price_level + "");
-//            Log.i("in saveDetailsToDB", "-------place_id---------------------------------: " + place_id);
-//            Log.i("in saveDetailsToDB", "-------formatted_phone_number---------------------------------: " + formatted_phone_number);
-//            Log.i("in saveDetailsToDB", "-------photosStr---------------------------------: " + photosStr);
-//
-//
             ContentValues values = new ContentValues();
 
             this.placeName = name;
@@ -426,14 +415,13 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_NAME, name);
             values.put(COLUMN_GOOGLE_PAGE, google_page);
             values.put(COLUMN_WEBSITE, website);
-//            values.put(COLUMN_PHOTOS, photosStr);
             values.put(COLUMN_DETAILS_AVAILABLE, 1);
 
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {place_id});
 
             saveReviewsToDB(googleReviews, place_id, "Google");
-//            saveReviewsToDB(yelpReviews, place_id, "Yelp");
+
     }
      catch(Exception e){
         // TODO: output no results/failed to get results error here
@@ -461,6 +449,7 @@ public class Database  extends SQLiteOpenHelper{
                 if (i == photosArray.length() - 1) {
 
                     photos += photosArray.getString(i);
+                    Log.i("in mergePhotoURLs", "-------mergePhotoURLs-----------url----------------------: " + photosArray.getString(i));
                 }
                 else {
                     photos += photosArray.getString(i) + delim;

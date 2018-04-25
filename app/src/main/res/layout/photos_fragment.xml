@@ -14,7 +14,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="60dp"
         android:orientation="vertical"
-        android:id="@+id/photos_fragment"
+        android:id="@+id/photos_container"
         tools:context="bizu.work.placessearch.DetailsActivity">
 
     </LinearLayout>

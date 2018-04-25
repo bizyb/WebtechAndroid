@@ -22,6 +22,7 @@ import db.Database;
 public class PhotosFragment extends Fragment {
 
     private String placeID;
+    private View v;
 
     public PhotosFragment() {
     }
@@ -37,22 +38,22 @@ public class PhotosFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Populate the dropdown list and inflate the layout fragment
-        View v = inflater.inflate(R.layout.photos_fragment, container, false);
+        v = inflater.inflate(R.layout.photos_fragment, container, false);
 
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
 
-        populatePhotosTab(v);
+        populatePhotosTab(placeID);
 
         return v;
     }
 
-    private void populatePhotosTab(View v) {
+    public void populatePhotosTab(String placeIDLocal) {
 
-        LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.photos_fragment);
+        LinearLayout linearLayout = (LinearLayout) getActivity().findViewById(R.id.photos_container);
 
         Database db = new Database(getActivity());
-        ArrayList<String> photosArray = db.getDetailsPhotos(placeID);
+        ArrayList<String> photosArray = db.getDetailsPhotos(placeIDLocal);
 
         for (String url : photosArray) {
 

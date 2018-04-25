@@ -114,52 +114,9 @@ public class SearchServices {
         else {
             requestHelper(url, placeID, false, false);
             if (yelpURL != null) { requestHelper(yelpURL, placeID, true, false);}
-            if (photosURL != null) { requestHelper(yelpURL, placeID, false, true);}
+            if (photosURL != null) { requestHelper(photosURL, placeID, false, true);}
 
         }
-//        else {
-//            JsonObjectRequest getRequest = new JsonObjectRequest(
-//                    Request.Method.GET, url, null,
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            // display response
-//                            Intent intent = new Intent(activity, ResultsActivity.class);
-//                            Log.d("Response", response.toString());
-//
-//                            if (placeID == null) {
-//
-//                                intent.putExtra("resultType", "SEARCH_RESULTS");
-//                            } else {
-//
-//                                Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
-//                                intent = new Intent(activity, DetailsActivity.class);
-//                                intent.putExtra("placeID", placeID);
-//                                intent.putExtra("loadFromDB", "false");
-//                            }
-//                            intent.putExtra("response", response.toString());
-//                            progressBar.dismiss();
-//                            activity.startActivity(intent);
-//                        }
-//                    },
-//                    new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            Log.e("Error.Response", error.toString());
-//                            Log.e("in search", "in search--------------------ERROR--------------");
-//                            progressBar.dismiss();
-//                        }
-//                    }
-//            );
-//            getRequest.setRetryPolicy(new DefaultRetryPolicy(
-//                    10000,
-//                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//
-//            // add it to the RequestQueue
-//            queue.add(getRequest);
-//            showProgressBar(placeID);
-//        }
     }
 
     private void requestHelper(final String url, final String placeID, final  boolean getYelpReviews,
@@ -181,7 +138,7 @@ public class SearchServices {
                             intent.putExtra("resultType", "SEARCH_RESULTS");
                         } else {
 
-                            Log.i("in search", "search------about to load DetailAcitivity--------------placeID-------------: " + placeID);
+
                             intent = new Intent(activity, DetailsActivity.class);
                             intent.putExtra("placeID", placeID);
                             intent.putExtra("loadFromDB", "false");
@@ -193,6 +150,8 @@ public class SearchServices {
                         }
                         else if (getPhotos) {
 
+                            Log.i("in search", "search------about to load DetailAcitivity--------------photos-------------: " + response.toString());
+                            Log.i("in search", "search------about to load DetailAcitivity--------------photos--url-----------: " +url);
                             new Database(activity).savePhotos(response.toString(), placeID);
                         }
                         else {
