@@ -1,14 +1,8 @@
 package bizu.work.placessearch;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
+
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
@@ -22,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +26,11 @@ import com.seatgeek.placesautocomplete.model.Place;
 
 import org.json.JSONObject;
 
-import static android.content.Context.LOCATION_SERVICE;
 
 
 public class SearchFragment extends Fragment {
 
     private String category;
-//    private String currentLoc;
     private MainActivity activity;
     public SearchFragment() {
     }
@@ -57,7 +48,6 @@ public class SearchFragment extends Fragment {
 
         // Populate the dropdown list and inflate the layout fragment
         View v = inflater.inflate(R.layout.search_form, container, false);
-//        populateDropdown(v);
 
         // Set onclick listeners
         Button btnClear = (Button) v.findViewById(R.id.btn_clear);
@@ -118,24 +108,9 @@ public class SearchFragment extends Fragment {
                 setOnFocusEvent(R.id.other_loc_input, hasFocus);
             }
         });
-        otherLocInput.setOnPlaceSelectedListener(
-                new OnPlaceSelectedListener() {
-                    @Override
-                    public void onPlaceSelected(final Place place) {
-                        // do something awesome with the selected place
-                    }
-                }
-        );
-
-//        setAutoComplete();
 
         return v;
     }
-
-//    public void setCurLocation(double lat, double lng) {
-//
-//        currentLoc = lat + "," + lng + "";
-//    }
 
 
     public void populateDropdown(View v) {
@@ -151,8 +126,6 @@ public class SearchFragment extends Fragment {
                 android.R.layout.simple_spinner_dropdown_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
-//        spinner.setDropDownVerticalOffset(500);
-
 
     }
 
@@ -297,16 +270,12 @@ public class SearchFragment extends Fragment {
 
             SearchServices ss = new SearchServices(getActivity(), v);
             JSONObject formData = getFormData();
-            Log.d("formData------------------formData-------------: ", formData.toString());
             ss.search(null, formData);
         }
 
     }
 
     private void clearForm(View v) {
-
-//        JSONObject formData = getFormData();
-//        Log.d("formData------------------formData-------------: ", formData.toString());
 
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
@@ -330,9 +299,6 @@ public class SearchFragment extends Fragment {
         EditText keyword = (EditText) getActivity().findViewById(R.id.keyword_input);
         EditText distance = (EditText) getActivity().findViewById((R.id.distance_input));
         PlacesAutocompleteTextView otherLocInput = (PlacesAutocompleteTextView) getActivity().findViewById(R.id.other_loc_input);
-//        TextView errorMsg1 = (TextView) getActivity().findViewById(R.id.mandatory_msg_1);
-//        TextView errorMsg2 = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
-
         RadioButton otherLocBtn = (RadioButton) getActivity().findViewById(R.id.radio_other_loc);
 
         String otherLocValue = otherLocInput.getText().toString();
@@ -370,9 +336,7 @@ public class SearchFragment extends Fragment {
             formData.put("centerLon", centerLon);
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-//            Log.i("in populateTable", "populateTable--------------------3--------------");
         }
         return formData;
     }
