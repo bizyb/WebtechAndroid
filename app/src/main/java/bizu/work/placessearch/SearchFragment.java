@@ -276,7 +276,7 @@ public class SearchFragment extends Fragment {
 
             SearchServices ss = new SearchServices(getActivity(), v);
             JSONObject formData = getFormData();
-            ss.search(null, formData);
+            ss.search(null, formData, "searchForm");
         }
 
     }

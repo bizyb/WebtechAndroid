@@ -59,7 +59,7 @@ public class SearchServices {
     * be too slow. Since we don't need the reviews right away, we'll just save them to the
     * database with a callback when they arrive.
     * */
-    public void search(final String placeID, final JSONObject formData) {
+    public void search(final String placeID, final JSONObject formData, String entryPoint) {
 
         String url = "";
         String yelpURL = null;
@@ -85,18 +85,19 @@ public class SearchServices {
             intent.putExtra("placeID", placeID);
             intent.putExtra("loadFromDB", "true");
             intent.putExtra("response", "");
+            intent.putExtra("entryPoint", entryPoint);
             activity.startActivity(intent);
         }
         else {
-            requestHelper(url, placeID, false, false);
-            if (yelpURL != null) { requestHelper(yelpURL, placeID, true, false);}
-            if (photosURL != null) { requestHelper(photosURL, placeID, false, true);}
+            requestHelper(url, placeID, false, false, entryPoint);
+            if (yelpURL != null) { requestHelper(yelpURL, placeID, true, false, entryPoint);}
+            if (photosURL != null) { requestHelper(photosURL, placeID, false, true, entryPoint);}
 
         }
     }
 
     private void requestHelper(final String url, final String placeID, final  boolean getYelpReviews,
-                               final boolean getPhotos) {
+                               final boolean getPhotos, final String entryPoint) {
 
         RequestQueue queue = Volley.newRequestQueue(activity);
 
@@ -119,6 +120,7 @@ public class SearchServices {
                             intent = new Intent(activity, DetailsActivity.class);
                             intent.putExtra("placeID", placeID);
                             intent.putExtra("loadFromDB", "false");
+                            intent.putExtra("entryPoint", entryPoint);
                         }
                         intent.putExtra("response", response.toString());
                         if (getYelpReviews) {

@@ -92,19 +92,27 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
     private void populateResults(String response, String resultType, int pageFromDB) {
 
         int insertionOrderOffset = 0;
-        if (resultType.equals("SEARCH_RESULTS")) {
+        try {
+            if (resultType.equals("SEARCH_RESULTS")) {
 
-            // we have a new search query. Drop all existing entries, except for those
-            // that have been favorited
-            Database db = new Database(this);
-            db.dropRows("favorites", null, null);
-            insertionOrderOffset = db.getCount(); // number of favorited entries
-            pageNum = 1;
-            pageFromDB = -1;
-            if (preferenceSettings != null) {
-                preferenceSettings.edit().clear();
-                preferenceSettings.edit().commit();
+                // we have a new search query. Drop all existing entries, except for those
+                // that have been favorited
+                Database db = new Database(this);
+                db.dropRows("favorites", null, null);
+                insertionOrderOffset = db.getCount(); // number of favorited entries
+                pageNum = 1;
+                pageFromDB = -1;
+                if (preferenceSettings != null) {
+                    preferenceSettings.edit().clear();
+                    preferenceSettings.edit().commit();
+                }
             }
+        }
+        catch(Exception e){
+            //resultType will be null if TH back button is pressed from details page if entry point
+            // is the favorites fragment. Handle that by reloading the favorites page manually
+
+            Log.e("error", e.toString());
         }
 
         Table tableObj = new Table(this, response, null, null);

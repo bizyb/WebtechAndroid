@@ -36,6 +36,7 @@ public class DetailsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private String entryPoint;
     private int[] tabIcons = {
             R.drawable.info_outline,
             R.drawable.photos,
@@ -48,19 +49,21 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // add a back button and a listener
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
-                finish();
-            }
-        });
+//        // add a back button and a listener
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
+//                finish();
+//            }
+//        });
 
         viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -72,6 +75,7 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         response = intent.getStringExtra("response");
         place_id = intent.getStringExtra("placeID");
+        entryPoint = intent.getStringExtra("entryPoint");
 
         // Save to the database only if the place has not already been downloaded
         String loadFromDB = intent.getStringExtra("loadFromDB");
@@ -82,9 +86,45 @@ public class DetailsActivity extends AppCompatActivity {
         placeAddress =  db.getPlaceName(place_id, "address");
         placeWebsite = db.getPlaceName(place_id, "website");
 
+        setBackButton(toolbar, entryPoint);
         setPageTitle();
         setTwitterListener();
         setDetailsFavListener();
+
+    }
+
+    /*
+    * Set main back button to point to the entry point.
+    * */
+    private void setBackButton(Toolbar toolbar, String entryPoint) {
+
+        // add a back button and a listener
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        if (entryPoint.equals("searchResults")) {
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
+                    finish();
+                }
+            });
+        }
+
+        else if (entryPoint.equals("favorites")) {
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                }
+            });
+
+        }
 
     }
 

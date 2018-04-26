@@ -53,7 +53,7 @@ public class Table {
     }
 
     private TableRow getTableRow(String name, String vicinity, String iconURL, String placeID,
-                                 String tableFor) {
+                                 String tableFor, String entryPoint) {
 
         //TODO: set listeners for both search resutls and favorites
         TableRow tr;
@@ -84,7 +84,7 @@ public class Table {
         setResultsFav(favIcon, placeID, tableFor);
 
         // Place name
-        setResultsPlaceName(placeName, name, vicinity, placeID);
+        setResultsPlaceName(placeName, name, vicinity, placeID, entryPoint);
 
 
         tr.addView(catIcon, new TableRow.LayoutParams(1));
@@ -96,7 +96,8 @@ public class Table {
         return tr;
     }
 
-    private void setResultsPlaceName(TextView placeName, String name, String vicinity, final String placeID) {
+    private void setResultsPlaceName(TextView placeName, String name, String vicinity,
+                                     final String placeID, final String entryPoint) {
 
 
         String nameNaddr = "<strong>" + name + "</strong>";
@@ -116,7 +117,7 @@ public class Table {
             public void onClick(View v) {
 
                 SearchServices ss = new SearchServices(activity, view);
-                ss.search(placeID, null);
+                ss.search(placeID, null, entryPoint);
 
             }
         });
@@ -237,6 +238,7 @@ public class Table {
         String vicinity;
         String iconURL;
         String placeID;
+        String entryPoint = "";
         JSONArray results = new JSONArray();
 
         try {
@@ -255,12 +257,14 @@ public class Table {
                     JSONObject responseJSON = new JSONObject(response);
                     results = responseJSON.getJSONArray("results");
                 }
+                entryPoint = "searchResults";
 
             }
             else if (tableFor == "favorites") {
 
                 Database db = new Database(activity);
                 results = db.getDBPage(pageFromDB, "favorites");
+                entryPoint = "favorites";
             }
 
             for (int i = 0; i < results.length(); i++) {
@@ -274,7 +278,7 @@ public class Table {
 
                 if (pageFromDB < 0) { saveToDB(r, optional); }
 
-                TableRow row = getTableRow(name, vicinity, iconURL, placeID, tableFor);
+                TableRow row = getTableRow(name, vicinity, iconURL, placeID, tableFor, entryPoint);
                 table.addView(row);
             }
             if (results.length() == 0) {
