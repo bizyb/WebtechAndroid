@@ -60,23 +60,10 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         });
 
         preferenceSettings = PreferenceManager.getDefaultSharedPreferences(this);
-//        preferenceSettings.edit().clear();
-//        if (preferenceSettings != null) {
 
             response = preferenceSettings.getString(STATE_RESPONSE, null);
             resultType = preferenceSettings.getString(STATE_RESULT_TYPE, "PAGINATION");
             pageFromDBGlobal = preferenceSettings.getInt(STATE_PAGE_FROM_DB, -1);
-
-        Log.i("onSaveInstanceState", "----inside-----resultType-------    " + "PAGINATION");
-        Log.i("onSaveInstanceState", "----inside-----response-------    " + response);
-        Log.i("onSaveInstanceState", "----inside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
-////        }
-        //debug
-        //debug
-        //debug
-//        pageFromDBGlobal= -1;
-        //debug
-        //debug
 
         if (pageFromDBGlobal < 1 && response == null) {
 
@@ -84,15 +71,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             response = intent.getStringExtra("response");
             resultType = intent.getStringExtra("resultType");
             pageFromDBGlobal = -1;
-
-//            saveToPreferences(response, resultType, pageFromDBGlobal);
-
-//            Log.i("onSaveInstanceState", "----else--------------resultType------------    " + resultType);
         }
-//
-        Log.i("onSaveInstanceState", "----outside-----resultType-------    " + resultType);
-        Log.i("onSaveInstanceState", "----outside-----response-------    " + response);
-        Log.i("onSaveInstanceState", "----outside-----pageFromDBGlobal-------    " + pageFromDBGlobal + "");
         populateResults(response, resultType, pageFromDBGlobal);
 
     }
