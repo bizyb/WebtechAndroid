@@ -3,7 +3,6 @@ package bizu.work.placessearch;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -118,7 +116,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
 
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
-//        Snackbar.make(btnRequestDirection, "Success with status : " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
         if (direction.isOK()) {
             Route route = direction.getRouteList().get(0);
             googleMap.addMarker(new MarkerOptions().position(origin));
@@ -128,16 +125,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
             googleMap.addPolyline(DirectionConverter.createPolyline(getActivity(), directionPositionList, 5, Color.RED));
             setCameraWithCoordinationBounds(route);
 
-//            btnRequestDirection.setVisibility(View.GONE);
         }
-//        else {
-//            Snackbar.make(btnRequestDirection, direction.getStatus(), Snackbar.LENGTH_SHORT).show();
-//        }
     }
 
     @Override
     public void onDirectionFailure(Throwable t) {
-//        Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
     }
 
     private void setCameraWithCoordinationBounds(Route route) {
@@ -149,8 +141,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
 
     public void requestDirection() {
 
-//        Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
-        //reset the map in case there's an existing route
         if (googleMap != null) { googleMap.clear();}
 
         GoogleDirection.withServerKey(MAP_API_KEY)
@@ -180,7 +170,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Directi
                     @Override
                     public void onFailure(final Throwable failure) {
                         Log.d("test", "failure " + failure);
-                        Log.e("setInputListeners", "---ERROR----------------------------------ERROR------");
                     }
                 });
             }
