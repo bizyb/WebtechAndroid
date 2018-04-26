@@ -1,19 +1,10 @@
 package bizu.work.placessearch;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.Spinner;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,8 +15,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import db.Database;
 
@@ -62,9 +51,7 @@ public class SearchServices {
 
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-//            Log.i("in populateTable", "populateTable--------------------3--------------");
         }
 
         return queryString;
@@ -99,7 +86,7 @@ public class SearchServices {
 
 //        final String url = "http://ip-api.com/json";
         Log.i("in search", "search--------------------url-------------: " + url);
-        Log.i("in search", "search--------------------yelp-------------: " + yelpURL);
+        Log.i("in search", "search--------------------yelp---url----------: " + yelpURL);
 
         Log.i("in search", "search--------------------placeID-------------: " + placeID);
 
@@ -151,8 +138,6 @@ public class SearchServices {
                         }
                         else if (getPhotos) {
 
-                            Log.i("in search", "search------about to load DetailAcitivity--------------photos-------------: " + response.toString());
-                            Log.i("in search", "search------about to load DetailAcitivity--------------photos--url-----------: " +url);
                             new Database(activity).savePhotos(response.toString(), placeID);
                         }
                         else {
@@ -166,7 +151,6 @@ public class SearchServices {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Error.Response", error.toString());
-                        Log.e("in search", "in search--------------------ERROR--------------url: " + url);
                         progressBar.dismiss();
                     }
                 }
