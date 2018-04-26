@@ -136,6 +136,7 @@ public class SearchServices {
                         if (placeID == null) {
 
                             intent.putExtra("resultType", "SEARCH_RESULTS");
+
                         } else {
 
 

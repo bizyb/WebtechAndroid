@@ -37,7 +37,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
     private SharedPreferences preferenceSettings;
     private SharedPreferences.Editor preferenceEditor;
-    private final int PREFERENCE_MODE_PRIVATE = 0;
+//    private final int PREFERENCE_MODE_PRIVATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         //debug
         //debug
 
-        if (pageFromDBGlobal < 1) {
+        if (pageFromDBGlobal < 1 && response == null) {
 
             Intent intent = getIntent();
             response = intent.getStringExtra("response");
@@ -124,6 +124,12 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             db.dropRows("favorites", null, null);
             insertionOrderOffset = db.getCount(); // number of favorited entries
             pageNum = 1;
+            pageFromDB = -1;
+//            preferenceSettings = null;
+            if (preferenceSettings != null) {
+                preferenceSettings.edit().clear();
+                preferenceSettings.edit().commit();
+            }
 
 //            saveToPreferences(null, null, -1);
 

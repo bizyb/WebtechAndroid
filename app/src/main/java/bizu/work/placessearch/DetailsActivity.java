@@ -10,16 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.net.URLEncoder;
@@ -70,7 +67,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
 
         Intent intent = getIntent();
@@ -90,8 +86,6 @@ public class DetailsActivity extends AppCompatActivity {
         setTwitterListener();
         setDetailsFavListener();
 
-        Log.i("in oncCreate", "------onCreate DetailAcitivity--------------placeID-------------: " + place_id);
-
     }
 
     /*
@@ -109,7 +103,6 @@ public class DetailsActivity extends AppCompatActivity {
                 openBrowser(v);
             }
         });
-//        twitterLink.setPadding(50, 0, 50 ,0);
     }
 
     public void openBrowser(View v){
@@ -134,8 +127,6 @@ public class DetailsActivity extends AppCompatActivity {
     private void setDetailsFavListener() {
 
         final ImageView favIcon = findViewById(R.id.details_fav_icon);
-//        favIcon.setPadding(200, 0, 50, 0);
-//        favIcon.setMaxWidth(50);
         favIcon.setClickable(true);
         final Activity activity = this;
 
@@ -164,10 +155,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         return place_id;
     }
-//    public String getDetailsData() {
-//
-//        return "xyz";
-//    }
 
     private void saveToDB(String response) {
 
@@ -176,10 +163,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-//    public String getDetailsData() {
-//
-//        return response;
-//    }
 
     private void setPageTitle() {
 
@@ -215,7 +198,7 @@ public class DetailsActivity extends AppCompatActivity {
             drawable.setSize(1, 1);
             ((LinearLayout) root).setDividerPadding(10);
             ((LinearLayout) root).setDividerDrawable(drawable);
-        };
+        }
 
     }
 
@@ -238,9 +221,8 @@ public class DetailsActivity extends AppCompatActivity {
             url = "https://twitter.com/intent/tweet?text=" + text;
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
+            
             Log.e("error", e.toString());
-            Log.i("in getTwitterURL", "--------------------ERROR--------------");
         }
         return url;
     }

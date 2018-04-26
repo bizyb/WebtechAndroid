@@ -112,7 +112,7 @@ public class PhotosFragment extends Fragment {
                 }
                 photosArray = db.getDetailsPhotos(placeID);
                 tries++;
-                if (tries > 5) {break;}
+                if (tries > 5) {break;} //assume the place has no pictures if 5 seconds is not enough
             }
             return "Executed";
         }
