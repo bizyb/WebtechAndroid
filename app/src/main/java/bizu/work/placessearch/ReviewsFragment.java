@@ -37,14 +37,12 @@ public class ReviewsFragment extends Fragment {
 
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
-//        Log.i("in oncCreate", "------onCreate reivewFragment--------------placeID-------------: " + placeID);
 
         populateDropdown(v, R.id.review_source, R.array.review_source);
         populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
 
         setSpinnerListeners(v);
 
-//        Button btnClear = (Button) v.findViewById(R.id.btn_clear);
         reviewsFrom = "Google";
         sortBy = SortBy.DEFAULT_ORDER;
         populateReviews();
@@ -88,9 +86,6 @@ public class ReviewsFragment extends Fragment {
     * */
     private void setSpinnerListeners(View v) {
 
-//        populateDropdown(v, R.id.review_source, R.array.review_source);
-//        populateDropdown(v, R.id.review_sort_option, R.array.review_sort_method);
-
         Spinner reviewSource = (Spinner) v.findViewById(R.id.review_source);
         Spinner sortingOption = (Spinner) v.findViewById(R.id.review_sort_option);
 
@@ -112,7 +107,6 @@ public class ReviewsFragment extends Fragment {
                         break;
                 }
                 populateReviews();
-//                Log.i("reviewsFromGlobal", "------reviewsFromGlobal------reviewsFromGlobal--------reviewsFromGlobal-------------: " + reviewsFromGlobal);
             }
 
             @Override
@@ -126,10 +120,8 @@ public class ReviewsFragment extends Fragment {
         sortingOption.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // your code here
                 Object item = parentView.getItemAtPosition(position);
                 String value = item.toString();
-//                Log.i("sortBy", "------sortBy------sortBy--------sortBy-------------: " + sortBy);
                 switch (value) {
 
                     case "Default Order":

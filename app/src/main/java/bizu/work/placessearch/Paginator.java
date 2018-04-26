@@ -14,7 +14,6 @@ public class Paginator {
     private String response;
     private ResultsActivity resultsInstace;
     private FavoritesFragment fragActivity;
-//    private View view;
 
     public Paginator(Activity activity, String response, ResultsActivity resultsInstace, FavoritesFragment
                      fragActivity) {
@@ -23,10 +22,6 @@ public class Paginator {
         this.response = response;
         this.resultsInstace = resultsInstace;
         this.fragActivity = fragActivity;
-
-
-
-
 
     }
 

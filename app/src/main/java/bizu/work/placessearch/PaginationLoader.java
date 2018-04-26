@@ -4,5 +4,5 @@ import android.widget.Button;
 
 public interface PaginationLoader {
 
-    public void loadPaginatedPage(Button prevBtn, Button nextBtn);
+    void loadPaginatedPage(Button prevBtn, Button nextBtn);
 }

@@ -221,7 +221,7 @@ public class DetailsActivity extends AppCompatActivity {
             url = "https://twitter.com/intent/tweet?text=" + text;
         }
         catch(Exception e){
-            
+
             Log.e("error", e.toString());
         }
         return url;
