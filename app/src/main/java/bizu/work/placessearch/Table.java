@@ -289,7 +289,7 @@ public class Table {
         }
 
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
+            showEmpty("searchResults");
             Log.e("error", e.toString());
         }
 
@@ -316,7 +316,6 @@ public class Table {
             db.addEntry(place_id, name, vicinity, favorited, iconURL, optional);
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
         }
 
@@ -334,6 +333,7 @@ public class Table {
 
         try {
 
+            table.removeAllViews();
             address = results.optString("formatted_address");
             phoneNumber = results.optString("formatted_phone_number");
             priceLevel = results.optString("price_level");
@@ -370,7 +370,7 @@ public class Table {
             }
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
+            showEmpty("infoTab");
             Log.e("error", e.toString());
         }
 
@@ -484,6 +484,7 @@ public class Table {
 
                 Database db = new Database(activity);
                 reviews = db.getSortedReviews(placeID, source, sortBy);
+                table.removeAllViews();
 
                 for (int i = 0; i < reviews.length(); i++) {
 
@@ -499,10 +500,14 @@ public class Table {
                     table.addView(getReviewRow(author, authorURL, avatar, text, date, rating));
 
                 }
+                if (reviews.length() == 0) {
+                    showEmpty("reviews");
+                }
+
 
             }
             catch(Exception e){
-                // TODO: output no results/failed to get results error here
+                showEmpty("reviews");
                 Log.e("error", e.toString());
             }
 
@@ -604,6 +609,18 @@ public class Table {
             message = "No Photos";
             layout = view.findViewById(R.id.photos_container);
             useLayout = true;
+        }
+        else if (forTab.equals("infoTab")) {
+
+            message = "No info. API ERROR";
+            table = view.findViewById(R.id.info_fragment_table);
+
+        }
+        else if (forTab.equals("reviews")) {
+
+            message = "No reviews";
+            table = view.findViewById(R.id.reviews_table);
+
         }
 
 
