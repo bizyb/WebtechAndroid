@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         currentLoc = null;
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
+        Log.d("token", "------------main activity onCreat----------------------");
+
         getLocation();
 
     }
@@ -75,10 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("in getLocation", "getLocation--------------------getLocation-------------");
         if( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED)
+        {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);

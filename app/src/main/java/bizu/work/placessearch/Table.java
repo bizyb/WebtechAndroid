@@ -224,7 +224,7 @@ public class Table {
         Picasso.get().load(url).resize(150, 150).into(imageView);
     }
 
-    public boolean populateTable(String tableFor, int pageFromDB, int... optional) {
+    public int populateTable(String tableFor, int pageFromDB, int... optional) {
 
         TableLayout table = (TableLayout) activity.findViewById(R.id.main_table);
 
@@ -280,7 +280,7 @@ public class Table {
             if (results.length() == 0) {
 
                 showEmpty("searchResults");
-                return  false;
+                return  0;
             }
             else {
                 instanceTable = table;
@@ -293,7 +293,7 @@ public class Table {
             Log.e("error", e.toString());
         }
 
-        return true;
+        return results.length();
     }
 
     public TableLayout getTableObj() {

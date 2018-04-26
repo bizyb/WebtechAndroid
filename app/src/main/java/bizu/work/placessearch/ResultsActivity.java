@@ -108,10 +108,10 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         }
 
         Table tableObj = new Table(this, response, null, null);
-        boolean isPopulated = tableObj.populateTable("results", pageFromDB, insertionOrderOffset);
+       int count = tableObj.populateTable("results", pageFromDB, insertionOrderOffset);
 
 
-        if (isPopulated) {
+        if (count > 0) {
 
             Paginator paginator = new Paginator(this, response, this, null);
             getLayoutInflater().inflate(R.layout.table_layout, tableObj.getTableObj(), true);

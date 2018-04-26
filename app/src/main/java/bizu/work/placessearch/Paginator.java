@@ -57,6 +57,7 @@ public class Paginator {
                         next_page_token = r.getString("next_page_token");
                     }
                 }
+                Log.d("token", "next page token-------------------------------token----------: " + next_page_token);
                 setNextBtnListener(nextBtn, next_page_token, pageNum);
             }
             catch(Exception e){
