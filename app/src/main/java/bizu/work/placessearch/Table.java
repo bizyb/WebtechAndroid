@@ -1,19 +1,15 @@
 package bizu.work.placessearch;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,7 +30,6 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import db.Database;
 
@@ -46,7 +40,6 @@ public class Table {
     private View view;
     private TableLayout instanceTable;
     FavoritesFragment favInstance;
-//    private int pageNum;
 
 
     public Table(Activity activity, String response, View view, FavoritesFragment favInstance) {
@@ -56,7 +49,7 @@ public class Table {
         this.view = view;
         this.favInstance = favInstance;
         this.instanceTable = null;
-//        pageNum = 0;
+
     }
 
     private TableRow getTableRow(String name, String vicinity, String iconURL, String placeID,
@@ -92,13 +85,7 @@ public class Table {
 
         // Place name
         setResultsPlaceName(placeName, name, vicinity, placeID);
-//        String nameNaddr = "<strong>" + name + "</strong>";
-//        nameNaddr += "<br>" + vicinity;
-//        placeName.setText(Html.fromHtml(nameNaddr));
-//
-//        placeName.setMaxWidth(1000);
-//        placeName.setMinWidth(1000);
-//        placeName.setMinHeight(200);
+
 
         tr.addView(catIcon, new TableRow.LayoutParams(1));
         tr.addView(placeName, new TableRow.LayoutParams(2));
@@ -232,15 +219,6 @@ public class Table {
         toast.show();
     }
 
-
-//    private String getPlaceID() {
-//
-//        String placeID = "ChIJfWmJOsfSD4gRVMPC4R4Q10w";
-//
-//        return placeID;
-//    }
-
-
     private void setIcon(ImageView imageView, String url) {
 
         Picasso.get().load(url).resize(150, 150).into(imageView);
@@ -254,7 +232,6 @@ public class Table {
 
         table.removeAllViews();
         table.setPadding(0,200, 0,50 );
-        Log.i("in populateTable", "populateTable--------------------1--------------");
 
         String name;
         String vicinity;
@@ -269,7 +246,6 @@ public class Table {
 
                 if (pageFromDB > 0) {
 
-                    Log.i("in populateTable", "calling getDBPage----------------------------------");
                     Database db = new Database(activity);
                     results = db.getDBPage(pageFromDB, "results");
 
@@ -294,7 +270,6 @@ public class Table {
                 vicinity = r.getString("vicinity");
                 iconURL = r.getString("icon");
                 placeID = r.getString("place_id");
-//                Log.i("in populateTable", "populateTable--------------------2--------------");
 
 
                 if (pageFromDB < 0) { saveToDB(r, optional); }
@@ -316,7 +291,6 @@ public class Table {
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-            Log.i("in populateTable", "populateTable--------------------3--------------");
         }
 
         return true;
@@ -340,7 +314,6 @@ public class Table {
             Database db = new Database(activity);
 
             db.addEntry(place_id, name, vicinity, favorited, iconURL, optional);
-            Log.d("db", "saving to db..........................------------: " + place_id);
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
@@ -355,23 +328,7 @@ public class Table {
         JSONObject results = null;
         Database db = new Database(activity);
 
-//        if (fromDB) {
-            // response == place_id
-            results = db.getDetailsInfo(placeID);
-//        }
-//        else {
-//            // save the new info to db
-//            try {
-//
-//                JSONObject responseJSON = new JSONObject(response);
-//                results = responseJSON.getJSONObject("results");
-//
-//            }
-//            catch(Exception e){
-//                // TODO: output no results/failed to get results error here
-//                Log.d("error", e.toString());
-//            }
-//        }
+        results = db.getDetailsInfo(placeID);
 
         String address, phoneNumber, priceLevel, googlePage, website, rating;
 
@@ -411,14 +368,10 @@ public class Table {
 
                 table.addView(getDetailsRow(website, "Website", true, false));
             }
-
-            Log.d("db", "saving to getDetailsInfoTable......................rating....------------: " + rating);
-
         }
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-            Log.d("db", "saving to getDetailsInfoTable......................error....------------: ");
         }
 
         return table;
@@ -525,20 +478,15 @@ public class Table {
 
     public void populateReviews(TableLayout table, String placeID, String source, SortBy sortBy) {
 
-//        String placeID = getPlaceID();
         JSONArray reviews = new JSONArray();
 
         try {
 
-            Log.i("in populateReviews", "populateReviews--------------------before calling get sorted--------------");
                 Database db = new Database(activity);
                 reviews = db.getSortedReviews(placeID, source, sortBy);
-            Log.i("in populateReviews", "populateReviews--------------------reviews.toString()--------------: "+ reviews.toString());
 
                 for (int i = 0; i < reviews.length(); i++) {
 
-
-                    Log.i("in populateReviews", "populateReviews--------------------reviews.length()--------------: "+ reviews.length() + "");
                     JSONObject row = reviews.getJSONObject(i);
 
                     String author = row.getString("author");
@@ -550,15 +498,12 @@ public class Table {
                     text.replace('\n', ' ');
                     table.addView(getReviewRow(author, authorURL, avatar, text, date, rating));
 
-
-                    //TODO: loop here; if not fromDB, save it to db
                 }
 
             }
             catch(Exception e){
                 // TODO: output no results/failed to get results error here
                 Log.e("error", e.toString());
-                Log.i("in populateReviews", "populateReviews--------------------ERORR--------------");
             }
 
     }
@@ -725,16 +670,6 @@ public class Table {
                 }
 
                 imageView.setPadding(50, topPadding, 50, 50);
-//                imageView.setAdjustViewBounds(true);
-//                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-//                android.view.ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-//                layoutParams.width = 100;
-//                layoutParams.height = 100;
-//                imageView.setLayoutParams(layoutParams);
-//                imageView.setMaxWidth(50);
-//                imageView.setMaxHeight(50);
-//                textView.setMinWidth(900);
-//                imageView.getRootView().setMinimumWidth(900);
             }
         });
 
