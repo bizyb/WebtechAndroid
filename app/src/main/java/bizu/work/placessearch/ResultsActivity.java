@@ -37,7 +37,6 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
     private SharedPreferences preferenceSettings;
     private SharedPreferences.Editor preferenceEditor;
-//    private final int PREFERENCE_MODE_PRIVATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +112,6 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
     private void populateResults(String response, String resultType, int pageFromDB) {
 
-
-//        Log.i("pagination", "in ppopulateResults pageFromDB=---------------------------    " + pageFromDB);
         int insertionOrderOffset = 0;
         if (resultType.equals("SEARCH_RESULTS")) {
 
@@ -125,14 +122,10 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
             insertionOrderOffset = db.getCount(); // number of favorited entries
             pageNum = 1;
             pageFromDB = -1;
-//            preferenceSettings = null;
             if (preferenceSettings != null) {
                 preferenceSettings.edit().clear();
                 preferenceSettings.edit().commit();
             }
-
-//            saveToPreferences(null, null, -1);
-
         }
 
         Table tableObj = new Table(this, response, null, null);
@@ -159,8 +152,6 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
         if (nextBtn != null) {
             String next_page_token = (String) nextBtn.getTag();
-//            Log.i("token", "next_page_token-----------------length-------------------: " + next_page_token.length() + "");
-//            Log.i("token", "next_page_token------------------------------------: " + next_page_token + "");
             if (next_page_token.length() > 1) {
                 // we have API token so make a new request
                 getNewResult(next_page_token);
@@ -173,9 +164,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
         }
         else {
-
             //TODO: need to assert if pagename > 0?
-
             pageNum = (Integer) prevBtn.getTag();
             pageNum--; // the page number to load; prevBtn stores the page number of the page it
                         // currently resides in
@@ -246,7 +235,6 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
 
 }
 
-//TODO: error loading paginated page and error getting search results for te first time
 
 
 

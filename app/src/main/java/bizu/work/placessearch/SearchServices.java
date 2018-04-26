@@ -72,7 +72,7 @@ public class SearchServices {
         boolean loadFromDB = false;
 
         if (placeID != null) {
-            url = "http://bizyb.us-east-2.elasticbeanstalk.com/places-details-endpoint";
+            url = "http://bizyb2.us-east-2.elasticbeanstalk.com/places-details-endpoint";
             url += "?placeID=" + placeID;
             yelpURL = url + "&requestForYelp=true";
             photosURL = url + "&requestForPhotos=true";
@@ -81,7 +81,7 @@ public class SearchServices {
         else {
 
             String queryString = getGETParams(formData);
-            url = "http://bizyb.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
+            url = "http://bizyb2.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
         }
 
 //        final String url = "http://ip-api.com/json";

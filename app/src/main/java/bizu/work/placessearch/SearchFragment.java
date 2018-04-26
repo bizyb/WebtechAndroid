@@ -1,8 +1,10 @@
 package bizu.work.placessearch;
 
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
@@ -109,6 +111,10 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        //clear any existing result cache
+        SharedPreferences preferenceSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferenceSettings.edit().clear().commit();
+
         return v;
     }
 
@@ -214,7 +220,7 @@ public class SearchFragment extends Fragment {
             String customLoc = otherLocInput.getText().toString();
             customLoc = customLoc.replaceAll("\\s+", "");
             if (customLoc.length() == 0) {
-
+                isValid = false;
                 textView = (TextView) getActivity().findViewById(R.id.mandatory_msg_2);
                 textView.setVisibility(View.VISIBLE);
             }
