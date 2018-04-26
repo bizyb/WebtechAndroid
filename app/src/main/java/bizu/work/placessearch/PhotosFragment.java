@@ -46,9 +46,8 @@ public class PhotosFragment extends Fragment {
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
 
+        populatePhotosTab(placeID);
         new AsyncPhotoLoader(placeID, activity, this).execute("");
-
-//        populatePhotosTab(placeID);
 
         return v;
     }
@@ -57,26 +56,14 @@ public class PhotosFragment extends Fragment {
 
         Log.d("db", "populatePhotosTab......................attempting to populate photos....--------------------------------PHOTO FUNC-----------: ");
 
-        boolean hasPhotos = false;
-
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.photos_container);
-//        if (linearLayout == null) {
-//            linearLayout = v.findViewById(R.id.photos_container);
-//        }
-
         Database db = new Database(getActivity());
 
-        // todo: block here until the photo request finishes; set another flag in savePhotos in db to indicate if the request is complete
-        // todo if request complete but array is null, then the place has not photos
         ArrayList<String> photosArray = null;
         photosArray = db.getDetailsPhotos(placeIDLocal);
 
-//        while (photosArray == null ) {
-//            photosArray = db.getDetailsPhotos(placeIDLocal);
-//        }
-
-
         if (photosArray != null) {
+            linearLayout.removeAllViews();
             for (String url : photosArray) {
 
 
@@ -99,7 +86,6 @@ public class PhotosFragment extends Fragment {
 
     private class AsyncPhotoLoader extends AsyncTask<String, Void, String> {
 
-//        private View v;
         private String placeID;
         private Activity activity;
         private PhotosFragment fragment;
@@ -117,6 +103,7 @@ public class PhotosFragment extends Fragment {
             Database db = new Database(activity);
             photosArray = db.getDetailsPhotos(placeID);
 
+            int tries = 0;
             while (photosArray == null ) {
                 try {
                     Thread.sleep(1000);
@@ -124,19 +111,9 @@ public class PhotosFragment extends Fragment {
                     Thread.interrupted();
                 }
                 photosArray = db.getDetailsPhotos(placeID);
+                tries++;
+                if (tries > 5) {break;}
             }
-
-
-//            photosArray = db.getDetailsPhotos(placeIDLocal);
-//        }
-//
-// for (int i = 0; i < 5; i++) {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    Thread.interrupted();
-//                }
-//            }
             return "Executed";
         }
 

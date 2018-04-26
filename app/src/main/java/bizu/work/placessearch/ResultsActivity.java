@@ -75,7 +75,7 @@ public class ResultsActivity extends AppCompatActivity implements PaginationLoad
         //debug
         //debug
         //debug
-        pageFromDBGlobal= -1;
+//        pageFromDBGlobal= -1;
         //debug
         //debug
 
