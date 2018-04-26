@@ -10,13 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
+
 
 import java.util.ArrayList;
 
@@ -54,7 +51,6 @@ public class PhotosFragment extends Fragment {
 
     public void populatePhotosTab(String placeIDLocal) {
 
-        Log.d("db", "populatePhotosTab......................attempting to populate photos....--------------------------------PHOTO FUNC-----------: ");
 
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.photos_container);
         Database db = new Database(getActivity());
