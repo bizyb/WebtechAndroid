@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.TableRow;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +15,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import bizu.work.placessearch.PhotosFragment;
 import bizu.work.placessearch.SortBy;
 
 
@@ -159,8 +157,7 @@ public class Database  extends SQLiteOpenHelper{
         else if (dropFor.equals("reviews")) {
 
             String whereClause = COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
-            int count = db.delete(TABLE_REVIEWS, whereClause, new String[]{placeID, reviewSource});
-            Log.i("in dropRows", "dropRows--------------------drop count--------------: "+ count + "");
+            db.delete(TABLE_REVIEWS, whereClause, new String[]{placeID, reviewSource});
 
         }
 
@@ -231,20 +228,6 @@ public class Database  extends SQLiteOpenHelper{
 
     private void  saveReviewsToDB(JSONArray reviews, String placeID, String reviewsFrom) {
 
-        // parse out the source
-        // parse out the place id
-
-//        String source = reviewsFrom;
-//        String authorName;
-//        String authorURL;
-//        String language;
-//        String avatr;
-//        String relativeTime;
-//        String text;
-//        String formattedTime;
-//        int defaultIndex;
-//        int epoch;
-//        int rating;
 
         // drop existing reviews for this place and reviewSource
         dropRows("reviews", placeID, reviewsFrom);
@@ -291,7 +274,6 @@ public class Database  extends SQLiteOpenHelper{
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-            Log.i("in saveReviewsToDB", "-------saveReviewsToDB-----------ERROR-----------------------");
         }
 
         finally {
@@ -315,9 +297,7 @@ public class Database  extends SQLiteOpenHelper{
         }
 
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-            Log.i("in saveYelpReviews", "-------saveYelpReviews-----------ERROR-----------------------");
         }
 
     }
@@ -341,14 +321,11 @@ public class Database  extends SQLiteOpenHelper{
             db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                     new String[] {placeID});
 
-//            new PhotosFragment().populatePhotosTab(placeID);
-
         }
 
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
+
             Log.e("error", e.toString());
-            Log.i("in saveYelpReviews", "-------saveYelpReviews-----------ERROR-----------------------");
         }
         finally {
             db.close();
@@ -426,7 +403,6 @@ public class Database  extends SQLiteOpenHelper{
      catch(Exception e){
         // TODO: output no results/failed to get results error here
         Log.e("error", e.toString());
-        Log.i("in saveDetailsToDB", "-------saveDetailsToDB-----------ERROR-----------------------");
     }
 
     finally {
@@ -449,7 +425,6 @@ public class Database  extends SQLiteOpenHelper{
                 if (i == photosArray.length() - 1) {
 
                     photos += photosArray.getString(i);
-                    Log.i("in mergePhotoURLs", "-------photos have arrived----------------------: " + photosArray.getString(i));
                 }
                 else {
                     photos += photosArray.getString(i) + delim;
@@ -461,7 +436,6 @@ public class Database  extends SQLiteOpenHelper{
         catch(Exception e){
             // TODO: output no results/failed to get results error here
             Log.e("error", e.toString());
-            Log.i("in mergePhotoURLs", "mergePhotoURLs--------------------ERROR--------------");
         }
 
         return photos;
@@ -561,7 +535,6 @@ public class Database  extends SQLiteOpenHelper{
         if (optional.length > 0) {
             insertionOrder -= optional[0]; // offset
         }
-//        Log.i("in addEntry", " ----entry---------------------  " + name  + ": " + insertionOrder + "");
 
         SQLiteDatabase db = this.getWritableDatabase();
         if (!rowExists) {
@@ -577,23 +550,19 @@ public class Database  extends SQLiteOpenHelper{
             values.put(COLUMN_VICINITY, vicinity);
             values.put(COLUMN_INSERTION_ORDER, insertionOrder);
             values.put(COLUMN_DETAILS_AVAILABLE, 0);
-//
             db.insert(TABLE_NEARBY_PLACES, null, values);
-//
+
 
 
         }
         else {
             // the row exists so update its insertion order
-//            CursorContainer container = getCursor(place_id, "insertionOrder");
-//            SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
                 values.put(COLUMN_INSERTION_ORDER, insertionOrder);
                 db.update(TABLE_NEARBY_PLACES, values, COLUMN_PLACE_ID + "= ?",
                         new String[] {place_id});
 
-//            Log.i("in addEntry", " ----exists new insertion order---------------------  " + name  + ": " + insertionOrder + "");
 
         }
         db.close();
@@ -623,11 +592,7 @@ public class Database  extends SQLiteOpenHelper{
 
 
         try {
-//            Log.i("in getDbPage", " about to enter while loop------------------------------- cursor count:   " + cursor.getCount() + "");
             while (cursor.moveToNext()) {
-//                Log.i("in getDbPage", "inside loop: i = ------------------------------    " + i + "");
-//                Log.i("in getDbPage", "inside loop: start = ------------------------------    " + start + "");
-//                Log.i("in getDbPage", "inside loop: end = ------------------------------    " + end + "");
                if (i >= start) {
 
                     //TODO: are these sorted by the primary key or are we just assuming?
@@ -699,9 +664,6 @@ public class Database  extends SQLiteOpenHelper{
 
         String query = "SELECT  * FROM " + TABLE_REVIEWS + " WHERE " + COLUMN_PLACE_ID + "=? AND " + COLUMN_REVIEW_SOURCE + "=?";
         query += " ORDER BY " + getSortingColumn(sortBy);
-//        query += " AND " + COLUMN_PLACE_ID + "=?";
-        Log.i("in getSortedReviews", "getSortedReviews--------------------placeID--------------: "+ placeID);
-        Log.i("in getSortedReviews", "getSortedReviews--------------------reviewsFrom--------------: "+ reviewsFrom);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[] {placeID, reviewsFrom});
@@ -726,17 +688,13 @@ public class Database  extends SQLiteOpenHelper{
                 row.put("date", date);
                 row.put("rating", rating);
 
-                Log.i("in getSortedReviews", "getSortedReviews--------------------AUTHOR--------------: "+ author);
-
                 reviews.put(row);
 
             }
 
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
             Log.d("error", e.toString());
-            Log.i("in getSortedReviews", "getSortedReviews--------------------ERROR--------------");
         }
         finally {
             cursor.close();
@@ -751,27 +709,12 @@ public class Database  extends SQLiteOpenHelper{
 
         JSONObject row = new JSONObject();
 
-        //TODO: save to db if for the first time; otherwise check fromDB flag
-        // and act accordingly
-
-//        ("SELECT EmployeeName FROM Employee WHERE EmpNo=?", new String[] {empNo + ""});
-
-//        rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
 
         String query = "SELECT  * FROM " + TABLE_NEARBY_PLACES + " WHERE " + COLUMN_PLACE_ID + "=?";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[] {place_id});
 
         try {
-
-//            String name = "University of Southern California";
-//            String vicinity = "Los Angeles, CA 90007, USA";
-//            String phoneNumber = "(213) 740-2311";
-//            String priceLevel = "$$";
-//            String rating = "****";
-//            String googlePage = "https://stackoverflow.com/questions/6763111/how-to-change-color-of-textview-hyperlink";
-//            String website = "http://usc.edu";
-
             while (cursor.moveToNext()) {
 
                 String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
@@ -782,7 +725,6 @@ public class Database  extends SQLiteOpenHelper{
                 String googlePage = cursor.getString(cursor.getColumnIndex(COLUMN_GOOGLE_PAGE));
                 String website = cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE));
 
-//                String priceLevelStr = '$' * priceLevel + "";
                 row.put("name", name);
                 row.put("formatted_address", vicinity);
                 row.put("formatted_phone_number", phoneNumber);
@@ -794,7 +736,6 @@ public class Database  extends SQLiteOpenHelper{
 
         }
         catch(Exception e){
-            // TODO: output no results/failed to get results error here
             Log.d("error", e.toString());
         }
         finally {
@@ -813,59 +754,28 @@ public class Database  extends SQLiteOpenHelper{
         Cursor cursor = container.cursor();
 
 
-//        if (fromDB) {
+        try {
 
-            try {
+            while (cursor.moveToNext()) {
 
-                while (cursor.moveToNext()) {
+                String URLs = cursor.getString(0);
+                String [] photosArray = URLs != null ? URLs.split(delim) : null;
 
-                    String URLs = cursor.getString(0);
-                    String [] photosArray = URLs != null ? URLs.split(delim) : null;
+                arr = photosArray != null ?  new ArrayList<>(Arrays.asList(photosArray)) : null;
 
-                    arr = photosArray != null ?  new ArrayList<>(Arrays.asList(photosArray)) : null;
-
-//                    for (String url : arr) {
-//
-//                        Log.i("in getDetailsPhotos", "--------------------photo url--------------: " + url);
-//                    }
-
-
-//                    arr.add("https://www.hdwallpapers.in/walls/new_year_high_quality-wide.jpg");
-//                    arr.add("https://www.hdwallpapers.in/walls/fantasy_world_of_flowers-wide.jpg");
-//                    arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
-//                    arr.add("https://www.hdwallpapers.in/walls/metro_city_eve-wide.jpg");
-
-                }
-//                Log.i("in getDetailsPhotos", "--------------------cursor finished--------------");
             }
+        }
 
-            catch(Exception e){
-                // TODO: output no results/failed to get results error here
-                Log.e("error", e.toString());
-                Log.i("in getDetailsPhotos", "------------------------------------------------------------------------ERROR--------------");
+        catch(Exception e){
+            // TODO: output no results/failed to get results error here
+            Log.e("error", e.toString());
+        }
+        finally {
+            cursor.close();
+            db.close();
             }
-            finally {
-                cursor.close();
-                db.close();
-            }
-
-//        }
-//        else {
-//            //parse the response, save to db and return the jsonobj
-//        }
-
         return arr;
     }
-
-//    public String getPlaceName(String place_id) {
-//
-//        String name = "University of Southern California";
-//        return name;
-//    }
-//    public String getPlaceID() {
-//
-//        return placeID;
-//    }
 
     public String getPlaceName(String placeID, String requestFor) {
 
@@ -879,7 +789,6 @@ public class Database  extends SQLiteOpenHelper{
 
         while (cursor.moveToNext()) {
 
-            Log.i("in getPlaceName", "getPlaceName--------------------columnName--------------: " + cursor.getColumnName(0));
             if (requestFor.equals("latitude") || requestFor.equals("longitude")) {
 
                 d = cursor.getDouble(0);
@@ -889,7 +798,6 @@ public class Database  extends SQLiteOpenHelper{
                 value = cursor.getString(0);
             }
 
-            Log.i("in getPlaceName", "getPlaceName--------------------name--------------: " + value);
         }
 
         cursor.close();
@@ -919,8 +827,6 @@ public class Database  extends SQLiteOpenHelper{
         else if (count <= PAGE_SIZE * 2) { pageNum = 2; }
         else {pageNum = 3; }
 
-//        Log.i("pageNum", pageNum + "");
-//        Log.i("count", count + "");
 
         cursor.close();
         db.close();
@@ -960,7 +866,6 @@ public class Database  extends SQLiteOpenHelper{
 
         cursor.close();
         db.close();
-//        Log.i("count", count + "");
         return count;
 
     }
