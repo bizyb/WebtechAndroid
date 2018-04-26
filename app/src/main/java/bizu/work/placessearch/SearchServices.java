@@ -30,10 +30,6 @@ public class SearchServices {
             this.view = view;
     }
 
-    private String getCurrentLocation() {
-
-        return "-1";
-    }
 
     private String getGETParams(JSONObject formData) {
 
@@ -65,7 +61,6 @@ public class SearchServices {
     * */
     public void search(final String placeID, final JSONObject formData) {
 
-//        RequestQueue queue = Volley.newRequestQueue(activity);
         String url = "";
         String yelpURL = null;
         String photosURL = null;
@@ -83,12 +78,6 @@ public class SearchServices {
             String queryString = getGETParams(formData);
             url = "http://bizyb2.us-east-2.elasticbeanstalk.com/search-endpoint" + queryString;
         }
-
-//        final String url = "http://ip-api.com/json";
-        Log.i("in search", "search--------------------url-------------: " + url);
-        Log.i("in search", "search--------------------yelp---url----------: " + yelpURL);
-
-        Log.i("in search", "search--------------------placeID-------------: " + placeID);
 
         if (loadFromDB) {
 
@@ -184,6 +173,4 @@ public class SearchServices {
             }
         }).start();
     }
-
-
 }
