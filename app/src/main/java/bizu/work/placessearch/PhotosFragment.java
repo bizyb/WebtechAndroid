@@ -1,5 +1,7 @@
 package bizu.work.placessearch;
 
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,7 +46,9 @@ public class PhotosFragment extends Fragment {
         DetailsActivity activity = (DetailsActivity) getActivity();
         placeID = activity.getDetailsPlaceID();
 
-        populatePhotosTab(placeID);
+        new AsyncPhotoLoader(placeID, activity, this).execute("");
+
+//        populatePhotosTab(placeID);
 
         return v;
     }
@@ -91,6 +95,62 @@ public class PhotosFragment extends Fragment {
 
             new Table(getActivity(), null, v, null).showEmpty("photos");
         }
+    }
+
+    private class AsyncPhotoLoader extends AsyncTask<String, Void, String> {
+
+//        private View v;
+        private String placeID;
+        private Activity activity;
+        private PhotosFragment fragment;
+        public AsyncPhotoLoader(String placeID, Activity activity, PhotosFragment fragment) {
+
+            this.placeID = placeID;
+            this.activity = activity;
+            this.fragment = fragment;
+       }
+        @Override
+        protected String doInBackground(String... params) {
+
+            //Wait for the photos to arrive
+            ArrayList<String> photosArray = null;
+            Database db = new Database(activity);
+            photosArray = db.getDetailsPhotos(placeID);
+
+            while (photosArray == null ) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
+                }
+                photosArray = db.getDetailsPhotos(placeID);
+            }
+
+
+//            photosArray = db.getDetailsPhotos(placeIDLocal);
+//        }
+//
+// for (int i = 0; i < 5; i++) {
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    Thread.interrupted();
+//                }
+//            }
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            fragment.populatePhotosTab(placeID);
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
     }
 
 }
