@@ -58,24 +58,23 @@ public class MainActivity extends AppCompatActivity {
         currentLoc = null;
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        Log.d("token", "------------main activity onCreat----------------------");
-
         getLocation();
 
+
     }
+
+//    @Override
+//    public void onBackPressed() {
+//
+//        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+//            getFragmentManager().popBackStack();
+//        }
+//
+//    }
+
     public void getLocation() {
 
-//        Location l = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//
-//        if (l != null){
-//            double lat = l.getLatitude();
-//            double lng = l.getLongitude();
-//            currentLoc = lat + "," + lng + "";
-//            Log.i("in getLocation", "getLocation--------------------currentLoc 1-------------: " + currentLoc);
-//
-//        }
 
-        Log.i("in getLocation", "getLocation--------------------getLocation-------------");
         if( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
         {

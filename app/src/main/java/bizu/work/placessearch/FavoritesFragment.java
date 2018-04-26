@@ -3,6 +3,8 @@ package bizu.work.placessearch;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,12 +35,21 @@ public class FavoritesFragment extends Fragment  {
 
         View v =  inflater.inflate(R.layout.favorites_fragment, container, false);
         activity = getActivity();
-
+//        fragmentStackManager();
 
         populateFavorites(v, 1);
         return v;
     }
 
+//    private void fragmentStackManager() {
+//
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.fav_fragment_container, this);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//
+//    }
 
     public void populateFavorites(View v, int pageFromDB) {
 
